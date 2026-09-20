@@ -1,10 +1,23 @@
+import { Turnstile } from '@marsidev/react-turnstile';
+
 import useContactForm from '../hooks/useContactForm';
 
 const fieldBaseClassName =
   'flex-1 rounded-lg bg-neutral-100 px-4 py-3 text-neutral-900 outline-none dark:bg-neutral-800 dark:text-white';
 
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_SITE_KEY;
+
 function ContactForm() {
-  const { formState, isSubmitting, handleChange, handleSubmit } = useContactForm();
+  const {
+    formState,
+    isSubmitting,
+    honeypot,
+    handleChange,
+    handleHoneypotChange,
+    handleTurnstileSuccess,
+    handleTurnstileExpireOrError,
+    handleSubmit,
+  } = useContactForm();
 
   return (
     <section
@@ -20,6 +33,17 @@ function ContactForm() {
         </h2>
 
         <form className='mt-6 flex flex-col gap-5' onSubmit={handleSubmit}>
+          <input
+            type='text'
+            name='contact_hp_field'
+            value={honeypot}
+            onChange={handleHoneypotChange}
+            tabIndex={-1}
+            autoComplete='off'
+            aria-hidden='true'
+            style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+          />
+
           <div className='flex flex-col gap-5 sm:flex-row'>
             <label htmlFor='contact-name' className='sr-only'>
               Your name
@@ -90,6 +114,19 @@ function ContactForm() {
             onChange={handleChange}
             className={`${fieldBaseClassName} resize-none`}
           />
+
+          <div className='w-full rounded-[10px] overflow-hidden'>
+            <div className='leading-0 -m-1.25'>
+              <Turnstile
+                siteKey={TURNSTILE_SITE_KEY}
+                onSuccess={handleTurnstileSuccess}
+                onExpire={handleTurnstileExpireOrError}
+                onError={handleTurnstileExpireOrError}
+                options={{ size: 'flexible', theme: 'dark' }}
+                className='border-0 w-full h-15'
+              />
+            </div>
+          </div>
 
           <div className='flex items-center gap-4'>
             <button

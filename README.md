@@ -58,6 +58,6 @@ npm install
 npm run dev
 ```
 
-Create a `.env` file based on `.env.example` and set `VITE_CONTACT_API_URL` to a running instance of the contact API for the contact form to work locally.
+Create a `.env` file based on `.env.example` and set `VITE_CONTACT_API_URL` to a running instance of the contact API, and `VITE_SITE_KEY` to a Cloudflare Turnstile site key for the contact form to work locally.
 
 Other scripts: `npm run build` (type-check + production build), `npm run lint`, `npm run preview`.

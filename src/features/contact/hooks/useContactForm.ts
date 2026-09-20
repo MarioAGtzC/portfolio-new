@@ -1,6 +1,8 @@
 import { useCallback, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { toast } from 'react-toastify';
 
+const SUBMIT_COOLDOWN_MS = 30000;
+
 export interface ContactFormState {
   name: string;
   email: string;
@@ -62,6 +64,25 @@ function validateFormState(formState: ContactFormState) {
 function useContactForm() {
   const [formState, setFormState] = useState<ContactFormState>(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Decoy field: only bots fill this in, real users never see it.
+  const [honeypot, setHoneypot] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [lastSubmit, setLastSubmit] = useState(0);
+
+  const handleHoneypotChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setHoneypot(event.target.value);
+    },
+    [],
+  );
+
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpireOrError = useCallback(() => {
+    setTurnstileToken('');
+  }, []);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -84,6 +105,12 @@ function useContactForm() {
     async (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (honeypot) {
+        toast.success("Thanks! I'll get back to you as soon as possible.");
+        setFormState(INITIAL_FORM_STATE);
+        return;
+      }
+
       if (!CONTACT_API_URL) {
         console.error('VITE_CONTACT_API_URL is not configured.');
         toast.error('Something went wrong. Please try again later.');
@@ -96,6 +123,17 @@ function useContactForm() {
         return;
       }
 
+      if (!turnstileToken) {
+        toast.error('Please complete the verification before sending.');
+        return;
+      }
+
+      if (Date.now() - lastSubmit < SUBMIT_COOLDOWN_MS) {
+        toast.error('Please wait a moment before sending another message.');
+        return;
+      }
+
+      setLastSubmit(Date.now());
       setIsSubmitting(true);
 
       try {
@@ -105,7 +143,7 @@ function useContactForm() {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(normalizedFormState),
+          body: JSON.stringify({ ...normalizedFormState, turnstileToken }),
         });
 
         if (!response.ok) {
@@ -114,6 +152,7 @@ function useContactForm() {
 
         toast.success("Thanks! I'll get back to you as soon as possible.");
         setFormState(INITIAL_FORM_STATE);
+        setTurnstileToken('');
       } catch (error) {
         console.error('Error sending contact message', error);
         toast.error('Something went wrong. Please try again later.');
@@ -121,10 +160,19 @@ function useContactForm() {
         setIsSubmitting(false);
       }
     },
-    [formState],
+    [formState, honeypot, turnstileToken, lastSubmit],
   );
 
-  return { formState, isSubmitting, handleChange, handleSubmit };
+  return {
+    formState,
+    isSubmitting,
+    honeypot,
+    handleChange,
+    handleHoneypotChange,
+    handleTurnstileSuccess,
+    handleTurnstileExpireOrError,
+    handleSubmit,
+  };
 }
 
 export default useContactForm;
