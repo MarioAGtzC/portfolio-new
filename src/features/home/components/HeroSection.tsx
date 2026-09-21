@@ -1,12 +1,14 @@
 import Button from '../../../components/ui/Button';
+import { downloadFile } from '../../../lib/downloadFile';
 
 interface HeroSectionProps {
   role: string;
   name: string;
   resumeUrl: string;
+  resumeName: string;
 }
 
-function HeroSection({ role, name, resumeUrl }: HeroSectionProps) {
+function HeroSection({ role, name, resumeUrl, resumeName }: HeroSectionProps) {
   return (
     <section className='mx-auto flex max-w-5xl flex-col items-start gap-6 px-4 py-20 sm:py-28'>
       <div>
@@ -28,8 +30,11 @@ function HeroSection({ role, name, resumeUrl }: HeroSectionProps) {
         </Button>
         <Button
           href={resumeUrl}
-          target='_blank'
-          rel='noopener noreferrer'
+          download={resumeName}
+          onClick={(event) => {
+            event.preventDefault();
+            void downloadFile(resumeUrl, resumeName);
+          }}
           variant='ghost'
           size='lg'
         >

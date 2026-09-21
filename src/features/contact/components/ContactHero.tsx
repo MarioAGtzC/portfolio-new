@@ -14,9 +14,9 @@ function ContactHero() {
         >
           Contact form
         </a>
-        <h2 className='font-recoleta text-4xl font-black text-white sm:text-5xl'>
+        <h1 className='font-recoleta text-4xl font-black text-white sm:text-5xl'>
           Hire me
-        </h2>
+        </h1>
         <p className='max-w-2xl text-lg font-light text-neutral-200'>
           Looking for a reliable full-stack developer to build or scale your website, app, or backend system? Send me a message and let's talk about how I can help.
         </p>

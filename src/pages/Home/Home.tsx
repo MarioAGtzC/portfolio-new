@@ -7,12 +7,16 @@ import SkillsSection from '../../features/home/components/SkillsSection';
 import TechStackSection from '../../features/home/components/TechStackSection';
 import { ABOUT_CATEGORIES } from '../../features/home/data/about';
 import { useSkillCategories } from '../../features/home/hooks/useSkillCategories';
+import { HOME_SEO } from '../../seo/routes';
+import { useSeo } from '../../seo/useSeo';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const showcasedProjects =
   featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 3);
 
 function Home() {
+  useSeo(HOME_SEO);
+
   const {
     activeCategoryIndex,
     activeCategory,
@@ -24,7 +28,12 @@ function Home() {
 
   return (
     <div>
-      <HeroSection role={SITE.role} name={SITE.name} resumeUrl={SITE.resumeUrl} />
+      <HeroSection
+        role={SITE.role}
+        name={SITE.name}
+        resumeUrl={SITE.resumeUrl}
+        resumeName={SITE.resumeName}
+      />
       <TechStackSection />
       <FeaturedProjectsSection projects={showcasedProjects} />
       <AboutSection />

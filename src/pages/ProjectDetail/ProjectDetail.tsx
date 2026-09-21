@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import {
   getParentProject,
@@ -11,11 +12,19 @@ import ProjectMetadata from '../../features/project-detail/components/ProjectMet
 import ProjectNavigation from '../../features/project-detail/components/ProjectNavigation';
 import ProjectOverview from '../../features/project-detail/components/ProjectOverview';
 import RelatedProjectsCarousel from '../../features/project-detail/components/RelatedProjectsCarousel';
+import { getProjectSeo, NOT_FOUND_SEO } from '../../seo/routes';
+import { useSeo } from '../../seo/useSeo';
 
 function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
 
   const project = projects.find((item) => item.slug === slug);
+
+  const seo = useMemo(
+    () => (project ? getProjectSeo(project) : NOT_FOUND_SEO),
+    [project],
+  );
+  useSeo(seo);
 
   if (!project) {
     return <Navigate to='/404' replace />;

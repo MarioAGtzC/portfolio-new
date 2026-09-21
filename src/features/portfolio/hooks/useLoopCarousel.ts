@@ -29,6 +29,7 @@ export function useLoopCarousel(
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
     loop: isCarousel,
+    skipSnaps: true,
   }, plugins);
 
   const repeatCount = isCarousel

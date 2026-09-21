@@ -34,7 +34,7 @@ export function getProjectImages(slug: string, title: string) {
 
   const images: ProjectImage[] = paths.map((path, index) => ({
     src: imageModules[path],
-    alt: `${title} - imagen ${index + 1}`,
+    alt: `${title}: screenshot ${index + 1}`,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
   }));

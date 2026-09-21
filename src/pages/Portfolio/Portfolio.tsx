@@ -1,7 +1,11 @@
 import ProjectCard from '../../features/portfolio/components/ProjectCard';
 import { getTopLevelProjects } from '../../data/projects';
+import { PORTFOLIO_SEO } from '../../seo/routes';
+import { useSeo } from '../../seo/useSeo';
 
 function Portfolio() {
+  useSeo(PORTFOLIO_SEO);
+
   const topLevelProjects = getTopLevelProjects();
 
   return (

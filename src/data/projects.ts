@@ -163,7 +163,7 @@ export const projects: Project[] = [
     year: 2026,
     featured: true,
     category: ['web app'],
-    status: 'in progress',
+    status: 'live',
   },
   // ─── Resume ────────────────────────────────────────────────────
   {

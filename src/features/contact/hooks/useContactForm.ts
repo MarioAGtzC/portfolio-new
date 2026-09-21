@@ -64,7 +64,6 @@ function validateFormState(formState: ContactFormState) {
 function useContactForm() {
   const [formState, setFormState] = useState<ContactFormState>(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // Decoy field: only bots fill this in, real users never see it.
   const [honeypot, setHoneypot] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [lastSubmit, setLastSubmit] = useState(0);
@@ -106,7 +105,7 @@ function useContactForm() {
       event.preventDefault();
 
       if (honeypot) {
-        toast.success("Thanks! I'll get back to you as soon as possible.");
+        toast.success('Thanks! I\'ll get back to you as soon as possible.');
         setFormState(INITIAL_FORM_STATE);
         return;
       }
@@ -150,7 +149,7 @@ function useContactForm() {
           throw new Error(`Request failed with status ${response.status}`);
         }
 
-        toast.success("Thanks! I'll get back to you as soon as possible.");
+        toast.success('Thanks! I\'ll get back to you as soon as possible.');
         setFormState(INITIAL_FORM_STATE);
         setTurnstileToken('');
       } catch (error) {

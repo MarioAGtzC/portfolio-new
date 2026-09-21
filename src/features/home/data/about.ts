@@ -1,8 +1,8 @@
 import frontendIcon from '../../../assets/images/about-frontend.svg';
 import backendIcon from '../../../assets/images/about-backend.svg';
-import cloudIcon from '../../../assets/images/about-devops.svg'; // good match: cloud + network icon
-import integrationsIcon from '../../../assets/images/about-ui-ux.svg'; // TODO: swap artwork — this is a wireframe/blueprint sketch, doesn't visually match "APIs & Integrations"
-import databaseIcon from '../../../assets/images/about-cms.svg'; // good match: this is a database/server-stack icon
+import cloudIcon from '../../../assets/images/about-cloud.svg';
+import integrationsIcon from '../../../assets/images/about-integration.svg';
+import databaseIcon from '../../../assets/images/about-database.svg';
 import toolsIcon from '../../../assets/images/about-tools.svg';
 
 export interface AboutCategory {
