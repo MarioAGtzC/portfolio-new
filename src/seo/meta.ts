@@ -195,7 +195,7 @@ export function personNode(): JsonLd {
     '@type': 'Person',
     '@id': personId(),
     name: SITE.name,
-    jobTitle: 'Full-Stack Software Engineer',
+    jobTitle: 'Backend Software Engineer',
     url: pageUrl('/'),
     email: `mailto:${SITE.email}`,
     address: {

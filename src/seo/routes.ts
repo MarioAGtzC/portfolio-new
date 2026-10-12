@@ -29,14 +29,14 @@ const websiteRef = () => ({
 });
 
 export const HOME_SEO: SeoMeta = {
-  title: `${SITE.name} | Full-Stack Developer (Backend & AWS)`,
-  description: 'Full-stack developer building backend APIs, serverless AWS architectures and web products with TypeScript, Node.js, NestJS and React. Based in Mexico.',
+  title: `${SITE.name} | Backend Software Engineer (Node.js & AWS)`,
+  description: 'Backend software engineer building APIs, serverless AWS architectures and web products with TypeScript, Node.js, NestJS and React. Based in Mexico.',
   path: '/',
   jsonLd: graph(webSiteNode(), personNode()),
 };
 
 export const PORTFOLIO_SEO: SeoMeta = {
-  title: withSiteName('Portfolio: Full-Stack & Backend Projects'),
+  title: withSiteName('Portfolio: Backend & Cloud Projects'),
   description: 'Case studies of the platforms, APIs and web apps I\'ve built end to end, each with the problem it solves, the process behind it and the results.',
   path: '/portfolio',
   jsonLd: graph(
@@ -44,7 +44,7 @@ export const PORTFOLIO_SEO: SeoMeta = {
       '@type': 'CollectionPage',
       '@id': `${pageUrl('/portfolio')}#page`,
       url: pageUrl('/portfolio'),
-      name: 'Portfolio: Full-Stack & Backend Projects',
+      name: 'Portfolio: Backend & Cloud Projects',
       isPartOf: websiteRef(),
       about: personRef(),
       mainEntity: {
@@ -66,7 +66,7 @@ export const PORTFOLIO_SEO: SeoMeta = {
 
 export const CONTACT_SEO: SeoMeta = {
   title: withSiteName('Contact & Hire Me'),
-  description: 'Need a full-stack developer for your website, app or backend? Send me a message and let\'s talk about your project. Open to remote work worldwide.',
+  description: 'Need a backend engineer for your API, cloud infrastructure or web product? Send me a message and let\'s talk about your project. Open to remote work worldwide.',
   path: '/contact',
   jsonLd: graph(
     {

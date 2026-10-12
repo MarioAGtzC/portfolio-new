@@ -1,8 +1,8 @@
 export const SITE = {
   name: 'Mario Gutiérrez',
-  role: 'Full-stack Developer',
+  role: 'Backend Software Engineer',
   email: 'marioagtzc@hotmail.com',
-  siteUrl: 'https://greenie-studios.com',
+  siteUrl: 'https://portfolio.mario-gutierrez.com',
   resumeUrl: 'https://mario-gutierrez.com/mario-gutierrez-cv.pdf',
   resumeName: 'Mario Gutierrez CV.pdf',
   locale: 'en_US',

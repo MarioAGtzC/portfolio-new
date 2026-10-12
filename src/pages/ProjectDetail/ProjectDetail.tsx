@@ -11,7 +11,7 @@ import ProjectHeader from '../../features/project-detail/components/ProjectHeade
 import ProjectMetadata from '../../features/project-detail/components/ProjectMetadata';
 import ProjectNavigation from '../../features/project-detail/components/ProjectNavigation';
 import ProjectOverview from '../../features/project-detail/components/ProjectOverview';
-import RelatedProjectsCarousel from '../../features/project-detail/components/RelatedProjectsCarousel';
+import ProjectPieces from '../../features/project-detail/components/ProjectPieces';
 import { getProjectSeo, NOT_FOUND_SEO } from '../../seo/routes';
 import { useSeo } from '../../seo/useSeo';
 
@@ -48,30 +48,24 @@ function ProjectDetail() {
     siblingProjects[(currentIndex + 1) % siblingProjects.length];
 
   return (
-    <div className='pt-8'>
-      <div className='mx-auto max-w-5xl px-4'>
-        <ProjectHeader project={project} parentProject={parentProject} />
-      </div>
+    <div className='mx-auto max-w-[1160px] px-5 pt-10 pb-20 md:px-8'>
+      <ProjectHeader project={project} parentProject={parentProject} />
 
       <ProjectGallery project={project} />
 
-      <div className='mx-auto max-w-5xl px-4'>
-        <div className='mt-8 grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
-          <ProjectOverview project={project} />
-          <ProjectMetadata project={project} />
-        </div>
+      <div className='mt-10 grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
+        <ProjectOverview project={project} />
+        <ProjectMetadata project={project} />
       </div>
 
-      <RelatedProjectsCarousel projects={childPieces} />
+      <ProjectPieces projects={childPieces} />
 
-      <div className='mx-auto max-w-5xl px-4 pb-20'>
-        {hasMultipleSiblings && (
-          <ProjectNavigation
-            previousProject={prevProject}
-            nextProject={nextProject}
-          />
-        )}
-      </div>
+      {hasMultipleSiblings && (
+        <ProjectNavigation
+          previousProject={prevProject}
+          nextProject={nextProject}
+        />
+      )}
     </div>
   );
 }

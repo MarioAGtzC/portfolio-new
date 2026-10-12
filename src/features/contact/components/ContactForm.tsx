@@ -3,7 +3,7 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import useContactForm from '../hooks/useContactForm';
 
 const fieldBaseClassName =
-  'flex-1 rounded-lg bg-neutral-100 px-4 py-3 text-neutral-900 outline-none dark:bg-neutral-800 dark:text-white';
+  'flex-1 rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-muted outline-none focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-glow';
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_SITE_KEY;
 
@@ -22,13 +22,10 @@ function ContactForm() {
   return (
     <section
       id='contact-form'
-      className='relative mx-auto max-w-3xl overflow-hidden px-5 py-24 md:px-16'
+      className='relative max-w-3xl scroll-mt-24 overflow-hidden pt-12'
     >
       <div className='flex flex-col gap-4'>
-        <span className='w-fit rounded-lg bg-secondary px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase'>
-          Contact me
-        </span>
-        <h2 className='font-recoleta text-3xl font-black text-primary sm:text-4xl'>
+        <h2 className='text-[30px] font-semibold text-ink'>
           Get in touch, tell me about your project.
         </h2>
 
@@ -122,7 +119,7 @@ function ContactForm() {
                 onSuccess={handleTurnstileSuccess}
                 onExpire={handleTurnstileExpireOrError}
                 onError={handleTurnstileExpireOrError}
-                options={{ size: 'flexible', theme: 'dark' }}
+                options={{ size: 'flexible', theme: 'auto' }}
                 className='border-0 w-full h-15'
               />
             </div>
@@ -132,7 +129,7 @@ function ContactForm() {
             <button
               type='submit'
               disabled={isSubmitting}
-              className='inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:brightness-110'
+              className='inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-base font-semibold text-on-accent transition-[filter] duration-200 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50'
             >
               {isSubmitting ? 'Sending' : 'Send message'}
             </button>

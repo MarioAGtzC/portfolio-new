@@ -5,7 +5,7 @@ import type {
 } from 'react';
 import { Link } from 'react-router-dom';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = 'accent' | 'outline';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonBaseProps {
@@ -28,14 +28,12 @@ export type ButtonAsAnchorProps = ButtonBaseProps &
 export type ButtonProps = ButtonAsButtonProps | ButtonAsAnchorProps;
 
 const baseStyles =
-  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-neutral-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none dark:focus-visible:ring-neutral-100';
+  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas focus-visible:ring-accent disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none';
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white hover:brightness-90 dark:hover:brightness-110',
-  secondary:
-    'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700',
-  ghost:
-    'bg-transparent text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-800',
+  accent: 'bg-accent font-semibold text-on-accent hover:brightness-110',
+  outline:
+    'border border-line bg-transparent font-semibold text-ink hover:border-line-strong hover:bg-surface-2',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -45,7 +43,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 };
 
 function Button({
-  variant = 'primary',
+  variant = 'accent',
   size = 'md',
   className,
   children,

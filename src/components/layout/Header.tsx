@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import Button from '../ui/Button';
 import Icon from '../ui/Icon';
+import ThemeToggle from '../ui/ThemeToggle';
 import { ROUTES } from '../../constants/routes';
 import { SITE } from '../../constants/site';
 
 const navLinks = [
   { to: ROUTES.home, label: 'Home' },
-  { to: ROUTES.portfolio, label: 'Portfolio' },
+  { to: ROUTES.portfolio, label: 'Projects' },
+  { to: ROUTES.contact, label: 'Contact' },
 ];
 
 interface NavItemProps {
@@ -24,10 +25,8 @@ function NavItem({ to, label, onNavigate }: NavItemProps) {
       onClick={onNavigate}
       className={({ isActive }) =>
         [
-          'text-sm font-medium transition-colors duration-200',
-          isActive
-            ? 'text-primary'
-            : 'text-neutral-500 hover:text-primary dark:text-neutral-400 dark:hover:text-primary',
+          'text-sm transition-colors duration-200',
+          isActive ? 'text-accent' : 'text-ink-2 hover:text-ink',
         ].join(' ')
       }
     >
@@ -36,34 +35,42 @@ function NavItem({ to, label, onNavigate }: NavItemProps) {
   );
 }
 
+const resumeLinkStyles =
+  'rounded-md border border-line px-3 py-1.5 text-[13px] text-ink transition-colors hover:border-line-strong';
+
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className='sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80'>
-      <div className='mx-auto flex max-w-5xl items-center justify-between px-4 py-4'>
+    <header className='sticky top-0 z-50 border-b border-line bg-bar/90 backdrop-blur'>
+      <div className='mx-auto flex max-w-[1160px] items-center justify-between gap-4 px-5 py-3.5 md:px-8'>
         <Link
           to={ROUTES.home}
-          className='text-lg font-semibold text-neutral-900 dark:text-white'
+          className='flex items-center gap-2 text-[15px] font-semibold text-ink'
           onClick={closeMenu}
         >
+          <span
+            aria-hidden='true'
+            className='h-[7px] w-[7px] rounded-full bg-accent shadow-[0_0_0_3px_var(--color-glow)]'
+          />
           {SITE.name}
         </Link>
 
-        <nav className='hidden items-center gap-6 md:flex'>
+        <nav className='hidden items-center gap-6 md:flex' aria-label='Main'>
           {navLinks.map((link) => (
             <NavItem key={link.to} to={link.to} label={link.label} />
           ))}
-          <Button href={ROUTES.contact} size='sm'>
-            Contact
-          </Button>
+          <ThemeToggle />
+          <a href={SITE.social.resume} target='_blank' rel='noopener noreferrer' className={resumeLinkStyles}>
+            Resume ↗
+          </a>
         </nav>
 
         <button
           type='button'
-          className='inline-flex items-center justify-center rounded-lg p-2 text-neutral-900 transition-colors duration-200 hover:bg-neutral-100 md:hidden dark:text-white dark:hover:bg-neutral-800'
+          className='inline-flex items-center justify-center rounded-md p-2 text-ink transition-colors hover:bg-surface-2 md:hidden'
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -73,29 +80,23 @@ function Header() {
       </div>
 
       <div
-        className={`grid border-t border-neutral-200 transition-[grid-template-rows] duration-200 ease-in-out md:hidden dark:border-neutral-800 ${
-          isMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        className={`grid border-t border-line transition-[grid-template-rows] duration-200 ease-in-out md:hidden ${
+          isMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr] border-transparent'
         }`}
         aria-hidden={!isMenuOpen}
+        inert={!isMenuOpen}
       >
         <div className='overflow-hidden'>
-          <nav className='flex flex-col gap-4 px-4 py-4'>
+          <nav className='flex flex-col gap-4 px-5 py-4' aria-label='Main'>
             {navLinks.map((link) => (
-              <NavItem
-                key={link.to}
-                to={link.to}
-                label={link.label}
-                onNavigate={closeMenu}
-              />
+              <NavItem key={link.to} to={link.to} label={link.label} onNavigate={closeMenu} />
             ))}
-            <Button
-              href={ROUTES.contact}
-              size='sm'
-              className='w-full'
-              onClick={closeMenu}
-            >
-              Contact
-            </Button>
+            <div className='flex items-center gap-3'>
+              <ThemeToggle />
+              <a href={SITE.social.resume} target='_blank' rel='noopener noreferrer' className={resumeLinkStyles}>
+                Resume ↗
+              </a>
+            </div>
           </nav>
         </div>
       </div>

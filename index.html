@@ -5,8 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Mario Gutiérrez" />
-    <meta name="theme-color" content="#2f5f02" />
-    <title>Mario Gutiérrez | Full-Stack Developer (Backend &amp; AWS)</title>
+    <meta name="theme-color" content="#f6f8f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1411" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <title>Mario Gutiérrez | Backend Software Engineer (Node.js &amp; AWS)</title>
   </head>
   <body>
     <div id="root"></div>

@@ -1,4 +1,3 @@
-import Card from '../../../components/ui/Card';
 import Icon, { type IconName } from '../../../components/ui/Icon';
 import { SITE } from '../../../constants/site';
 
@@ -38,30 +37,30 @@ const CONTACT_INFO: ContactInfoCard[] = [
 
 function ContactInfoCards() {
   return (
-    <section className='mx-auto max-w-7xl px-5 pt-16 pb-10 md:px-16'>
-      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+    <section className='pt-8'>
+      <div className='grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4'>
         {CONTACT_INFO.map((info) => (
-          <Card
+          <div
             key={info.title}
-            className='flex flex-col gap-4 p-8 transition-transform duration-300 hover:-translate-y-2'
+            className='flex flex-col gap-3 rounded-[10px] border border-line bg-surface p-5'
           >
             <div className='flex items-center gap-4'>
-              <Icon name={info.icon} size={32} className='text-primary' />
+              <Icon name={info.icon} size={24} className='text-accent' />
               <div className='flex flex-col'>
-                <span className='text-xs text-primary'>{info.eyebrow}</span>
-                <span className='font-recoleta text-lg font-bold text-neutral-900 dark:text-white'>
+                <span className='font-geist-mono text-xs text-muted'>{info.eyebrow}</span>
+                <span className='text-base font-semibold text-ink'>
                   {info.title}
                 </span>
               </div>
             </div>
             <div className='flex flex-col gap-1'>
               {info.lines.map((line, index) => (
-                <p key={index} className='text-neutral-500 dark:text-neutral-400'>
+                <p key={index} className='text-sm text-ink-2'>
                   {line}
                 </p>
               ))}
             </div>
-          </Card>
+          </div>
         ))}
       </div>
     </section>

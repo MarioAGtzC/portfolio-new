@@ -1,67 +1,117 @@
 @import 'tailwindcss';
 
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Recoleta';
-  src: url('./assets/fonts/Recoleta-Black.ttf') format('truetype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@theme {
-  --color-primary: #2f5f02;
-  --color-primary-dark: #1e3a03;
-  --color-secondary: #597043;
-  --color-surface-light: #f4faf0;
-
-  --font-recoleta: 'Recoleta', sans-serif;
-}
-
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-recoleta);
+  font-family: var(--font-geist);
+  background: var(--ds-canvas);
+  color: var(--ds-ink);
+}
+/* ─── Design system (redesign) ─────────────────────────────────────────
+   New tokens live alongside the current theme so existing pages keep their
+   look until they are migrated. Light values on :root, dark values when the
+   OS prefers dark (unless data-theme="light") or when data-theme="dark". */
+
+@font-face {
+  font-family: 'Geist Variable';
+  src: url('./assets/fonts/Geist-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono Variable';
+  src: url('./assets/fonts/GeistMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ds-canvas: #f6f8f6;
+  --ds-bar: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #eef2ef;
+  --ds-inset: #f9fbf9;
+  --ds-line: #d9e1db;
+  --ds-line-strong: #b9c6bd;
+  --ds-ink: #142019;
+  --ds-ink-2: #3d4a42;
+  --ds-muted: #5d6b62;
+  --ds-chip: #2c3a31;
+  --ds-accent: #1b7a43;
+  --ds-on-accent: #ffffff;
+  --ds-warn: #9a5f0c;
+  --ds-code-num: #2457b8;
+  --ds-glow: rgb(27 122 67 / 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --ds-canvas: #0e1411;
+    --ds-bar: #111814;
+    --ds-surface: #151d18;
+    --ds-surface-2: #1b2620;
+    --ds-inset: #121915;
+    --ds-line: #26332b;
+    --ds-line-strong: #3a4a40;
+    --ds-ink: #e4ebe6;
+    --ds-ink-2: #b4c1b8;
+    --ds-muted: #93a399;
+    --ds-chip: #c9d4cc;
+    --ds-accent: #5cc27a;
+    --ds-on-accent: #0e1411;
+    --ds-warn: #e0a84a;
+    --ds-code-num: #8fb8ff;
+    --ds-glow: rgb(92 194 122 / 0.18);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ds-canvas: #0e1411;
+  --ds-bar: #111814;
+  --ds-surface: #151d18;
+  --ds-surface-2: #1b2620;
+  --ds-inset: #121915;
+  --ds-line: #26332b;
+  --ds-line-strong: #3a4a40;
+  --ds-ink: #e4ebe6;
+  --ds-ink-2: #b4c1b8;
+  --ds-muted: #93a399;
+  --ds-chip: #c9d4cc;
+  --ds-accent: #5cc27a;
+  --ds-on-accent: #0e1411;
+  --ds-warn: #e0a84a;
+  --ds-code-num: #8fb8ff;
+  --ds-glow: rgb(92 194 122 / 0.18);
+}
+
+@theme inline {
+  --color-canvas: var(--ds-canvas);
+  --color-bar: var(--ds-bar);
+  --color-surface: var(--ds-surface);
+  --color-surface-2: var(--ds-surface-2);
+  --color-inset: var(--ds-inset);
+  --color-line: var(--ds-line);
+  --color-line-strong: var(--ds-line-strong);
+  --color-ink: var(--ds-ink);
+  --color-ink-2: var(--ds-ink-2);
+  --color-muted: var(--ds-muted);
+  --color-chip: var(--ds-chip);
+  --color-accent: var(--ds-accent);
+  --color-on-accent: var(--ds-on-accent);
+  --color-warn: var(--ds-warn);
+  --color-code-num: var(--ds-code-num);
+  --color-glow: var(--ds-glow);
+}
+
+@theme {
+  --font-geist: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
 }

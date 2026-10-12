@@ -21,10 +21,10 @@ function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className='border-t border-neutral-200 py-8 dark:border-neutral-800'>
-      <div className='mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 text-sm text-neutral-500 sm:flex-row sm:justify-between dark:text-neutral-400'>
+    <footer className='border-t border-line'>
+      <div className='mx-auto flex max-w-[1160px] flex-col items-center gap-4 px-5 py-6 text-[13px] text-muted sm:flex-row sm:justify-between md:px-8'>
         <p>
-          © {year} {SITE.name}. All rights reserved.
+          © {year} {SITE.name}
         </p>
 
         <div className='flex items-center gap-4'>
@@ -35,9 +35,9 @@ function Footer() {
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
               aria-label={link.label}
-              className='text-neutral-500 transition-colors duration-200 hover:text-primary dark:text-neutral-400 dark:hover:text-primary'
+              className='text-muted transition-colors duration-200 hover:text-accent'
             >
-              <Icon name={link.name} size={20} />
+              <Icon name={link.name} size={18} />
             </a>
           ))}
         </div>
@@ -49,7 +49,7 @@ function Footer() {
             event.preventDefault();
             void downloadFile(SITE.resumeUrl, SITE.resumeName);
           }}
-          className='font-medium text-neutral-900 underline-offset-4 transition-colors duration-200 hover:text-primary hover:underline dark:text-white'
+          className='font-medium text-ink underline-offset-4 transition-colors duration-200 hover:text-accent hover:underline'
         >
           Download CV
         </a>

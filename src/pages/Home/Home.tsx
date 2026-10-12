@@ -1,51 +1,32 @@
 import { SITE } from '../../constants/site';
-import { projects } from '../../data/projects';
+import { getFeaturedProjects, getTopLevelProjects } from '../../data/projects';
 import AboutSection from '../../features/home/components/AboutSection';
+import ContactCta from '../../features/home/components/ContactCta';
 import FeaturedProjectsSection from '../../features/home/components/FeaturedProjectsSection';
 import HeroSection from '../../features/home/components/HeroSection';
-import SkillsSection from '../../features/home/components/SkillsSection';
-import TechStackSection from '../../features/home/components/TechStackSection';
-import { ABOUT_CATEGORIES } from '../../features/home/data/about';
-import { useSkillCategories } from '../../features/home/hooks/useSkillCategories';
+import SkillsTable from '../../features/home/components/SkillsTable';
 import { HOME_SEO } from '../../seo/routes';
 import { useSeo } from '../../seo/useSeo';
 
-const featuredProjects = projects.filter((project) => project.featured);
+const featuredProjects = getFeaturedProjects();
 const showcasedProjects =
-  featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 3);
+  featuredProjects.length > 0 ? featuredProjects : getTopLevelProjects().slice(0, 3);
 
 function Home() {
   useSeo(HOME_SEO);
 
-  const {
-    activeCategoryIndex,
-    activeCategory,
-    isPanelVisible,
-    handleSelectCategory,
-    handleNextCategory,
-    handlePrevCategory,
-  } = useSkillCategories();
-
   return (
-    <div>
+    <div className='mx-auto flex max-w-[1160px] flex-col gap-14 px-5 pb-16 md:px-8'>
       <HeroSection
         role={SITE.role}
         name={SITE.name}
         resumeUrl={SITE.resumeUrl}
         resumeName={SITE.resumeName}
       />
-      <TechStackSection />
       <FeaturedProjectsSection projects={showcasedProjects} />
       <AboutSection />
-      <SkillsSection
-        categories={ABOUT_CATEGORIES}
-        activeCategoryIndex={activeCategoryIndex}
-        activeCategory={activeCategory}
-        isPanelVisible={isPanelVisible}
-        onSelectCategory={handleSelectCategory}
-        onPrevCategory={handlePrevCategory}
-        onNextCategory={handleNextCategory}
-      />
+      <SkillsTable />
+      <ContactCta />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import Button from '../../../components/ui/Button';
+import { Link } from 'react-router-dom';
 import Icon from '../../../components/ui/Icon';
 import type { Project } from '../../../types/project';
 
@@ -7,20 +7,29 @@ interface ProjectNavigationProps {
   nextProject: Project;
 }
 
-function ProjectNavigation({
-  previousProject,
-  nextProject,
-}: ProjectNavigationProps) {
+const linkStyles =
+  'inline-flex min-w-0 flex-col gap-1 rounded-md p-2 text-sm transition-colors hover:text-accent';
+
+function ProjectNavigation({ previousProject, nextProject }: ProjectNavigationProps) {
   return (
-    <nav className='mt-16 flex items-center justify-between border-t border-neutral-200 pt-8 dark:border-neutral-800' aria-label='Project navigation'>
-      <Button href={`/portfolio/${previousProject.slug}`} variant='ghost' size='md'>
-        <Icon name='arrow-left' size={18} />
-        Previous project
-      </Button>
-      <Button href={`/portfolio/${nextProject.slug}`} variant='ghost' size='md'>
-        Next project
-        <Icon name='arrow-right' size={18} />
-      </Button>
+    <nav
+      className='mt-16 flex items-start justify-between gap-4 border-t border-line pt-8'
+      aria-label='Project navigation'
+    >
+      <Link to={`/portfolio/${previousProject.slug}`} className={linkStyles}>
+        <span className='inline-flex items-center gap-1.5 font-geist-mono text-xs text-muted'>
+          <Icon name='arrow-left' size={14} />
+          Previous
+        </span>
+        <span className='font-semibold'>{previousProject.title}</span>
+      </Link>
+      <Link to={`/portfolio/${nextProject.slug}`} className={`${linkStyles} items-end text-right`}>
+        <span className='inline-flex items-center gap-1.5 font-geist-mono text-xs text-muted'>
+          Next
+          <Icon name='arrow-right' size={14} />
+        </span>
+        <span className='font-semibold'>{nextProject.title}</span>
+      </Link>
     </nav>
   );
 }
