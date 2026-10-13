@@ -30,16 +30,17 @@ function ContactForm() {
         </h2>
 
         <form className='mt-6 flex flex-col gap-5' onSubmit={handleSubmit}>
-          <input
-            type='text'
-            name='contact_hp_field'
-            value={honeypot}
-            onChange={handleHoneypotChange}
-            tabIndex={-1}
-            autoComplete='off'
-            aria-hidden='true'
-            style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
-          />
+          {/* Honeypot: display:none keeps browser autofill (and people) out of it; simple bots still fill it. */}
+          <div hidden aria-hidden='true'>
+            <input
+              type='text'
+              name='hp_extra'
+              value={honeypot}
+              onChange={handleHoneypotChange}
+              tabIndex={-1}
+              autoComplete='off'
+            />
+          </div>
 
           <div className='flex flex-col gap-5 sm:flex-row'>
             <label htmlFor='contact-name' className='sr-only'>

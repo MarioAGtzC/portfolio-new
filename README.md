@@ -1,63 +1,69 @@
-# Mario Gutiérrez — Portfolio
+# Mario Gutiérrez: Portfolio
 
-A personal portfolio site for Mario Gutiérrez, a full-stack developer, built to showcase real projects as in-depth case studies and give visitors a direct, working way to get in touch. It is a single-page-app-style React site with dedicated pages for an overview, a project index, individual project detail pages, and a contact form.
+A personal portfolio site where each project is a structured case study covering the problem, the process and the results, not just a link to a repo. It also has a spam-protected contact form that sends messages to my own serverless API.
 
-## The Problem It Solves
+**Live:** https://portfolio.mario-gutierrez.com
 
-Developers are often evaluated on scattered evidence of their work: a resume PDF, a GitHub profile full of repos with no context, or a LinkedIn summary. None of these let a recruiter, hiring manager, or potential client quickly answer the questions that actually matter — *what did this person build, what was their specific role, what problem did it solve, and can I reach them easily?*
+## The problem it solves
 
-This site addresses that gap by presenting each project as a structured case study (problem → process → results) rather than a bare link, and by grouping related work together — for example, a multi-part platform is shown as one project with its individual pieces (client app, business app, admin panel, backend API) linked underneath it instead of as four unrelated, context-free repos. It also removes friction for outreach by offering a working contact form backed by a real API, instead of only a mailto link.
+Recruiters and clients usually judge an engineer from a resume PDF, a GitHub profile full of repos without context, or a LinkedIn summary. None of these quickly shows what the person built, what their role was, or why it mattered.
 
-## My Role and Process
+This site answers those questions. Each project page explains what was broken, which decisions were made and what shipped. Platforms with several codebases appear as one story with their pieces linked underneath, not as separate repos. Visitors can then get in touch from the same site through a contact form, without opening their email client.
 
-This was designed, built, and is maintained solo, end-to-end — from information architecture to UI design to the backend integration the contact form relies on.
+## My role and process
 
-The approach:
-- **Structured the app by feature, not by file type** — `contact`, `home`, `portfolio`, and `project-detail` each own their components, hooks, and local data, keeping related logic together as the site grows.
-- **Modeled project data to reflect how real work is actually organized.** Rather than a flat list, projects support a "hub and pieces" relationship, so a larger platform (e.g., a multi-app product with separate client, business, admin, and backend codebases) can be documented as one cohesive case study with linked sub-projects, instead of four disconnected entries.
-- **Built a reusable carousel component** shared between the homepage's featured projects and a project detail page's related-projects section, with a graceful fallback to a static layout when there's only one item to show.
-- **Wired up a real contact flow**, including client-side validation and pending/success/error feedback, connected to a separate serverless API built for this purpose (documented as its own project within the site).
-- **Designed a custom visual identity** — a self-hosted display typeface, a green-based color system, and full dark mode support — rather than relying on a default framework theme.
+**Solo project.** I did the design, implementation and deployment.
 
-## Technologies and Tools Used
+- **Content as data.** All projects live in one typed data file. A project can be a *hub* with linked *pieces* (for example, a booking platform with its customer app, business panel, admin panel and backend). The site currently models 14 entries: 5 top-level projects, and 9 pieces under 3 of them. Pieces can include an optional layered architecture diagram.
+- **Feature-based structure.** Code is grouped by feature (`home`, `portfolio`, `project-detail`, `contact`), not by file type, so each area keeps its components, hooks and data together.
+- **SEO for a client-side app.** After the build, a prerender script creates a static HTML page for every route. Each page gets its own title, description, Open Graph/Twitter tags, JSON-LD structured data and a `<noscript>` fallback. The script also writes `sitemap.xml`, `robots.txt`, a `404.html` and per-project Open Graph images, and it warns at build time when a title or description is too long or too short.
+- **Layered form protection.** The contact form uses a CAPTCHA, a hidden honeypot field, client-side validation and a 30-second cooldown between submissions. The server-side checks live in the separate Contact API.
+- **Custom design system.** Colors are CSS design tokens with light and dark values. Visitors can switch between system, dark and light themes, and their choice is saved in the browser. Fonts are self-hosted.
+- **Automated deploys.** Every push to `main` is linted, type-checked, built, prerendered and published.
 
-- **UI framework**: React 19 with TypeScript, for a type-safe, component-based interface.
-- **Build tooling**: Vite, for fast local development and production bundling.
-- **Routing**: React Router (v7, `createBrowserRouter`) for client-side navigation across the home, portfolio index, individual project, and contact pages, with a shared layout and a catch-all not-found route.
-- **Styling and theming**: Tailwind CSS v4, using its CSS-first configuration to define a custom design system (brand colors, a self-hosted "Recoleta" font family, and dark-mode support applied consistently across the site).
-- **Carousel/slider**: Embla Carousel, powering the looping "featured projects" and "related projects" carousels, including custom logic to keep looping smooth regardless of how many items exist.
-- **Contact form backend**: A custom-built serverless API (a separate project, deployed on AWS via API Gateway and Lambda) that the contact form submits to over `fetch`, rather than a third-party form service — giving full control over validation, email delivery, and future anti-spam protection.
-- **Form handling**: Hand-rolled client-side validation (required fields, email format checking) and submit-state management, keeping the dependency footprint minimal for a form this size.
-- **User feedback**: React Toastify, for success/error notifications after a contact form submission.
+## Technologies and tools
 
-## Results / Impact
+| Function | What it does in this project |
+| --- | --- |
+| **Language & UI** | React 19 with TypeScript (strict, type-checked on every build) |
+| **Routing** | Client-side routing with React Router: home, portfolio index, project detail pages, contact and a not-found page |
+| **Build** | Vite for development and production bundles, plus a custom Node prerender script for static HTML, sitemap and robots.txt |
+| **Styling & theming** | Tailwind CSS v4 on top of CSS custom-property design tokens, with system, dark and light themes |
+| **Data** | Typed, in-repo project data (no database or CMS), with images found automatically per project folder |
+| **Contact & integrations** | The form posts JSON to a separate serverless [Contact API](https://github.com/MarioAGtzC/contact-api); the endpoint is set through an environment variable |
+| **Bot protection** | Cloudflare Turnstile on the contact form, plus a honeypot field and a client-side submit cooldown |
+| **SEO** | Per-route meta tags, canonical URLs and schema.org JSON-LD, generated at build time and updated on client-side navigation |
+| **CI/CD & hosting** | GitHub Actions lints, builds and deploys to GitHub Pages on every push to `main`, with a custom domain |
+| **Testing** | No automated test suite yet. Quality checks are linting and TypeScript type-checking, both of which must pass in CI before a deploy |
 
-This project is under active, ongoing development. What it currently delivers:
+## Results and impact
 
-- A **case-study-driven presentation** of real projects, replacing a flat list of repo links with problem/process/results narratives — designed to make technical work legible to non-technical reviewers (recruiters, clients) as well as other engineers.
-- A **data model that scales to multi-part systems**: a single platform-level project (currently modeling a four-piece system — client app, business app, admin panel, and backend) is represented as one coherent story instead of fragmented, context-free entries.
-- A **fully functioning, self-hosted contact pipeline** (form → validation → serverless API → email), removing the dependency on third-party form services and giving full ownership of the data and delivery path.
-- A **consistent, custom-branded UI** with dark mode support across every page, built on a maintainable design-token system rather than ad hoc styling.
+There are no traffic or conversion metrics to report. What the project delivers today:
 
-Several project entries and page copy sections are still being written out as the site content is finished, and integrating the shared anti-spam protection already built into the contact API backend is a planned next step.
+- **Projects explained as case studies.** Each entry follows a problem → process → results format. Larger systems appear as one hub with linked pieces, so the work is readable for non-technical reviewers as well as engineers.
+- **Search- and share-ready pages from a single-page app.** Every project has its own prerendered HTML, metadata, structured data and preview image, so search engines and link previews see real content without running JavaScript.
+- **A contact channel I own.** Messages go through my own serverless backend, not a third-party form service, and bots are filtered on both the client and the API.
+- **Zero-touch releases.** A push to `main` is the only step needed to publish. CI stops any release that fails linting or type-checking.
 
-## Images, Screenshots, or Live Demos
+## Screenshots and live demo
 
-No screenshots are checked into the repository yet — project cover/gallery images are loaded dynamically from `src/assets/images/projects/<project-slug>/`, which is currently empty aside from a placeholder, and the UI falls back to a text-only card when no image is present. Screenshots of the live site (homepage, portfolio grid, a project detail page, and the contact page) should be added here once available, for example under a `docs/screenshots/` folder referenced from this section.
+- **Live demo:** https://portfolio.mario-gutierrez.com
+
+No screenshots of the current UI are in the repository yet. They should be added under `docs/screenshots/` (suggested: home, portfolio index, a project detail page with an architecture diagram, and the contact page) and embedded in this section.
 
 ## Links
 
-- **Author**: [github.com/MarioAGtzC](https://github.com/MarioAGtzC) · [LinkedIn](https://www.linkedin.com/in/marioagtz/)
-- **Live site**: not yet deployed — this project does not have its own domain/URL assigned yet.
-- **Repository**: to be linked here once pushed to a remote.
+- **Live site:** https://portfolio.mario-gutierrez.com
+- **Resume site (related repo):** [resume-new](https://github.com/MarioAGtzC/resume-new): a resume page and PDF CV generated from the same source data
+- **Contact API (related repo):** [contact-api](https://github.com/MarioAGtzC/contact-api): the serverless backend behind this site's contact form
+- **Author:** [GitHub](https://github.com/MarioAGtzC) · [LinkedIn](https://www.linkedin.com/in/marioagtz/)
 
-## Getting Started
+## Running locally
 
 ```bash
 npm install
+cp .env.example .env   # set the contact API endpoint and the Turnstile site key
 npm run dev
 ```
 
-Create a `.env` file based on `.env.example` and set `VITE_CONTACT_API_URL` to a running instance of the contact API, and `VITE_SITE_KEY` to a Cloudflare Turnstile site key for the contact form to work locally.
-
-Other scripts: `npm run build` (type-check + production build), `npm run lint`, `npm run preview`.
+Other scripts: `npm run build` (type-check, bundle and prerender), `npm run lint`, `npm run preview`.
