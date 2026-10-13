@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DevTree · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #111a2c; --grid: rgb(255 255 255 / 0.03); --grid-size: 40px; --accent: #4ade80;
+  --accent-gradient: linear-gradient(90deg, #a8d92a, #00bef5); --muted: #b6c2d6; --line: #2a3654; }
+.glow { left: 290px; top: -260px; width: 620px; height: 620px; background: radial-gradient(circle, rgb(74 222 128 / 0.18), transparent 65%); }
+.logo { height: 46px; }
+.tag { margin-top: 24px; }
+h1 { --h1: 56px; margin: 20px 0 16px; }
+.tagline { max-width: 760px; font-size: 20px; }
+.pieces { display: grid; grid-template-columns: repeat(2, 300px); gap: 18px; margin-top: 30px; }
+.piece { display: flex; align-items: center; gap: 12px; padding: 14px 18px; text-align: left; }
+.piece strong { display: block; font-size: 17px; }
+.piece small { font: 13px 'Geist Mono', monospace; color: #8a97ad; }
+</style>
+</head>
+<body>
+<div class="canvas grid center">
+  <div class="glow"></div>
+  <img class="logo" src="assets/devtree-logo.svg" alt="DevTree">
+  <span class="tag">Link-in-bio platform</span>
+  <h1>Every profile and link,<br><span class="gradient-text">one public page</span></h1>
+  <p class="tagline">A REST API and the React app that consumes it: accounts, unique usernames, drag-and-drop links and public profiles.</p>
+  <div class="pieces">
+    <div class="card piece"><span class="dot" style="background:#4ade80"></span><div><strong>Backend API</strong><small>Express · MongoDB · JWT</small></div></div>
+    <div class="card piece"><span class="dot" style="background:#22d3ee"></span><div><strong>Frontend</strong><small>React · TanStack Query</small></div></div>
+  </div>
+</div>
+
+</body>
+</html>

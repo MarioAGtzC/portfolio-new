@@ -19,7 +19,7 @@ export interface HeadTag {
   attrs: Record<string, string>;
 }
 
-export const DEFAULT_OG_IMAGE = '/og-image.png';
+export const DEFAULT_OG_IMAGE = '/og-image.jpg';
 export const DEFAULT_OG_IMAGE_ALT = `${SITE.name}: ${SITE.role}`;
 const DEFAULT_OG_SIZE = { width: 1200, height: 630 };
 

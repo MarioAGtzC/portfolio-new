@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Contact API · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #14181f; --grid: rgb(255 255 255 / 0.035); --grid-size: 34px; --accent: #ff9900; --muted: #9aa3b2; --line: rgb(255 255 255 / 0.1); }
+.split { --pad-x: 90px; --text-width: 500px; }
+.tag { margin-bottom: 26px; }
+h1 { --h1: 50px; margin-bottom: 20px; }
+.tagline { font-size: 20px; }
+.note { display: flex; align-items: center; gap: 10px; margin-top: 30px; font: 15px 'Geist Mono', monospace; color: #6b7383; }
+.note .dot { width: 8px; height: 8px; background: #6b7383; }
+.visual { display: flex; flex-direction: column; align-items: center; }
+.node { display: flex; align-items: center; gap: 14px; width: 320px; padding: 16px 22px; background: #1c222c; }
+.node b { display: grid; place-items: center; width: 44px; height: 34px; border-radius: 8px; background: #ff9900; color: #14181f; font-size: 13px; font-weight: 800; flex: none; }
+.node strong { display: block; font: 600 17px 'Geist Mono', monospace; color: #e8ebf0; }
+.node small { font: 12px 'Geist Mono', monospace; color: #6b7383; }
+.arrow { padding: 6px 0; font-size: 22px; line-height: 1; color: #3a4150; }
+</style>
+</head>
+<body>
+<div class="canvas grid split">
+  <div class="text stack">
+    <span class="tag">AWS serverless</span>
+    <h1>Contact forms,<br>delivered as <span class="accent">email</span></h1>
+    <p class="tagline">Filters bots, validates every field and delivers each message as a formatted email, with no server to maintain.</p>
+    <div class="note"><span class="dot"></span>CORS allow-list · per-site Turnstile</div>
+  </div>
+  <div class="visual">
+    <div class="card node"><b>GW</b><div><strong>API Gateway</strong><small>POST /contact · throttled</small></div></div>
+    <div class="arrow">&darr;</div>
+    <div class="card node"><b>&lambda;</b><div><strong>Lambda</strong><small>Turnstile + validation</small></div></div>
+    <div class="arrow">&darr;</div>
+    <div class="card node"><b>SES</b><div><strong>Amazon SES</strong><small>DKIM · HTML email</small></div></div>
+  </div>
+</div>
+
+</body>
+</html>

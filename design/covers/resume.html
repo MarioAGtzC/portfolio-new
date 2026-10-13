@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Resume · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0e1411; --grid: rgb(228 235 230 / 0.06); --grid-size: 28px; --accent: #5cc27a; --ink: #e4ebe6; --muted: #b4c1b8;
+  --line: #26332b; --surface: #151d18; }
+.glow { background: radial-gradient(circle, rgb(92 194 122 / 0.16), transparent 65%); }
+.brand-name { font-size: 22px; font-weight: 600; }
+.gdot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgb(92 194 122 / 0.18); }
+.api { display: inline-flex; align-items: center; gap: 10px; font: 500 15px 'Geist Mono', monospace; color: #93a399; }
+.verb { padding: 3px 8px; border-radius: 5px; background: var(--accent); color: var(--bg); font: 600 12px 'Geist Mono', monospace; }
+.verb.post { background: #e0a84a; }
+.ok { color: var(--accent); }
+h1 { font-weight: 700; letter-spacing: -0.03em; }
+.chip { padding: 4px 9px; border: 1px solid var(--line); border-radius: 6px; background: #1b2620; font: 12.5px 'Geist Mono', monospace; color: #c9d4cc; }
+
+.glow { right: -240px; top: -320px; width: 700px; height: 700px; }
+.content { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100%; padding: 0 72px; }
+.api { margin-top: 26px; }
+h1 { --h1: 60px; margin: 16px 0 18px; }
+.tagline { font-size: 20px; max-width: 660px; }
+.timeline { width: 100%; margin-top: 34px; }
+.bar { display: flex; height: 40px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; font-weight: 600; }
+.bar div { display: flex; align-items: center; min-width: 0; padding: 0 12px; white-space: nowrap; overflow: hidden; }
+.legend { display: flex; justify-content: space-between; margin-top: 8px; font: 13px 'Geist Mono', monospace; color: #93a399; }
+</style>
+</head>
+<body>
+<div class="canvas dots">
+  <div class="glow"></div>
+  <div class="content">
+    <div class="brand"><span class="gdot"></span><span class="brand-name">Mario Gutiérrez</span></div>
+    <div class="api"><span class="verb">GET</span>/experience <span class="ok" id="roles">200 OK</span></div>
+    <h1>Backend Software<br><span class="accent">Engineer</span></h1>
+    <p class="tagline">Serverless systems on AWS with Node.js, TypeScript and Python. The site and the PDF CV are built from the same data.</p>
+    <div class="timeline">
+      <div class="bar" id="bar"></div>
+      <div class="legend"><span id="since">since 2020</span><span>JSON → LaTeX → PDF</span></div>
+    </div>
+  </div>
+</div>
+<script>
+  // The timeline is built from the resume's own data, so regenerating the cover
+  // after updating resume-new keeps it correct. The inline copy is a fallback
+  // for offline renders; update it if the remote file ever moves.
+  const SOURCE = 'https://raw.githubusercontent.com/MarioAGtzC/resume-new/main/src/data/experience.json';
+  const FALLBACK = [
+    { company: 'TechBridge IT', start: '2022-04', end: null },
+    { company: 'Tata Consultancy Services', start: '2020-11', end: '2022-04' },
+    { company: 'Kioscomático', start: '2020-02', end: '2020-11' },
+  ];
+  const SHADES = ['#2a3a30', '#33543f', '#3f6e4f', '#4b8a5f'];
+
+  const months = (start, end) => {
+    const [sy, sm] = start.split('-').map(Number);
+    const [ey, em] = end ? end.split('-').map(Number) : [new Date().getFullYear(), new Date().getMonth() + 1];
+    return Math.max(1, (ey - sy) * 12 + (em - sm));
+  };
+
+  function draw(roles) {
+    const sorted = [...roles].sort((a, b) => a.start.localeCompare(b.start));
+    const bar = document.getElementById('bar');
+    bar.innerHTML = '';
+    sorted.forEach((role, i) => {
+      const current = role.end === null;
+      const el = document.createElement('div');
+      el.style.flex = `${months(role.start, role.end)} 1 0`;
+      el.style.background = current ? 'var(--accent)' : SHADES[Math.min(i, SHADES.length - 1)];
+      el.style.color = current ? 'var(--bg)' : 'var(--ink)';
+      el.textContent = role.company + (current ? ' · current' : '');
+      bar.appendChild(el);
+    });
+    document.getElementById('since').textContent = `since ${sorted[0].start.slice(0, 4)}`;
+    document.getElementById('roles').textContent = `200 OK · ${sorted.length} roles`;
+  }
+
+  // window.coverNote is printed by the render script.
+  window.coverReady = fetch(SOURCE)
+    .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+    .then((roles) => {
+      draw(roles);
+      window.coverNote = 'timeline from resume-new/experience.json';
+    })
+    .catch(() => {
+      draw(FALLBACK);
+      window.coverNote = 'timeline from the inline fallback (could not fetch experience.json)';
+    });
+</script>
+</body>
+</html>

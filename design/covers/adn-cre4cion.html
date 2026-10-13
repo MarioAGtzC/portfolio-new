@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ADN Cre4ción · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #183045; --grid: rgb(246 245 245 / 0.05); --grid-size: 40px; --accent: #e77b2f; --accent-ink: #e77b2f;
+  --ink: #f6f5f5; --muted: #c3ccd4; --line: rgb(246 245 245 / 0.16); --surface: rgb(246 245 245 / 0.06); }
+.art { right: 70px; top: 50%; translate: 0 -50%; width: 420px; }
+.fade { inset: 0; background: linear-gradient(90deg, var(--bg) 0 50%, rgb(24 48 69 / 0.6) 64%, transparent 80%); }
+.content { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 100%; padding: 0 90px; max-width: 720px; }
+.brand img { width: 38px; }
+.brand-name { font-size: 24px; letter-spacing: 0.08em; }
+.tag { margin-top: 36px; }
+h1 { --h1: 50px; font-weight: 500; letter-spacing: -0.01em; margin: 22px 0 18px; }
+h1 .accent { color: #6bb8c4; }
+.tagline { max-width: 540px; font-size: 21px; font-weight: 300; margin-bottom: 34px; }
+.pill { font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="canvas grid">
+  <img class="layer art" src="assets/adn-logo-white.png" alt="">
+  <div class="layer fade"></div>
+  <div class="content">
+    <div class="brand"><img src="assets/adn-logo-white.png" alt=""><span class="brand-name">ADN CRE4CIÓN</span></div>
+    <span class="tag">BIM consulting</span>
+    <h1>Bringing construction<br>into the <span class="accent">digital age</span></h1>
+    <p class="tagline">Marketing site for a consultancy that helps construction companies adopt BIM and digital workflows.</p>
+    <div class="pill"><span class="dot"></span>Client project · 2020</div>
+  </div>
+</div>
+
+</body>
+</html>

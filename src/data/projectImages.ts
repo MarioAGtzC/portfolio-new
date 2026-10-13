@@ -9,38 +9,48 @@ const imageModules = import.meta.glob(
   },
 ) as Record<string, string>;
 
-const DEFAULT_WIDTH = 1600;
-const DEFAULT_HEIGHT = 900;
+/**
+ * Covers and screenshots share the 1200 × 630 ratio (covers are rendered at 2×
+ * by `npm run covers`). Declaring it lets the browser reserve the right space.
+ */
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 630;
+
+const COVER_FILE = /^cover\.[^.]+$/i;
 
 function getFileName(path: string) {
   return path.split('/').pop() ?? '';
 }
 
+function toImage(src: string, alt: string): ProjectImage {
+  return { src, alt, width: IMAGE_WIDTH, height: IMAGE_HEIGHT };
+}
+
+/**
+ * `coverImage` is used on cards and as the social preview.
+ * `images` is the gallery: the screenshots when there are any, otherwise the cover alone.
+ */
 export function getProjectImages(slug: string, title: string) {
   const folder = `../assets/images/projects/${slug}/`;
-  const paths = Object.keys(imageModules)
-    .filter((path) => path.startsWith(folder))
-    .sort((left, right) => {
-      const leftIsCover = /^cover\.[^.]+$/i.test(getFileName(left));
-      const rightIsCover = /^cover\.[^.]+$/i.test(getFileName(right));
-      return (
-        Number(rightIsCover) - Number(leftIsCover) ||
-        getFileName(left).localeCompare(getFileName(right), undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        })
-      );
-    });
+  const paths = Object.keys(imageModules).filter((path) => path.startsWith(folder));
 
-  const images: ProjectImage[] = paths.map((path, index) => ({
-    src: imageModules[path],
-    alt: `${title}: screenshot ${index + 1}`,
-    width: DEFAULT_WIDTH,
-    height: DEFAULT_HEIGHT,
-  }));
+  const coverPath = paths.find((path) => COVER_FILE.test(getFileName(path)));
+  const screenshotPaths = paths
+    .filter((path) => path !== coverPath)
+    .sort((left, right) =>
+      getFileName(left).localeCompare(getFileName(right), undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      }),
+    );
+
+  const coverImage = coverPath ? toImage(imageModules[coverPath], `${title}: cover`) : null;
+  const screenshots = screenshotPaths.map((path, index) =>
+    toImage(imageModules[path], `${title}: screenshot ${index + 1}`),
+  );
 
   return {
-    coverImage: images[0] ?? null,
-    images,
+    coverImage,
+    images: screenshots.length > 0 ? screenshots : coverImage ? [coverImage] : [],
   };
 }

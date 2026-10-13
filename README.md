@@ -49,7 +49,11 @@ There are no traffic or conversion metrics to report. What the project delivers 
 
 - **Live demo:** https://portfolio.mario-gutierrez.com
 
-No screenshots of the current UI are in the repository yet. They should be added under `docs/screenshots/` (suggested: home, portfolio index, a project detail page with an architecture diagram, and the contact page) and embedded in this section.
+![Home page](src/assets/images/projects/portfolio/1.webp)
+![Project index](src/assets/images/projects/portfolio/2.webp)
+![Architecture diagram on a project page](src/assets/images/projects/portfolio/3.webp)
+
+These are the same images shown in this project's gallery on the site.
 
 ## Links
 
@@ -67,3 +71,8 @@ npm run dev
 ```
 
 Other scripts: `npm run build` (type-check, bundle and prerender), `npm run lint`, `npm run preview`.
+
+## Project covers and images
+
+- **Covers** are HTML files in [`design/covers/`](design/covers/) rendered to images with `npm run covers` (Playwright + sharp). Each one produces `src/assets/images/projects/<slug>/cover.webp` and the social preview `public/og/<slug>.jpg`. See [`design/covers/README.md`](design/covers/README.md) for the rules, live data and how to add a cover.
+- **Screenshots** for a project's gallery go in `src/assets/images/projects/<slug>/` as `1.webp`, `2.webp`, … at 1200 × 630 (or 2× that). When a project has screenshots, the gallery shows only them; otherwise it shows the cover.

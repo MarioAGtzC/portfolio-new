@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DevTree Frontend · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0f172a; --accent: #a8d92a; --accent-gradient: linear-gradient(90deg, #a8d92a, #00bef5); --line: rgb(255 255 255 / 0.14); }
+.blob { right: -230px; top: -150px; width: 720px; height: 720px; border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
+  background: linear-gradient(135deg, #e4e61d, #5fbd3f 45%, #00bef5 75%, #007dc6); opacity: 0.92; }
+.blob2 { right: -140px; top: 140px; width: 420px; height: 420px; border-radius: 55% 45% 40% 60% / 50% 55% 45% 50%;
+  background: radial-gradient(circle at 35% 35%, #67e8f9, #007dc6 70%); opacity: 0.45; filter: blur(18px); }
+.fade { inset: 0; background: linear-gradient(100deg, var(--bg) 0 52%, rgb(15 23 42 / 0.85) 60%, rgb(15 23 42 / 0.2) 74%, transparent 86%); }
+.content { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100%; padding: 0 90px; max-width: 760px; }
+.logo { height: 40px; margin-bottom: 40px; }
+h1 { --h1: 58px; margin-bottom: 24px; }
+.tagline { max-width: 590px; font-size: 23px; margin-bottom: 38px; }
+.pill .dot { background: #a8d92a; }
+.pill { font-size: 20px; color: #e2e8f0; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="layer blob"></div>
+  <div class="layer blob2"></div>
+  <div class="layer fade"></div>
+  <div class="content">
+    <img class="logo" src="assets/devtree-logo.svg" alt="DevTree">
+    <h1>All your<br><span class="gradient-text">social media</span><br>in one link</h1>
+    <p class="tagline">A single shareable page with your profile, bio and every social link, reordered with drag-and-drop.</p>
+    <div class="pill"><span class="dot"></span>devtree.greenie.dev</div>
+  </div>
+</div>
+
+</body>
+</html>

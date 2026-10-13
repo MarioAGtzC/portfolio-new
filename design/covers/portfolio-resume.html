@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Portfolio & Resume Sites · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0e1411; --grid: rgb(228 235 230 / 0.06); --grid-size: 28px; --accent: #5cc27a; --ink: #e4ebe6; --muted: #b4c1b8;
+  --line: #26332b; --surface: #151d18; }
+.glow { background: radial-gradient(circle, rgb(92 194 122 / 0.16), transparent 65%); }
+.brand-name { font-size: 22px; font-weight: 600; }
+.gdot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgb(92 194 122 / 0.18); }
+.api { display: inline-flex; align-items: center; gap: 10px; font: 500 15px 'Geist Mono', monospace; color: #93a399; }
+.verb { padding: 3px 8px; border-radius: 5px; background: var(--accent); color: var(--bg); font: 600 12px 'Geist Mono', monospace; }
+.verb.post { background: #e0a84a; }
+.ok { color: var(--accent); }
+h1 { font-weight: 700; letter-spacing: -0.03em; }
+.chip { padding: 4px 9px; border: 1px solid var(--line); border-radius: 6px; background: #1b2620; font: 12.5px 'Geist Mono', monospace; color: #c9d4cc; }
+
+.glow { left: -200px; top: -300px; width: 700px; height: 700px; }
+.split { --pad-x: 72px; --text-width: 560px; --split-gap: 56px; }
+.api { margin-top: 26px; }
+h1 { --h1: 58px; margin: 16px 0 18px; }
+.tagline { font-size: 20px; max-width: 520px; }
+.visual { display: flex; flex-direction: column; gap: 14px; }
+.sites { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.site { padding: 16px; }
+.site strong { display: block; font-size: 17px; font-weight: 600; }
+.site small { font: 12.5px 'Geist Mono', monospace; color: #93a399; }
+.arrows { text-align: center; font: 22px/1 'Geist Mono', monospace; color: #3a4a40; word-spacing: 1.2em; }
+.api-box { padding: 16px; border-color: #33543f; }
+.api-box .row { display: flex; justify-content: space-between; align-items: center; }
+.api-box .api { margin: 0; color: var(--ink); }
+.chips { display: flex; gap: 8px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="canvas dots split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <div class="brand"><span class="gdot"></span><span class="brand-name">Mario Gutiérrez</span></div>
+    <div class="api"><span class="verb">GET</span>/projects/portfolio-resume <span class="ok">200 OK</span></div>
+    <h1>Two sites,<br><span class="accent">one contact pipeline</span></h1>
+    <p class="tagline">My resume and this portfolio, plus the serverless API behind both contact forms.</p>
+  </div>
+  <div class="visual">
+    <div class="sites">
+      <div class="card site"><strong>Resume</strong><small>mario-gutierrez.com</small></div>
+      <div class="card site"><strong>Portfolio</strong><small>portfolio.mario-…</small></div>
+    </div>
+    <div class="arrows">↓ ↓</div>
+    <div class="card api-box">
+      <div class="row"><span class="api"><span class="verb post">POST</span>/contact</span><span class="ok mono" style="font-size:12.5px">Turnstile</span></div>
+      <div class="chips"><span class="chip">API Gateway</span><span class="chip">Lambda</span><span class="chip">SES</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

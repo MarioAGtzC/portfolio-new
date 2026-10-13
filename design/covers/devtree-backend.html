@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DevTree Backend · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0f172a; --grid: rgb(148 163 184 / 0.06); --accent: #5ebd3f; --accent-ink: #7ed957;
+  --accent-gradient: linear-gradient(90deg, #7ed957, #00bef5); --line: rgb(148 163 184 / 0.16); --panel-bg: #0b1220; }
+.glow { right: -120px; top: -160px; width: 520px; height: 520px; background: radial-gradient(circle, rgb(0 190 245 / 0.22), rgb(94 189 63 / 0.10) 55%, transparent 75%); }
+.text { --text-width: 440px; }
+.logo { height: 40px; }
+.tag { margin-top: 30px; }
+h1 { --h1: 50px; margin: 22px 0 18px; }
+.tagline { font-size: 20px; }
+.code { font-size: 17px; row-gap: 2px; }
+.get { color: #00bef5; } .post { color: #7ed957; } .patch { color: #f59e0b; }
+</style>
+</head>
+<body>
+<div class="canvas grid split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <img class="logo" src="assets/devtree-logo.svg" alt="DevTree">
+    <span class="tag">REST API</span>
+    <h1>The engine<br>behind every<br><span class="gradient-text">profile</span></h1>
+    <p class="tagline">Auth, profiles, image uploads and public username lookups, with interactive Swagger docs.</p>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#22c55e"></i><span>router.ts</span></div>
+    <div class="code">
+      <span class="verb post">POST</span><span class="path">/auth/register</span>
+      <span class="verb post">POST</span><span class="path">/auth/login</span>
+      <span class="verb get">GET</span><span class="path">/user</span>
+      <span class="verb patch">PATCH</span><span class="path">/user</span>
+      <span class="verb post">POST</span><span class="path">/user/image</span>
+      <span class="verb get">GET</span><span class="path">/:username</span>
+      <span class="verb post">POST</span><span class="path">/search</span>
+      <span class="comment">// docs at /docs (Swagger UI)</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

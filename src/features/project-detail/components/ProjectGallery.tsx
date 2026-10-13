@@ -24,7 +24,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
           height={image.height}
           loading='eager'
           decoding='async'
-          className='aspect-video w-full object-cover'
+          className='aspect-1200/630 w-full object-cover'
         />
       </div>
     );
@@ -49,7 +49,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
               height={image.height}
               loading='lazy'
               decoding='async'
-              className='aspect-video w-full rounded-[10px] border border-line bg-surface-2 object-cover'
+              className='aspect-1200/630 w-full rounded-[10px] border border-line bg-surface-2 object-cover'
             />
           </div>
         ))}

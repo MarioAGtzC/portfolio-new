@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reservadito Backend · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #16213e; --grid: rgb(255 255 255 / 0.03); --grid-size: 34px; --accent: #00afb5; --accent-ink: #2dd4bf;
+  --muted: #c8c8d0; --line: rgb(255 255 255 / 0.08); --panel-bg: #1a1a2e; --comment: #4a4f68; }
+.chip { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 9px; background: #fff; }
+.chip img { width: 27px; }
+.text { --text-width: 450px; }
+.tag { margin-top: 28px; }
+h1 { --h1: 44px; margin: 22px 0 18px; }
+.get { color: #00afb5; } .post { color: #f7931e; }
+</style>
+</head>
+<body>
+<div class="canvas grid split">
+  <div class="text stack">
+    <div class="brand"><span class="chip"><img src="assets/reservadito-logo-blue.png" alt=""></span><span class="brand-name">Reservadito</span></div>
+    <span class="tag">Core API</span>
+    <h1>Bookings, payments<br>and <span class="accent">multi-tenant</span> logic</h1>
+    <p class="tagline">Auth, availability, bookings, Stripe Connect payments and organization and branch management for the whole platform.</p>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#f87171"></i><i style="background:#fcd34d"></i><i style="background:#2dd4bf"></i><span>bookings.controller.ts</span></div>
+    <div class="code">
+      <span class="verb post">POST</span><span class="path">/bookings</span>
+      <span class="verb get">GET</span><span class="path">/availability</span>
+      <span class="verb post">POST</span><span class="path">/stripe/webhook</span>
+      <span class="verb get">GET</span><span class="path">/organizations/:id</span>
+      <span class="verb post">POST</span><span class="path">/checkin/:code</span>
+      <span class="comment">// + scheduled jobs: reminders, no-shows</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

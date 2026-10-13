@@ -1,0 +1,267 @@
+/*
+  Shared styles for project covers (1200 × 630).
+  Each cover sets its palette with CSS variables on .canvas:
+    --bg, --ink, --muted, --accent, --accent-ink, --grid, --surface, --line
+*/
+
+@font-face {
+  font-family: 'Geist';
+  src: url('fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Geist', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+}
+
+/* ── Canvas ─────────────────────────────────────────────── */
+
+.canvas {
+  --ink: #ffffff;
+  --muted: #94a3b8;
+  --surface: rgb(255 255 255 / 0.05);
+  --line: rgb(255 255 255 / 0.12);
+  --accent-ink: var(--accent);
+
+  position: relative;
+  isolation: isolate;
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+  background-color: var(--bg);
+  color: var(--ink);
+}
+
+/* Square grid */
+.canvas.grid {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--grid-size, 36px) var(--grid-size, 36px);
+}
+
+/* Dot grid */
+.canvas.dots {
+  background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+  background-size: var(--grid-size, 28px) var(--grid-size, 28px);
+}
+
+/* Decorative layers sit behind the content */
+.layer {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* ── Layouts ────────────────────────────────────────────── */
+
+/* Text on the left, visual on the right */
+.split {
+  display: flex;
+  align-items: center;
+  gap: var(--split-gap, 48px);
+  height: 100%;
+  padding: 0 var(--pad-x, 80px);
+}
+
+.split > .text {
+  flex: 0 0 var(--text-width, 460px);
+}
+
+.split > .visual {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Everything centered */
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+/* Vertical rhythm inside a text block */
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.center .stack,
+.stack.centered {
+  align-items: center;
+}
+
+/* ── Text ───────────────────────────────────────────────── */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-ink);
+  font: 600 14px/1.2 'Geist Mono', ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: var(--h1, 46px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+h1 .accent {
+  color: var(--accent-ink);
+}
+
+/* Gradient accent text */
+.gradient-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  font-size: var(--tagline, 19px);
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* Small rounded label, e.g. a URL or a credit */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font: 500 18px 'Geist Mono', ui-monospace, monospace;
+}
+
+.pill .dot,
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ── Panels ─────────────────────────────────────────────── */
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-bg, #1e293b);
+  box-shadow: 0 30px 60px rgb(0 0 0 / 0.35);
+  overflow: hidden;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* Code window with traffic-light dots */
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgb(255 255 255 / 0.03);
+}
+
+.window-bar i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.window-bar span {
+  margin-left: 6px;
+  font: 14px 'Geist Mono', ui-monospace, monospace;
+  color: var(--muted);
+}
+
+.code {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 14px;
+  row-gap: 6px;
+  padding: 26px 30px;
+  font: 17px/1.9 'Geist Mono', ui-monospace, monospace;
+}
+
+.code .verb {
+  font-weight: 700;
+}
+
+.code .path {
+  color: #e2e8f0;
+}
+
+.code .comment {
+  grid-column: 1 / -1;
+  color: var(--comment, #475569);
+}

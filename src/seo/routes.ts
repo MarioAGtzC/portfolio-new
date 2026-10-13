@@ -92,7 +92,7 @@ export const NOT_FOUND_SEO: SeoMeta = {
 };
 
 export function getProjectOgImage(project: Project): string | undefined {
-  return project.coverImage ? `/og/${project.slug}.png` : undefined;
+  return project.coverImage ? `/og/${project.slug}.jpg` : undefined;
 }
 
 export function getProjectSeo(project: Project): SeoMeta {

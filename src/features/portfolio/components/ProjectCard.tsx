@@ -36,7 +36,7 @@ function ProjectCard({ project, wide = false, showOrigin = true, className }: Pr
       <div
         className={[
           'overflow-hidden border-line bg-surface-2',
-          wide ? 'aspect-video border-b md:aspect-auto md:w-1/2 md:border-r md:border-b-0' : 'aspect-video border-b',
+          wide ? 'aspect-1200/630 border-b md:aspect-auto md:w-1/2 md:border-r md:border-b-0' : 'aspect-1200/630 border-b',
         ].join(' ')}
       >
         {project.coverImage ? (
@@ -49,7 +49,7 @@ function ProjectCard({ project, wide = false, showOrigin = true, className }: Pr
             decoding='async'
             className={[
               'h-full w-full transition-transform duration-300 ease-in-out group-hover:scale-[1.03]',
-              // Covers are 16:9 graphics with text: never crop them in the wide layout.
+              // Covers are 1200 × 630 graphics with text: never crop them in the wide layout.
               wide ? 'object-contain' : 'object-cover',
             ].join(' ')}
           />
