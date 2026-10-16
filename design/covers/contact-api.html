@@ -26,14 +26,14 @@ h1 { --h1: 50px; margin-bottom: 20px; }
     <span class="tag">AWS serverless</span>
     <h1>Contact forms,<br>delivered as <span class="accent">email</span></h1>
     <p class="tagline">Filters bots, validates every field and delivers each message as a formatted email, with no server to maintain.</p>
-    <div class="note"><span class="dot"></span>CORS allow-list · per-site Turnstile</div>
+    <div class="note"><span class="dot"></span>CORS allow-list · per-site Turnstile · tested in CI</div>
   </div>
   <div class="visual">
     <div class="card node"><b>GW</b><div><strong>API Gateway</strong><small>POST /contact · throttled</small></div></div>
     <div class="arrow">&darr;</div>
-    <div class="card node"><b>&lambda;</b><div><strong>Lambda</strong><small>Turnstile + validation</small></div></div>
+    <div class="card node"><b>&lambda;</b><div><strong>Lambda</strong><small>Turnstile · validation · SSM</small></div></div>
     <div class="arrow">&darr;</div>
-    <div class="card node"><b>SES</b><div><strong>Amazon SES</strong><small>DKIM · HTML email</small></div></div>
+    <div class="card node"><b>SES</b><div><strong>Amazon SES</strong><small>DKIM · DMARC · delivery events</small></div></div>
   </div>
 </div>
 

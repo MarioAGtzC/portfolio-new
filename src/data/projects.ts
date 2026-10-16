@@ -308,16 +308,23 @@ export const projects: Project[] = [
       'AWS CDK',
       'TypeScript',
       'Cloudflare Turnstile',
+      'AWS Systems Manager',
       'AWS IAM',
+      'Vitest',
+      'GitHub Actions',
+      'Amazon EventBridge',
+      'Amazon CloudWatch',
     ],
     role: 'Solo project: I designed, built and deployed it end to end.',
     problem: 'A personal website needs a reliable way for visitors to get in touch without exposing a personal email address or letting bots flood the inbox. Running a traditional server just to relay a handful of messages is more to run, secure and maintain than the feature is worth.',
-    process: 'One POST /contact endpoint on an API Gateway HTTP API, handled by a TypeScript Lambda and delivered through Amazon SES, with no database or always-on compute. The handler validates every field with length caps, verifies the Turnstile token server-side with a separate secret per site, checks that the token was solved on the same site making the request, and rejects origins with no secret configured. User input is HTML-escaped before it goes into the email, and IP, user agent and time come from the request itself. Everything is defined with the AWS CDK: secrets and the destination address are passed at deploy time, and the deploy stops if any of them is missing.',
+    process: 'One POST /contact endpoint on an API Gateway HTTP API, handled by a TypeScript Lambda and delivered through Amazon SES, with no database or always-on compute. The handler validates every field with length caps, verifies the Turnstile token server-side with a separate secret per site, checks that the token was solved on the same site making the request, and rejects origins with no secret configured. User input is HTML-escaped before it goes into the email, and IP, user agent and time come from the request itself. Everything is defined with the AWS CDK. The CAPTCHA secrets are encrypted parameters in AWS Systems Manager Parameter Store, read at runtime and cached for five minutes, and the destination address is resolved at deploy time, so neither lives in the repo or the deploy command. Each request writes one structured log line with the site, the outcome, the rejection reason and the SES message ID, and no personal data. An SES configuration set publishes the delivery events of every email (delivered, delayed by the receiving server, bounced, complained, rejected) through Amazon EventBridge to CloudWatch Logs, so each message can be followed after it leaves AWS. A Vitest suite covers the validation, CAPTCHA, secret loading, email template and CORS logic, the full handler with AWS and Cloudflare mocked, and the synthesized CDK template; GitHub Actions runs it with a type check and cdk synth on every push and pull request.',
     results: [
       'One deployment handles the contact forms of two sites, each with its own CAPTCHA configuration and a label in the email showing where the message came from.',
       'A message is sent only after it passes field validation and the CAPTCHA check, including the site match.',
       'API-wide throttling (5 requests per second, burst of 10) bounds abuse without paying for AWS WAF.',
       'No servers or database to maintain, and replying to a message is one click.',
+      '54 automated tests run in CI on every push, including checks that the deployed template keeps IAM scoped and contains no secrets.',
+      'Every email is traceable end to end, from the request log to the receiving server\'s response, which turned a multi-hour Outlook delay from guesswork into a diagnosis.',
     ],
     architecture: [
       {
@@ -335,7 +342,15 @@ export const projects: Project[] = [
         label: 'Services',
         nodes: [
           { label: 'Cloudflare Turnstile', detail: 'per-site secret · hostname check' },
-          { label: 'Amazon SES', detail: 'DKIM · HTML email' },
+          { label: 'SSM Parameter Store', detail: 'encrypted secrets · 5 min cache' },
+          { label: 'Amazon SES', detail: 'DKIM · DMARC · HTML email' },
+        ],
+      },
+      {
+        label: 'Observability',
+        nodes: [
+          { label: 'EventBridge', detail: 'SES delivery events' },
+          { label: 'CloudWatch Logs', detail: 'request log · delivery log' },
         ],
       },
     ],
