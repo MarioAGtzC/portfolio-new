@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CashTrackr Frontend · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #1c0631; --grid: rgb(255 255 255 / 0.035); --accent: #f59e0b; --accent-ink: #fbbf24;
+  --muted: #cbb9e0; --line: rgb(255 255 255 / 0.13); --surface: rgb(255 255 255 / 0.06); }
+.glow { right: -100px; top: -120px; width: 600px; height: 600px; background: radial-gradient(circle, rgb(124 58 237 / 0.34), transparent 68%); }
+.text { --text-width: 470px; }
+.logo { height: 56px; margin-left: -10px; }
+h1 { --h1: 52px; margin: 30px 0 18px; }
+.tagline { font-size: 19px; margin-bottom: 30px; }
+.pill { font-size: 17px; color: #e9e2f3; }
+.pill .dot { background: #f59e0b; }
+.app { background: #fff; color: #1f1030; border-radius: 16px; box-shadow: 0 30px 60px rgb(0 0 0 / 0.4); overflow: hidden; }
+.app-bar { background: #3b0764; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; }
+.app-bar img { height: 26px; }
+.app-bar span { font: 600 12px 'Geist', sans-serif; color: #fff; letter-spacing: 0.04em; }
+.app-body { padding: 22px 24px 20px; }
+.budget-title { font-size: 24px; font-weight: 800; color: #3b0764; }
+.budget-sub { font-size: 13px; color: #6b5b80; margin-top: 2px; }
+.amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 14px; }
+.amounts div { background: #f6f2fb; border-radius: 10px; padding: 10px 12px; }
+.amounts small { display: block; font-size: 11px; color: #6b5b80; text-transform: uppercase; letter-spacing: 0.06em; }
+.amounts strong { font: 700 18px 'Geist Mono', monospace; color: #1f1030; }
+.amounts .left strong { color: #b45309; }
+.bar { height: 10px; border-radius: 999px; background: #ede7f5; overflow: hidden; }
+.bar i { display: block; width: 65%; height: 100%; background: #f59e0b; border-radius: 999px; }
+.expenses { margin-top: 16px; display: grid; gap: 8px; }
+.expense { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border: 1px solid #ece6f3; border-radius: 10px; font-size: 14px; }
+.expense span { font: 600 14px 'Geist Mono', monospace; color: #3b0764; }
+</style>
+</head>
+<body>
+<div class="canvas grid split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <img class="logo" src="assets/cashtrackr-logo.svg" alt="CashTrackr">
+    <h1>See what's left<br>in every <span class="accent">budget</span></h1>
+    <p class="tagline">Budgets and expenses through Next.js server actions, so the API never reaches the browser.</p>
+    <div class="pill"><span class="dot"></span>cashtrackr.greenie.dev</div>
+  </div>
+  <div class="visual">
+    <div class="app">
+      <div class="app-bar"><img src="assets/cashtrackr-logo.svg" alt=""><span>MY BUDGETS</span></div>
+      <div class="app-body">
+        <div class="budget-title">Groceries</div>
+        <div class="budget-sub">3 expenses</div>
+        <div class="amounts">
+          <div><small>Budget</small><strong>$5,000</strong></div>
+          <div><small>Spent</small><strong>$3,250</strong></div>
+          <div class="left"><small>Left</small><strong>$1,750</strong></div>
+        </div>
+        <div class="bar"><i></i></div>
+        <div class="expenses">
+          <div class="expense">Supermarket<span>$1,800</span></div>
+          <div class="expense">Farmers market<span>$950</span></div>
+          <div class="expense">Bakery<span>$500</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CashTrackr · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #1c0631; --grid: rgb(255 255 255 / 0.035); --grid-size: 40px; --accent: #f59e0b; --accent-ink: #fbbf24;
+  --muted: #cbb9e0; --line: rgb(255 255 255 / 0.12); --surface: rgb(255 255 255 / 0.05); }
+.glow { left: 290px; top: -280px; width: 620px; height: 620px; background: radial-gradient(circle, rgb(124 58 237 / 0.32), transparent 65%); }
+.logo { height: 72px; }
+.tag { margin-top: 18px; }
+h1 { --h1: 56px; margin: 20px 0 16px; }
+.tagline { max-width: 780px; font-size: 20px; }
+.pieces { display: grid; grid-template-columns: repeat(2, 310px); gap: 18px; margin-top: 30px; }
+.piece { display: flex; align-items: center; gap: 12px; padding: 14px 18px; text-align: left; }
+.piece strong { display: block; font-size: 17px; }
+.piece small { font: 13px 'Geist Mono', monospace; color: #a996c2; }
+</style>
+</head>
+<body>
+<div class="canvas grid center">
+  <div class="glow"></div>
+  <img class="logo" src="assets/cashtrackr-logo.svg" alt="CashTrackr">
+  <span class="tag">Budgeting app</span>
+  <h1>Every budget, every expense,<br><span class="accent">always know what's left</span></h1>
+  <p class="tagline">A Next.js app and a private Express API: email-verified accounts, budgets and expenses that only their owner can see.</p>
+  <div class="pieces">
+    <div class="card piece"><span class="dot" style="background:#f59e0b"></span><div><strong>Backend API</strong><small>Express · PostgreSQL · JWT</small></div></div>
+    <div class="card piece"><span class="dot" style="background:#a78bfa"></span><div><strong>Frontend</strong><small>Next.js · server actions</small></div></div>
+  </div>
+</div>
+
+</body>
+</html>

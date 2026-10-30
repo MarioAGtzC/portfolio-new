@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CashTrackr Backend · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #1c0631; --grid: rgb(255 255 255 / 0.035); --accent: #f59e0b; --accent-ink: #fbbf24;
+  --muted: #cbb9e0; --line: rgb(255 255 255 / 0.13); --panel-bg: #12031f; --comment: #7c6a96; }
+.glow { right: -140px; top: -180px; width: 540px; height: 540px; background: radial-gradient(circle, rgb(124 58 237 / 0.30), rgb(245 158 11 / 0.08) 55%, transparent 75%); }
+.text { --text-width: 450px; }
+.logo { height: 56px; margin-left: -10px; }
+.tag { margin-top: 26px; }
+h1 { --h1: 48px; margin: 22px 0 18px; }
+.tagline { font-size: 19px; }
+.req { padding: 22px 26px; font: 16px/1.75 'Geist Mono', monospace; }
+.req + .req { border-top: 1px solid var(--line); }
+.req .line { color: #e9e2f3; }
+.req .h { color: #a996c2; }
+.req .h b { color: #e9e2f3; font-weight: 500; }
+.req .res { margin-top: 6px; font-weight: 700; }
+.post { color: #fbbf24; font-weight: 700; } .get { color: #a78bfa; font-weight: 700; }
+.ok { color: #4ade80; } .no { color: #f87171; }
+</style>
+</head>
+<body>
+<div class="canvas grid split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <img class="logo" src="assets/cashtrackr-logo.svg" alt="CashTrackr">
+    <span class="tag">Private REST API</span>
+    <h1>An API only its<br><span class="accent">frontend</span> can call</h1>
+    <p class="tagline">Email-verified accounts, budgets and expenses scoped to their owner, rate limits and an internal key on every request.</p>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#22c55e"></i><span>requests</span></div>
+    <div class="req">
+      <div class="line"><span class="post">POST</span> /api/budgets</div>
+      <div class="h">X-Internal-Key: <b>••••••••</b></div>
+      <div class="h">Authorization: <b>Bearer eyJhbGci…</b></div>
+      <div class="res ok">→ 201 Created</div>
+    </div>
+    <div class="req">
+      <div class="line"><span class="get">GET</span> /api/budgets</div>
+      <div class="h">// no internal key</div>
+      <div class="res no">→ 401 Unauthorized</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
