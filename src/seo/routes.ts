@@ -1,4 +1,6 @@
 import { getParentProject, getTopLevelProjects, projects } from '../data/projects';
+import type { Seo } from '../data/schemas';
+import seoJson from '../data/seo.json';
 import type { Project } from '../types/project';
 import {
   absoluteUrl,
@@ -15,6 +17,9 @@ import {
 } from './meta';
 import { SITE } from '../constants/site';
 
+// seo.json is published by the Site Content Manager and checked against its schema at build time.
+const SEO: Seo = seoJson;
+
 const personRef = () => ({
   '@type': 'Person',
   '@id': personId(),
@@ -29,22 +34,22 @@ const websiteRef = () => ({
 });
 
 export const HOME_SEO: SeoMeta = {
-  title: `${SITE.name} | Backend Software Engineer (Node.js & AWS)`,
-  description: 'Backend software engineer building APIs, serverless AWS architectures and web products with TypeScript, Node.js, NestJS and React. Based in Mexico.',
+  title: withSiteName(SEO.home.title),
+  description: SEO.home.description,
   path: '/',
   jsonLd: graph(webSiteNode(), personNode()),
 };
 
 export const PORTFOLIO_SEO: SeoMeta = {
-  title: withSiteName('Portfolio: Backend & Cloud Projects'),
-  description: 'Case studies of the platforms, APIs and web apps I\'ve built end to end, each with the problem it solves, the process behind it and the results.',
+  title: withSiteName(SEO.portfolio.title),
+  description: SEO.portfolio.description,
   path: '/portfolio',
   jsonLd: graph(
     {
       '@type': 'CollectionPage',
       '@id': `${pageUrl('/portfolio')}#page`,
       url: pageUrl('/portfolio'),
-      name: 'Portfolio: Backend & Cloud Projects',
+      name: SEO.portfolio.title,
       isPartOf: websiteRef(),
       about: personRef(),
       mainEntity: {
@@ -65,8 +70,8 @@ export const PORTFOLIO_SEO: SeoMeta = {
 };
 
 export const CONTACT_SEO: SeoMeta = {
-  title: withSiteName('Contact & Hire Me'),
-  description: 'Need a backend engineer for your API, cloud infrastructure or web product? Send me a message and let\'s talk about your project. Open to remote work worldwide.',
+  title: withSiteName(SEO.contact.title),
+  description: SEO.contact.description,
   path: '/contact',
   jsonLd: graph(
     {

@@ -98,13 +98,20 @@ export const careerSchema = z.strictObject({
   start: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected YYYY-MM'),
 });
 
+const seoPage = z.strictObject({ title: text, description: text });
+
+/** Texts of the fixed pages; project pages use their own title and summary. */
+export const seoSchema = z.strictObject({ home: seoPage, portfolio: seoPage, contact: seoPage });
+
 export type ProjectData = z.infer<typeof projectSchema>;
 export type About = z.infer<typeof aboutSchema>;
 export type Career = z.infer<typeof careerSchema>;
+export type Seo = z.infer<typeof seoSchema>;
 
 /** Every published JSON file and its schema, by path from the project root. */
 export const DATA_FILES = {
   'src/data/projects.json': projectsSchema,
   'src/data/about.json': aboutSchema,
   'src/data/career.json': careerSchema,
+  'src/data/seo.json': seoSchema,
 };

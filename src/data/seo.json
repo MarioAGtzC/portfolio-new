@@ -1,0 +1,14 @@
+{
+  "home": {
+    "title": "Mario Gutiérrez | Backend Software Engineer (Node.js & AWS)",
+    "description": "Backend software engineer building APIs, serverless AWS architectures and web products with TypeScript, Node.js, NestJS and React. Based in Mexico."
+  },
+  "portfolio": {
+    "title": "Portfolio: Backend & Cloud Projects",
+    "description": "Case studies of the platforms, APIs and web apps I've built end to end, each with the problem it solves, the process behind it and the results."
+  },
+  "contact": {
+    "title": "Contact & Hire Me",
+    "description": "Need a backend engineer for your API, cloud infrastructure or web product? Send me a message and let's talk about your project. Open to remote work worldwide."
+  }
+}
