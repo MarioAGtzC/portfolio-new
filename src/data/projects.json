@@ -431,121 +431,6 @@
     "parentSlug": "portfolio-resume"
   },
   {
-    "slug": "devtree",
-    "title": "DevTree: Link-in-bio Platform",
-    "summary": "A link-in-bio platform for developers: a REST API for accounts, usernames and public profiles, and the React app that consumes it.",
-    "stack": [
-      "Express",
-      "MongoDB",
-      "React 19",
-      "TypeScript",
-      "JWT",
-      "TanStack React Query",
-      "Swagger (OpenAPI)",
-      "Tailwind CSS",
-      "Vitest",
-      "Node.js test runner"
-    ],
-    "role": "Course project (2025), built solo: I followed the course material and extended it, writing both the API and the frontend.",
-    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
-    "process": "Two pieces built against one REST contract: an Express and MongoDB API that handles authentication, username claiming, profile management, image uploads and public lookups, documented with Swagger, and a React SPA that covers the full user journey, from username search and registration to a drag-and-drop link editor with a live preview and a public profile page.",
-    "results": [
-      "Both pieces are deployed: the API on Render with interactive Swagger docs, and the frontend on Netlify.",
-      "Covers the full user journey: claim a username, sign up, edit the profile and links, and share a public page.",
-      "Both pieces have automated tests: 57 in the frontend, and unit tests for the API's validators, error handling and image uploads."
-    ],
-    "liveUrl": "https://devtree.greenie.dev/",
-    "year": 2025,
-    "featured": false,
-    "order": 4,
-    "origin": "course",
-    "category": [
-      "web app",
-      "backend"
-    ],
-    "status": "live"
-  },
-  {
-    "slug": "devtree-backend",
-    "title": "DevTree: Backend",
-    "summary": "A REST API providing authentication, profile management, username availability lookup, and public profile lookup for the DevTree platform.",
-    "stack": [
-      "Express",
-      "TypeScript",
-      "MongoDB",
-      "Mongoose",
-      "JWT",
-      "bcryptjs",
-      "express-validator",
-      "Cloudinary",
-      "formidable",
-      "Swagger (OpenAPI)",
-      "Node.js",
-      "Node.js test runner",
-      "Render"
-    ],
-    "role": "Course project (2025), built solo following the course and extending it: API design, data model, authentication, validation, image uploads and API docs.",
-    "problem": "The platform needed an API to register accounts, claim a unique username, personalize a public page, check whether a desired username is still available, and expose a fast public lookup by username without leaking sensitive data.",
-    "process": "A single User document holds both the credentials and the public profile. Each request goes through routes, validators, a body whitelist, optional JWT authentication and then a controller. Usernames become unique, lowercase, URL-safe slugs, and names that would collide with app routes or static files, such as admin or docs, are reserved. Profile links must be http(s) URLs, so no javascript: link can reach a public page. Passwords need 8+ characters with upper and lower case, a number and a symbol before they are hashed with bcrypt. Public lookups return the profile without password, email or internal fields, and a search endpoint powers the frontend's live username picker. Uploading a new profile image deletes the previous one from Cloudinary. CORS allows only the configured frontend origin, and the OpenAPI spec is generated from JSDoc annotations and served at /docs.",
-    "results": [
-      "Deployed API covering the full profile lifecycle: sign-up, login, profile editing, image upload, username checks and public lookup.",
-      "Field whitelisting, slugged usernames and uniqueness checks keep unexpected or duplicate data out of the database.",
-      "Public responses never include passwords, emails or internal fields, and replaced images don't pile up in storage.",
-      "Every endpoint can be explored and tried from the browser in Swagger UI.",
-      "Automated tests with Node.js's built-in test runner cover the username and link validators, the error handler and the image upload flow, with Cloudinary mocked."
-    ],
-    "liveUrl": "https://apidevtree.greenie.dev/docs",
-    "repoUrl": "https://github.com/MarioAGtzC/devtree-backend",
-    "year": 2025,
-    "featured": false,
-    "order": 1,
-    "origin": "course",
-    "category": [
-      "backend"
-    ],
-    "status": "live",
-    "parentSlug": "devtree"
-  },
-  {
-    "slug": "devtree-frontend",
-    "title": "DevTree: Frontend",
-    "summary": "A React SPA consuming the DevTree API to manage a developer's profile, links, and public \"link-in-bio\" page.",
-    "stack": [
-      "React 19",
-      "TypeScript",
-      "TanStack Query",
-      "React Router",
-      "React Hook Form",
-      "dnd-kit",
-      "Tailwind CSS",
-      "Axios",
-      "Vite (SWC)",
-      "Vitest",
-      "React Testing Library",
-      "Netlify"
-    ],
-    "role": "Course project (2025), built solo following the course and extending it: the whole frontend, connected to my own API.",
-    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
-    "process": "Route-level layouts separate the public and auth pages from the /admin dashboard, which redirects to login when the user can't be loaded. The logged-in user lives in one TanStack Query cache: toggling or reordering links updates it immediately so the live preview reacts at once, and Save changes sends it to the API. All requests go through one Axios client that attaches the auth token. Forms use React Hook Form with validation for email format, password strength and confirmation, and URLs are validated before a link can be enabled. Netlify serves an SPA fallback so public /<username> links work on direct visits. Every bug I fixed got a regression test, such as lost URLs and duplicate link IDs in the links editor, and a login that bounced back to the login page after logging out.",
-    "results": [
-      "Live in production and connected to my own backend, covering the full flow: claim a handle, sign up, edit the profile and links, and share a public page.",
-      "Client-side validation catches common input errors before a request is sent.",
-      "Link changes and reordering show in the preview right away, before they are saved.",
-      "57 automated tests across 7 files cover routing, the API module, the auth and search forms, and both editors."
-    ],
-    "liveUrl": "https://devtree.greenie.dev/",
-    "repoUrl": "https://github.com/MarioAGtzC/devtree-frontend",
-    "year": 2025,
-    "featured": false,
-    "order": 2,
-    "origin": "course",
-    "category": [
-      "web app"
-    ],
-    "status": "live",
-    "parentSlug": "devtree"
-  },
-  {
     "slug": "cashtrackr",
     "title": "CashTrackr: Budgeting App",
     "summary": "A personal budgeting app: users create budgets, log expenses against them and see what is left, with a Next.js frontend and a private Express API.",
@@ -697,6 +582,121 @@
     ],
     "status": "live",
     "parentSlug": "cashtrackr"
+  },
+  {
+    "slug": "devtree",
+    "title": "DevTree: Link-in-bio Platform",
+    "summary": "A link-in-bio platform for developers: a REST API for accounts, usernames and public profiles, and the React app that consumes it.",
+    "stack": [
+      "Express",
+      "MongoDB",
+      "React 19",
+      "TypeScript",
+      "JWT",
+      "TanStack React Query",
+      "Swagger (OpenAPI)",
+      "Tailwind CSS",
+      "Vitest",
+      "Node.js test runner"
+    ],
+    "role": "Course project (2025), built solo: I followed the course material and extended it, writing both the API and the frontend.",
+    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
+    "process": "Two pieces built against one REST contract: an Express and MongoDB API that handles authentication, username claiming, profile management, image uploads and public lookups, documented with Swagger, and a React SPA that covers the full user journey, from username search and registration to a drag-and-drop link editor with a live preview and a public profile page.",
+    "results": [
+      "Both pieces are deployed: the API on Render with interactive Swagger docs, and the frontend on Netlify.",
+      "Covers the full user journey: claim a username, sign up, edit the profile and links, and share a public page.",
+      "Both pieces have automated tests: 57 in the frontend, and unit tests for the API's validators, error handling and image uploads."
+    ],
+    "liveUrl": "https://devtree.greenie.dev/",
+    "year": 2025,
+    "featured": false,
+    "order": 4,
+    "origin": "course",
+    "category": [
+      "web app",
+      "backend"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "devtree-backend",
+    "title": "DevTree: Backend",
+    "summary": "A REST API providing authentication, profile management, username availability lookup, and public profile lookup for the DevTree platform.",
+    "stack": [
+      "Express",
+      "TypeScript",
+      "MongoDB",
+      "Mongoose",
+      "JWT",
+      "bcryptjs",
+      "express-validator",
+      "Cloudinary",
+      "formidable",
+      "Swagger (OpenAPI)",
+      "Node.js",
+      "Node.js test runner",
+      "Render"
+    ],
+    "role": "Course project (2025), built solo following the course and extending it: API design, data model, authentication, validation, image uploads and API docs.",
+    "problem": "The platform needed an API to register accounts, claim a unique username, personalize a public page, check whether a desired username is still available, and expose a fast public lookup by username without leaking sensitive data.",
+    "process": "A single User document holds both the credentials and the public profile. Each request goes through routes, validators, a body whitelist, optional JWT authentication and then a controller. Usernames become unique, lowercase, URL-safe slugs, and names that would collide with app routes or static files, such as admin or docs, are reserved. Profile links must be http(s) URLs, so no javascript: link can reach a public page. Passwords need 8+ characters with upper and lower case, a number and a symbol before they are hashed with bcrypt. Public lookups return the profile without password, email or internal fields, and a search endpoint powers the frontend's live username picker. Uploading a new profile image deletes the previous one from Cloudinary. CORS allows only the configured frontend origin, and the OpenAPI spec is generated from JSDoc annotations and served at /docs.",
+    "results": [
+      "Deployed API covering the full profile lifecycle: sign-up, login, profile editing, image upload, username checks and public lookup.",
+      "Field whitelisting, slugged usernames and uniqueness checks keep unexpected or duplicate data out of the database.",
+      "Public responses never include passwords, emails or internal fields, and replaced images don't pile up in storage.",
+      "Every endpoint can be explored and tried from the browser in Swagger UI.",
+      "Automated tests with Node.js's built-in test runner cover the username and link validators, the error handler and the image upload flow, with Cloudinary mocked."
+    ],
+    "liveUrl": "https://apidevtree.greenie.dev/docs",
+    "repoUrl": "https://github.com/MarioAGtzC/devtree-backend",
+    "year": 2025,
+    "featured": false,
+    "order": 1,
+    "origin": "course",
+    "category": [
+      "backend"
+    ],
+    "status": "live",
+    "parentSlug": "devtree"
+  },
+  {
+    "slug": "devtree-frontend",
+    "title": "DevTree: Frontend",
+    "summary": "A React SPA consuming the DevTree API to manage a developer's profile, links, and public \"link-in-bio\" page.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "TanStack Query",
+      "React Router",
+      "React Hook Form",
+      "dnd-kit",
+      "Tailwind CSS",
+      "Axios",
+      "Vite (SWC)",
+      "Vitest",
+      "React Testing Library",
+      "Netlify"
+    ],
+    "role": "Course project (2025), built solo following the course and extending it: the whole frontend, connected to my own API.",
+    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
+    "process": "Route-level layouts separate the public and auth pages from the /admin dashboard, which redirects to login when the user can't be loaded. The logged-in user lives in one TanStack Query cache: toggling or reordering links updates it immediately so the live preview reacts at once, and Save changes sends it to the API. All requests go through one Axios client that attaches the auth token. Forms use React Hook Form with validation for email format, password strength and confirmation, and URLs are validated before a link can be enabled. Netlify serves an SPA fallback so public /<username> links work on direct visits. Every bug I fixed got a regression test, such as lost URLs and duplicate link IDs in the links editor, and a login that bounced back to the login page after logging out.",
+    "results": [
+      "Live in production and connected to my own backend, covering the full flow: claim a handle, sign up, edit the profile and links, and share a public page.",
+      "Client-side validation catches common input errors before a request is sent.",
+      "Link changes and reordering show in the preview right away, before they are saved.",
+      "57 automated tests across 7 files cover routing, the API module, the auth and search forms, and both editors."
+    ],
+    "liveUrl": "https://devtree.greenie.dev/",
+    "repoUrl": "https://github.com/MarioAGtzC/devtree-frontend",
+    "year": 2025,
+    "featured": false,
+    "order": 2,
+    "origin": "course",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "devtree"
   },
   {
     "slug": "maquilaexpress",
