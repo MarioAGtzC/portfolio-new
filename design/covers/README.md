@@ -9,7 +9,7 @@ design/covers/
   _base.css          shared styles: canvas, grid, glow, tag, headline, panels, code window
   fonts/             Geist and Geist Mono (OFL), loaded by _base.css
   assets/            logos used by the covers (only the ones in use)
-  <slug>.html        one cover per project; the file name is the project slug in src/data/projects.ts
+  <slug>.html        one cover per project; the file name is the project slug in src/data/projects.json
 ```
 
 ## Rules

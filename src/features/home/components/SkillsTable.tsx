@@ -1,9 +1,10 @@
 import ResponsePanel from '../../../components/ui/ResponsePanel';
 import TechChips from '../../../components/ui/TechChips';
+import type { SKILLS_TABLE_CATEGORIES } from '../../../data/schemas';
 import { ABOUT_CATEGORIES } from '../data/about';
 
 /** Order and labels for the skills table. "Tools and Workflow" is intentionally left out. */
-const GROUPS = [
+const GROUPS: { source: (typeof SKILLS_TABLE_CATEGORIES)[number]; label: string; key: string }[] = [
   { source: 'APIs & Integrations', label: 'APIs & Integrations', key: 'apis_integrations' },
   { source: 'Cloud & Serverless (AWS)', label: 'Cloud (AWS)', key: 'cloud_aws' },
   { source: 'DevOps & Delivery', label: 'DevOps & Delivery', key: 'devops_delivery' },

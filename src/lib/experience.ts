@@ -1,5 +1,9 @@
-/** First professional role (Feb 2020). Used to compute experience on the fly. */
-export const CAREER_START = { year: 2020, month: 2 };
+import career from '../data/career.json';
+
+const [startYear, startMonth] = career.start.split('-').map(Number);
+
+/** First professional role, derived from the oldest experience on publish. Used to compute experience on the fly. */
+export const CAREER_START = { year: startYear, month: startMonth };
 
 export function monthsSince({ year, month }: { year: number; month: number }, now = new Date()) {
   return (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month);
