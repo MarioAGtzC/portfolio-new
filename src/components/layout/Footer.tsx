@@ -1,6 +1,5 @@
 import Icon, { type IconName } from '../ui/Icon';
 import { SITE } from '../../constants/site';
-import { downloadFile } from '../../lib/downloadFile';
 
 interface SocialLink {
   name: IconName;
@@ -45,10 +44,6 @@ function Footer() {
         <a
           href={SITE.resumeUrl}
           download={SITE.resumeName}
-          onClick={(event) => {
-            event.preventDefault();
-            void downloadFile(SITE.resumeUrl, SITE.resumeName);
-          }}
           className='font-medium text-ink underline-offset-4 transition-colors duration-200 hover:text-accent hover:underline'
         >
           Download CV

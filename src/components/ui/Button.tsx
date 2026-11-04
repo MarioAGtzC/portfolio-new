@@ -61,7 +61,8 @@ function Button({
   if ('href' in rest && typeof rest.href === 'string') {
     const { href, ...anchorProps } = rest;
 
-    if (href.startsWith('/')) {
+    // Router links ignore `download`, so downloads stay plain anchors.
+    if (href.startsWith('/') && anchorProps.download === undefined) {
       return (
         <Link to={href} className={classes} {...anchorProps}>
           {children}

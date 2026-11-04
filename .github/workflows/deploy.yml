@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Two publishes in a row: only the newest one deploys.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -27,6 +32,33 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Compile CV to PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: cv.tex
+          latexmk_use_xelatex: true
+
+      - name: Install poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Validate PDF text extraction
+        run: |
+          TEXT=$(pdftotext cv.pdf - | tr -d '[:space:]')
+          if [ -z "$TEXT" ]; then
+            echo "ERROR: PDF text extraction returned empty content"
+            exit 1
+          fi
+          echo "PDF text extraction check passed ($(echo "$TEXT" | wc -c) characters)"
+
+      - name: Move CV into public directory
+        run: mkdir -p public && mv cv.pdf public/mario-gutierrez-cv.pdf
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Render covers and social previews
+        run: npm run covers
 
       - name: Build site
         run: npm run build

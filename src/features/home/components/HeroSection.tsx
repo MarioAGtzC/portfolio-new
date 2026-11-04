@@ -1,7 +1,6 @@
 import Button from '../../../components/ui/Button';
 import LiveClock from '../../../components/ui/LiveClock';
 import ApiLabel from '../../../components/ui/ApiLabel';
-import { downloadFile } from '../../../lib/downloadFile';
 import { CAREER_START, formatShortDuration, monthsSince } from '../../../lib/experience';
 
 interface HeroSectionProps {
@@ -52,10 +51,6 @@ function HeroSection({ role, name, resumeUrl, resumeName }: HeroSectionProps) {
           <Button
             href={resumeUrl}
             download={resumeName}
-            onClick={(event) => {
-              event.preventDefault();
-              void downloadFile(resumeUrl, resumeName);
-            }}
             variant='outline'
           >
             Download CV

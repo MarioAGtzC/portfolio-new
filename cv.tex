@@ -1,0 +1,132 @@
+\documentclass[10pt,letterpaper]{article}
+
+% ---------- Packages ----------
+\usepackage[margin=0.55in,top=0.5in,bottom=0.5in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+% ---------- Font ----------
+\setmainfont{Latin Modern Sans}
+
+% ---------- Colors ----------
+\definecolor{darkgray}{RGB}{40,40,40}
+\definecolor{accent}{RGB}{20,60,110}
+
+% ---------- Hyperlink config ----------
+\hypersetup{
+    colorlinks=true,
+    urlcolor=accent,
+    linkcolor=accent
+}
+
+% ---------- Section title style ----------
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{accent}}
+  {}{0em}{}
+  [\vspace{-4pt}{\color{accent}\hrule height 1pt}\vspace{1pt}]
+\titlespacing{\section}{0pt}{6pt}{2pt}
+
+% ---------- No page numbering ----------
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+% ---------- Compact lists ----------
+\setlist[itemize]{leftmargin=1.1em, itemsep=0pt, topsep=1pt, parsep=0pt}
+\setlength{\emergencystretch}{2em}
+
+\begin{document}
+
+% ================= HEADER =================
+\begin{center}
+    {\Large \bfseries \color{darkgray} MARIO ALBERTO GUTIÉRREZ COVIAN}\\[2pt]
+    {Backend Software Engineer}\\[4pt]
+    \small
+    +52 (312) 103 1850 \;$\vert$\;
+    \href{mailto:marioagtzc@hotmail.com}{marioagtzc@hotmail.com} \;$\vert$\;
+    \href{https://github.com/MarioAGtzC}{GitHub} \;$\vert$\;
+    \href{https://www.linkedin.com/in/marioagtz/}{LinkedIn} \;$\vert$\;
+    \href{https://mario-gutierrez.com/}{Profile} \;$\vert$\;
+    \href{https://portfolio.mario-gutierrez.com/}{Portfolio}
+\end{center}
+
+% ================= PROFESSIONAL SUMMARY =================
+\section*{Professional Summary}
+Software development with experience in backend APIs and microservices using Node.js. Experienced in designing and deploying serverless architectures on AWS, using services like Lambda, Lex, API Gateway, DynamoDB, S3 and CloudWatch. Comfortable working with both SQL and NoSQL databases.
+
+% ================= KEY ACHIEVEMENTS =================
+\section*{Key Achievements}
+\begin{itemize}
+    \item Implemented Amazon Lex conversational bots integrated with Connect and Lambda, automating customer interactions and reducing manual support workload.
+    \item Enhanced IVR call flows and routing logic in Amazon Connect, improving user experience and reducing call handling time.
+    \item Led backend improvements and bug fixes that increased system stability and reduced production issues.
+    \item Collaborated on full-stack features using React and Redux, improving data flow efficiency and frontend performance.
+    \item Built a Python/Django microservice that generated vector embeddings from unstructured files, enabling semantic search and improving search result relevance while reducing query response time through optimized data retrieval.
+\end{itemize}
+
+% ================= TECHNICAL SKILLS =================
+\section*{Technical Skills}
+\begin{itemize}
+    \item \textbf{Languages \& Runtimes:} JavaScript (6+ years), Node.js (6+ years), TypeScript (4+ years), Python (3+ years), Java (3+ years)
+    \item \textbf{Backend:} Node.js, Express.js, Nest.js, REST APIs, Django
+    \item \textbf{Frontend:} React.js, Next.js, Redux, Tailwind CSS, HTML5, CSS3
+    \item \textbf{Databases:} MySQL, MongoDB, PostgreSQL, DynamoDB, Redis, Firebase
+    \item \textbf{Cloud \& Serverless:} AWS (Lambda, Lex, Connect, Bedrock, API Gateway, CloudWatch, S3), Terraform, Docker
+    \item \textbf{Other:} Git, Postman, Swagger, Agile/Scrum, Microservices Architecture, AI (GitHub Copilot, Claude, ChatGPT)
+\end{itemize}
+
+% ================= PROFESSIONAL EXPERIENCE =================
+\section*{Professional Experience}
+
+\textbf{Backend Software Engineer} \hfill \textit{April 2022 -- Present}\\
+\textit{TechBridge IT}
+\begin{itemize}
+    \item Built and maintained backend services and AWS Lambda functions in Node.js (TypeScript), plus targeted services in Python and Java.
+    \item Built and managed an AI-powered context management microservice using AWS Bedrock to auto-generate intelligent summaries of guest-agent chat conversations.
+    \item Managed Node.js Lambda function updates and deployments to improve performance and scalability across AWS-based services.
+    \item Designed and implemented Amazon Lex bots to enhance customer self-service experience.
+    \item Optimized call routing and workflows within Amazon Connect for improved efficiency.
+    \item Conducted performance analysis and testing on the Connect platform to ensure reliability.
+    \item Delivered bilingual (English/Spanish) support, refining Spanish language conversational flows.
+    \item Used Terraform to provision and manage AWS infrastructure supporting Lambda, Connect, and Lex environments.
+\end{itemize}
+
+\vspace{1pt}
+\textbf{Full-Stack Developer} \hfill \textit{November 2020 -- April 2022}\\
+\textit{Tata Consultancy Services}
+\begin{itemize}
+    \item Designed and built REST APIs as Node.js (JavaScript) AWS Lambda functions, based on data analysis, enabling seamless communication between systems.
+    \item Built new UI sections using React, optimizing data retrieval from AWS-hosted APIs with Redux for state management.
+    \item Designed and managed database structures to ensure smooth information flow and maintain data integrity.
+    \item Collaborated closely with front-end developers to write functional, cohesive code that enhanced overall user experience.
+    \item Set up development and production environments using AWS toolsets, streamlining deployment and improving scalability.
+\end{itemize}
+
+\vspace{1pt}
+\textbf{Full-Stack Web Developer} \hfill \textit{February 2020 -- November 2020}\\
+\textit{Kioscomático}
+\begin{itemize}
+    \item Developed and maintained web applications using PHP and Node.js, with a focus on performance, security, and scalability.
+    \item Implemented RESTful APIs with Node.js, Express, and MySQL to support robust backend functionality.
+    \item Built a custom React component library to improve code reusability and long-term maintainability.
+    \item Leveraged React Hooks and Redux to ensure consistent state management and a cohesive user interface experience.
+    \item Designed and developed cross-platform mobile applications using Flutter, ensuring consistent performance across iOS and Android.
+    \item Integrated the Bloc pattern for efficient and scalable state management in Flutter applications.
+\end{itemize}
+
+% ================= EDUCATION =================
+\section*{Education}
+\textbf{Bachelor of Software Engineering} \hfill \textit{Graduated August 2020}\\
+Universidad de Colima -- Facultad de Telemática
+
+% ================= LANGUAGES =================
+\section*{Languages}
+\begin{itemize}
+    \item \textbf{Spanish:} Native
+    \item \textbf{English:} Professional Working Proficiency \href{https://cert.efset.org/en/SdWPH8}{(C2)}
+\end{itemize}
+
+\end{document}

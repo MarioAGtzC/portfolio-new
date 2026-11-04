@@ -3,7 +3,8 @@ export const SITE = {
   role: 'Backend Software Engineer',
   email: 'marioagtzc@hotmail.com',
   siteUrl: 'https://portfolio.mario-gutierrez.com',
-  resumeUrl: 'https://mario-gutierrez.com/mario-gutierrez-cv.pdf',
+  // Compiled from cv.tex by the deploy workflow.
+  resumeUrl: '/mario-gutierrez-cv.pdf',
   resumeName: 'Mario Gutierrez CV.pdf',
   locale: 'en_US',
   location: {
