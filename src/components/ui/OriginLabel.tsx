@@ -5,6 +5,7 @@ const ORIGIN_LABELS: Record<ProjectOrigin, string> = {
   personal: 'Personal',
   course: 'Course',
   client: 'Client',
+  challenge: 'Challenge',
 };
 
 export interface OriginLabelProps {

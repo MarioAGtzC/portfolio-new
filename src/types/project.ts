@@ -6,7 +6,7 @@ export interface ProjectImage {
 }
 
 /** Where the project came from. Shown as a label on cards and project pages. */
-export type ProjectOrigin = 'product' | 'personal' | 'course' | 'client';
+export type ProjectOrigin = 'product' | 'personal' | 'course' | 'client' | 'challenge';
 
 export interface ArchitectureNode {
   label: string;

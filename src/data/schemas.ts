@@ -33,7 +33,7 @@ const projectSchema = z.strictObject({
   year: z.int().min(2000).max(2100),
   featured: z.boolean(),
   order: z.int(),
-  origin: z.enum(['product', 'personal', 'course', 'client']),
+  origin: z.enum(['product', 'personal', 'course', 'client', 'challenge']),
   category: z
     .array(z.enum(['web app', 'mobile app', 'backend', 'api', 'serverless', 'microservice', 'platform', 'landing', 'template']))
     .min(1),
