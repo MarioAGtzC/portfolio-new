@@ -239,24 +239,84 @@
   {
     "slug": "portfolio-resume",
     "title": "Portfolio & Resume Sites",
-    "summary": "My two personal sites, this portfolio and my resume site, plus the serverless Contact API behind both contact forms.",
+    "summary": "My two personal sites, this portfolio and my resume, plus the systems behind them: a content manager that edits and publishes both, and a serverless API for their contact forms.",
     "stack": [
       "React 19",
       "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "Prisma",
       "Tailwind CSS v4",
       "AWS Lambda",
       "Amazon SES",
       "AWS CDK",
-      "Cloudflare Turnstile",
       "GitHub Actions",
-      "LaTeX (XeLaTeX)"
+      "LaTeX (XeLaTeX)",
+      "Cloudflare Turnstile"
     ],
-    "role": "Solo project: I designed, built and deployed all three pieces.",
-    "problem": "Recruiters see a candidate twice, as a web profile and as a PDF, and the two drift apart when they are maintained separately. A list of repo links doesn't show what someone built or why. I wanted a resume site and CV generated from the same data, a portfolio that explains each project as a case study, and a contact channel I own instead of a third-party form service.",
-    "process": "Three pieces that share one design system and one contact pipeline. The resume site renders its content from JSON and generates the PDF CV from the same files with LaTeX in CI. The portfolio models multi-part projects as hubs with linked pieces and prerenders every route for SEO. Both contact forms post to a serverless API on AWS (API Gateway, Lambda and SES) defined with the AWS CDK, with a separate Turnstile configuration per site.",
+    "role": "Solo project: I designed, built and deployed all five pieces.",
+    "problem": "Recruiters see a candidate twice, as a web profile and as a PDF, and the two drift apart when they are maintained separately. A list of repo links doesn't show what someone built or why. I wanted a resume site and CV built from the same data, a portfolio that explains each project as a case study, content I can update without editing code in two repositories, and a contact channel I own instead of a third-party form service.",
+    "process": "Five pieces around two static sites. The resume and the portfolio are React apps that build from published JSON, and each compiles the same CV PDF with LaTeX in CI. Their content is edited in the Site Content Manager: an admin panel and a NestJS API that store it in PostgreSQL and publish it to each site's repository as one validated commit, which redeploys the site. The portfolio models multi-part projects as hubs with linked pieces, renders every cover from HTML during the deploy and prerenders every route for SEO. Both contact forms post to a serverless API on AWS (API Gateway, Lambda and SES) defined with the AWS CDK, with a separate Turnstile configuration per site.",
     "results": [
-      "The resume site and the PDF CV can't drift apart: a push to main regenerates, validates and deploys both.",
+      "Both sites are edited from one panel, and every change is reviewed as a diff before it is published.",
+      "The resume and the portfolio offer the same CV PDF, compiled from the same generated LaTeX file, so the PDF can't drift from the site.",
       "Both sites share one contact backend with no server to maintain, and bots are filtered on the client and on the API."
+    ],
+    "architecture": [
+      {
+        "label": "Editing",
+        "nodes": [
+          {
+            "label": "Admin panel",
+            "detail": "React · Cloudflare Pages",
+            "pieceSlug": "site-content-manager-admin"
+          }
+        ]
+      },
+      {
+        "label": "Content",
+        "nodes": [
+          {
+            "label": "Content API",
+            "detail": "NestJS · PostgreSQL (Neon)",
+            "pieceSlug": "site-content-manager-api"
+          }
+        ]
+      },
+      {
+        "label": "Publishing",
+        "nodes": [
+          {
+            "label": "GitHub",
+            "detail": "one commit per site · Actions deploy"
+          }
+        ]
+      },
+      {
+        "label": "Sites",
+        "nodes": [
+          {
+            "label": "Portfolio",
+            "detail": "React · GitHub Pages",
+            "pieceSlug": "portfolio"
+          },
+          {
+            "label": "Resume",
+            "detail": "React · LaTeX CV",
+            "pieceSlug": "resume"
+          }
+        ]
+      },
+      {
+        "label": "Contact",
+        "nodes": [
+          {
+            "label": "Contact API",
+            "detail": "Lambda · SES",
+            "pieceSlug": "contact-api"
+          }
+        ]
+      }
     ],
     "year": 2026,
     "featured": true,
@@ -278,17 +338,20 @@
       "Tailwind CSS v4",
       "React Router",
       "Vite",
+      "Zod",
       "Cloudflare Turnstile",
+      "LaTeX (XeLaTeX)",
+      "Playwright",
       "GitHub Actions",
       "GitHub Pages"
     ],
     "role": "Solo project: design, implementation and deployment.",
     "problem": "Recruiters and clients usually judge an engineer from a resume PDF, a GitHub profile full of repos without context, or a LinkedIn summary. None of these quickly shows what the person built, what their role was, or why it mattered. This site answers those questions, and platforms with several codebases appear as one story with their pieces linked underneath.",
-    "process": "All projects live in one typed data file, where a project can be a hub with linked pieces and an optional architecture diagram. Code is grouped by feature (home, portfolio, project detail, contact). After the build, a prerender script writes static HTML for every route with its own meta tags, JSON-LD and Open Graph image, plus sitemap.xml and robots.txt. Colors are design tokens with light and dark values and a system, dark and light toggle. The contact form combines Turnstile, a honeypot field, client-side validation and a 30-second cooldown, and posts to the Contact API.",
+    "process": "All content (projects, the About section and SEO texts) is JSON published by my Site Content Manager and checked against Zod schemas at build time, so invalid data fails the build. A project can be a hub with linked pieces and an optional architecture diagram. Code is grouped by feature (home, portfolio, project detail, contact). Each deploy compiles the site's own copy of my CV from the published LaTeX file and renders every project cover and social preview from its HTML with Playwright. After the build, a prerender script writes static HTML for every route with its own meta tags, JSON-LD and Open Graph image, plus sitemap.xml and robots.txt. Colors are design tokens with light and dark values and a system, dark and light toggle. The contact form combines Turnstile, a honeypot field, client-side validation and a 30-second cooldown, and posts to the Contact API.",
     "results": [
       "Projects read as case studies, and multi-part systems appear as one hub with linked pieces instead of disconnected repos.",
       "Every route is prerendered with its own metadata and preview image, so search engines and link previews see real content without running JavaScript.",
-      "A push to main is the only release step, and CI stops any deploy that fails linting or type-checking."
+      "Publishing from the admin panel is the only release step: the commit triggers linting, the CV, the covers, the build and the deploy, and invalid content stops it."
     ],
     "repoUrl": "https://github.com/MarioAGtzC/portfolio-new",
     "year": 2026,
@@ -304,7 +367,7 @@
   {
     "slug": "resume",
     "title": "Mario Gutiérrez: Resume Site",
-    "summary": "My resume site for recruiters: experience, skills and contact on one page, with a PDF CV generated from the same data so both always match.",
+    "summary": "My resume site for recruiters: experience, skills and contact on one page, with a PDF CV built from the same content so both always match.",
     "stack": [
       "React 19",
       "TypeScript",
@@ -317,9 +380,9 @@
     ],
     "role": "Solo project: design, implementation, CV pipeline and deployment.",
     "problem": "Recruiters usually see a candidate as a web profile and as a PDF attached to an application. When those are maintained separately they drift apart: an updated role on the site, an outdated PDF in the inbox. This site keeps a single source of truth, and gives recruiters a spam-protected way to get in touch without a personal email address on the page.",
-    "process": "All resume content lives in JSON files and components only render it. Experience totals, role durations, the career timeline and years per language are calculated from dates, so nothing goes stale. A TypeScript script turns the same JSON into a LaTeX document, and GitHub Actions compiles it to PDF, checks that the PDF has extractable text, builds the site and deploys it. Sections are labelled like API endpoints to match the backend focus, with light, dark and system themes. The contact form uses Turnstile, a honeypot field and a 30-second cooldown before posting to the Contact API.",
+    "process": "All resume content lives in JSON files published by my Site Content Manager, and components only render it. Experience totals, role durations, the career timeline and years per language are calculated from dates, so nothing goes stale. The same content becomes a LaTeX document generated by the content manager's API, and GitHub Actions compiles it to PDF, checks that the PDF has extractable text, builds the site and deploys it. Sections are labelled like API endpoints to match the backend focus, with light, dark and system themes. The contact form uses Turnstile, a honeypot field and a 30-second cooldown before posting to the Contact API.",
     "results": [
-      "The site and the downloadable CV are generated from the same data on every deploy, so they can't fall out of sync.",
+      "The site and the downloadable CV are built from the same published content on every deploy, so they can't fall out of sync.",
       "Experience figures are computed from dates instead of typed by hand.",
       "A broken CV can't ship: the pipeline fails if the compiled PDF has no extractable text."
     ],
@@ -331,6 +394,88 @@
     "origin": "personal",
     "category": [
       "web app"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "site-content-manager-admin",
+    "title": "Site Content Manager: Admin Panel",
+    "summary": "A private React panel where I edit every piece of content on my resume and portfolio, review a diff of what will change, publish it and follow each site's deploy.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS v4",
+      "React Router",
+      "TanStack Query",
+      "openapi-typescript",
+      "openapi-fetch",
+      "CodeMirror 6",
+      "dnd-kit",
+      "Vitest",
+      "Testing Library",
+      "Playwright",
+      "GitHub Actions",
+      "Cloudflare Pages"
+    ],
+    "role": "Solo project: requirements, design, implementation, tests and deployment.",
+    "problem": "Updating either site meant editing data files and components by hand in two repositories. I wanted every piece of content in forms, a clear view of what would change before it went live, and no need to open the site repositories at all.",
+    "process": "The panel is a React single-page app that works only through its API. I built each feature after its API endpoints were usable, generating the panel's TypeScript types from the API's OpenAPI document with openapi-typescript, so both sides stay in sync. It has editors for the resume (profile, experience and CV), for portfolio projects (story, stack, links, architecture diagram, parent projects with their pieces, and slug renaming with a confirmation for published pages), for the About section and for both sites' SEO texts. Screenshots are uploaded and reordered, each project's cover is edited as HTML in CodeMirror with a live preview in a sandboxed frame, and the logos the covers use are managed in their own screen. The publish screen shows a per-file diff for each site and then the progress of its deploy, and the history restores an earlier version as a new publish. Short lists such as stack and skills are chips that can be reordered by drag and drop or with the keyboard. It reuses the portfolio's design tokens, treats keyboard and screen-reader use as requirements, warns about unsaved changes, shows API errors next to their fields, and waits with retries while the free-tier API wakes up. Hosting is Cloudflare Pages with a strict Content-Security-Policy.",
+    "results": [
+      "The content of both sites is managed from one place, without editing code or opening the site repositories.",
+      "Every change is reviewed as a diff before it goes live, and an earlier version can be restored from the history.",
+      "Component tests cover each screen, and end-to-end tests run the real API against a production build of the panel, including its Content-Security-Policy, so a header problem fails locally instead of in production."
+    ],
+    "year": 2026,
+    "featured": false,
+    "order": 3,
+    "origin": "personal",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "site-content-manager-api",
+    "title": "Site Content Manager: API",
+    "summary": "The backend behind the content of my resume and portfolio: it stores everything in PostgreSQL and publishes each site's files to its GitHub repository as one validated commit.",
+    "stack": [
+      "NestJS",
+      "TypeScript",
+      "Node.js 24",
+      "PostgreSQL",
+      "Prisma",
+      "Zod",
+      "Swagger (OpenAPI)",
+      "GitHub App",
+      "Octokit",
+      "sharp",
+      "Vitest",
+      "Supertest",
+      "Docker",
+      "GitHub Actions",
+      "Neon",
+      "Render"
+    ],
+    "role": "Solo project: requirements, architecture, implementation, tests and deployment.",
+    "problem": "Both sites kept their content in their repositories: JSON files in the resume, and TypeScript data plus text inside a component in the portfolio, which also had no CV of its own and downloaded the resume's. Updating a job, a project or a skill meant editing files by hand in two repositories, with nothing checking the data until the build.",
+    "process": "I wrote a specification first, then a phased plan with acceptance criteria per task, building the API before the panel in each phase. The content lives in a relational schema in PostgreSQL with Prisma, and an importer read the sites' original files, with a round-trip test proving that importing and exporting reproduces them exactly. The database is exported into the exact files each site builds from (JSON data, cover HTML, images and a LaTeX cv.tex generated from the resume data), and every file is validated against the same schema the site uses before it is published. A preview shows a per-file diff; publishing creates a single commit per site through GitHub's Git Data API, authenticated as a GitHub App, and is refused if the content or the branch changed since the preview. Unchanged content creates no commit. After publishing, the API follows each site's GitHub Actions deploy and reports its progress. Screenshots are validated and converted to WebP with sharp, uploaded SVG logos are rejected if they contain scripts or external references, and every publication keeps a snapshot that can be restored as a new commit. Sign-in is GitHub-only and restricted to an allow-list, with sessions in a signed httpOnly cookie, CSRF and Origin checks on every write, Helmet headers and per-IP rate limits. The publishing flow was built against two sandbox repositories and a dry-run mode before the real sites were connected.",
+    "results": [
+      "Both sites are now updated from the admin panel instead of by editing code, and every publish goes through validation, a diff preview and a reviewable commit.",
+      "The resume and the portfolio offer the same CV PDF, compiled in each site's CI from the cv.tex the API generates.",
+      "The sites' own builds fail on invalid data, so a bad publish cannot silently break a live page.",
+      "Any earlier version of either site can be republished from the history."
+    ],
+    "liveUrl": "https://api.mario-gutierrez.com/docs",
+    "year": 2026,
+    "featured": false,
+    "order": 4,
+    "origin": "personal",
+    "category": [
+      "backend",
+      "api"
     ],
     "status": "live",
     "parentSlug": "portfolio-resume"
@@ -421,7 +566,7 @@
     "repoUrl": "https://github.com/MarioAGtzC/contact-api",
     "year": 2026,
     "featured": false,
-    "order": 3,
+    "order": 5,
     "origin": "personal",
     "category": [
       "serverless",

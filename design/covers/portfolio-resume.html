@@ -18,20 +18,23 @@ h1 { font-weight: 700; letter-spacing: -0.03em; }
 .chip { padding: 4px 9px; border: 1px solid var(--line); border-radius: 6px; background: #1b2620; font: 12.5px 'Geist Mono', monospace; color: #c9d4cc; }
 
 .glow { left: -200px; top: -300px; width: 700px; height: 700px; }
-.split { --pad-x: 72px; --text-width: 560px; --split-gap: 56px; }
+.split { --pad-x: 72px; --text-width: 540px; --split-gap: 48px; }
 .api { margin-top: 26px; }
-h1 { --h1: 58px; margin: 16px 0 18px; }
+h1 { --h1: 56px; margin: 16px 0 18px; }
 .tagline { font-size: 20px; max-width: 520px; }
-.visual { display: flex; flex-direction: column; gap: 14px; }
-.sites { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.site { padding: 16px; }
-.site strong { display: block; font-size: 17px; font-weight: 600; }
-.site small { font: 12.5px 'Geist Mono', monospace; color: #93a399; }
-.arrows { text-align: center; font: 22px/1 'Geist Mono', monospace; color: #3a4a40; word-spacing: 1.2em; }
-.api-box { padding: 16px; border-color: #33543f; }
-.api-box .row { display: flex; justify-content: space-between; align-items: center; }
-.api-box .api { margin: 0; color: var(--ink); }
-.chips { display: flex; gap: 8px; margin-top: 14px; }
+.visual { display: flex; flex-direction: column; gap: 8px; }
+.box { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+.box strong { font-size: 16px; font-weight: 600; }
+.box small { font: 12px 'Geist Mono', monospace; color: #93a399; }
+.box.cms { border-color: #33543f; }
+.sites { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.site { padding: 12px 16px; }
+.site strong { display: block; font-size: 16px; font-weight: 600; }
+.site small { font: 12px 'Geist Mono', monospace; color: #93a399; }
+.flow { text-align: center; font: 12px 'Geist Mono', monospace; color: #5d7465; }
+.flow b { color: #3a4a40; font-size: 16px; }
+.contact .api { margin: 0; color: var(--ink); font-size: 14px; }
+.contact .chips { display: flex; gap: 6px; }
 </style>
 </head>
 <body>
@@ -40,21 +43,21 @@ h1 { --h1: 58px; margin: 16px 0 18px; }
   <div class="text stack">
     <div class="brand"><span class="gdot"></span><span class="brand-name">Mario Gutiérrez</span></div>
     <div class="api"><span class="verb">GET</span>/projects/portfolio-resume <span class="ok">200 OK</span></div>
-    <h1>Two sites,<br><span class="accent">one contact pipeline</span></h1>
-    <p class="tagline">My resume and this portfolio, plus the serverless API behind both contact forms.</p>
+    <h1>Two sites and<br><span class="accent">what runs them</span></h1>
+    <p class="tagline">My resume and this portfolio, the content manager that publishes both, and the API behind their contact forms.</p>
   </div>
   <div class="visual">
+    <div class="card box"><strong>Admin panel</strong><small>React · edit · diff · publish</small></div>
+    <div class="flow"><b>↓</b></div>
+    <div class="card box cms"><strong>Content API</strong><small>NestJS · PostgreSQL</small></div>
+    <div class="flow"><b>↓</b> one commit per site <b>↓</b></div>
     <div class="sites">
       <div class="card site"><strong>Resume</strong><small>mario-gutierrez.com</small></div>
       <div class="card site"><strong>Portfolio</strong><small>portfolio.mario-…</small></div>
     </div>
-    <div class="arrows">↓ ↓</div>
-    <div class="card api-box">
-      <div class="row"><span class="api"><span class="verb post">POST</span>/contact</span><span class="ok mono" style="font-size:12.5px">Turnstile</span></div>
-      <div class="chips"><span class="chip">API Gateway</span><span class="chip">Lambda</span><span class="chip">SES</span></div>
-    </div>
+    <div class="flow"><b>↓</b> contact forms <b>↓</b></div>
+    <div class="card box contact"><span class="api"><span class="verb post">POST</span>/contact</span><span class="chips"><span class="chip">Lambda</span><span class="chip">SES</span></span></div>
   </div>
 </div>
-
 </body>
 </html>

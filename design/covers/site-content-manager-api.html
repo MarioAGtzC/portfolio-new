@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site Content Manager: API · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0e1411; --grid: rgb(228 235 230 / 0.06); --grid-size: 28px; --accent: #5cc27a; --ink: #e4ebe6; --muted: #b4c1b8;
+  --line: #26332b; --surface: #151d18; --panel-bg: #101713; --comment: #4d6355; }
+.glow { background: radial-gradient(circle, rgb(92 194 122 / 0.16), transparent 65%); }
+.brand-name { font-size: 22px; font-weight: 600; }
+.gdot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgb(92 194 122 / 0.18); }
+.api { display: inline-flex; align-items: center; gap: 10px; font: 500 15px 'Geist Mono', monospace; color: #93a399; }
+.verb { padding: 3px 8px; border-radius: 5px; background: var(--accent); color: var(--bg); font: 600 12px 'Geist Mono', monospace; }
+.verb.post { background: #e0a84a; }
+.ok { color: var(--accent); }
+h1 { font-weight: 700; letter-spacing: -0.03em; }
+
+.glow { right: -240px; top: -300px; width: 700px; height: 700px; }
+.split { --pad-x: 72px; --text-width: 500px; --split-gap: 52px; }
+.api { margin-top: 26px; }
+h1 { --h1: 56px; margin: 16px 0 18px; }
+.tagline { font-size: 20px; }
+.log { padding: 20px 22px; font: 15px/1.9 'Geist Mono', monospace; color: #c9d4cc; }
+.log .row { display: flex; justify-content: space-between; gap: 16px; }
+.log .dim { color: #6f8577; }
+.log .sha { color: #e0a84a; }
+.log .sep { border-top: 1px solid var(--line); margin: 10px 0; }
+.log .p { font-weight: 700; color: #e0a84a; } .log .g { font-weight: 700; color: var(--accent); }
+.run { color: #e0a84a; }
+</style>
+</head>
+<body>
+<div class="canvas dots split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <div class="brand"><span class="gdot"></span><span class="brand-name">Mario Gutiérrez</span></div>
+    <div class="api"><span class="verb">GET</span>/projects/site-content-manager-api <span class="ok">200 OK</span></div>
+    <h1>Content in,<br><span class="accent">one commit out</span></h1>
+    <p class="tagline">A NestJS API that stores my sites' content and publishes it to their GitHub repos, validated and previewed as a diff.</p>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#22c55e"></i><span>publish</span></div>
+    <div class="log">
+      <div class="row"><span><span class="p">POST</span> /publish/preview</span><span class="dim">6 files changed</span></div>
+      <div class="row"><span><span class="p">POST</span> /publish</span><span class="ok">201</span></div>
+      <div class="sep"></div>
+      <div class="row"><span>resume-new</span><span><span class="sha">a1f3c9e</span> <span class="ok">✓ deployed</span></span></div>
+      <div class="row"><span>portfolio-new</span><span><span class="sha">7be20d4</span> <span class="run">● building</span></span></div>
+      <div class="sep"></div>
+      <div class="row dim"><span>// schema-checked · no change, no commit</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

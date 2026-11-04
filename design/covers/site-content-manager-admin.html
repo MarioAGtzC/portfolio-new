@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site Content Manager: Admin Panel · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0e1411; --grid: rgb(228 235 230 / 0.06); --grid-size: 28px; --accent: #5cc27a; --ink: #e4ebe6; --muted: #b4c1b8;
+  --line: #26332b; --surface: #151d18; }
+.glow { background: radial-gradient(circle, rgb(92 194 122 / 0.16), transparent 65%); }
+.brand-name { font-size: 22px; font-weight: 600; }
+.gdot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgb(92 194 122 / 0.18); }
+.api { display: inline-flex; align-items: center; gap: 10px; font: 500 15px 'Geist Mono', monospace; color: #93a399; }
+.verb { padding: 3px 8px; border-radius: 5px; background: var(--accent); color: var(--bg); font: 600 12px 'Geist Mono', monospace; }
+.ok { color: var(--accent); }
+h1 { font-weight: 700; letter-spacing: -0.03em; }
+
+.glow { left: -260px; bottom: -380px; width: 700px; height: 700px; }
+.split { --pad-x: 72px; --text-width: 470px; --split-gap: 48px; }
+.api { margin-top: 26px; }
+h1 { --h1: 56px; margin: 16px 0 18px; }
+.tagline { font-size: 20px; }
+.app { display: grid; grid-template-columns: 150px 1fr; border-radius: 12px; overflow: hidden; }
+.nav { padding: 16px 12px; border-right: 1px solid var(--line); background: #121915; display: grid; gap: 4px; align-content: start; }
+.nav small { font: 600 10px 'Geist Mono', monospace; color: #6f8577; letter-spacing: 0.08em; margin: 8px 6px 2px; }
+.nav span { font-size: 13px; padding: 5px 8px; border-radius: 6px; color: #b4c1b8; }
+.nav .on { background: var(--accent); color: var(--bg); font-weight: 600; }
+.main { padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+.main h3 { font-size: 16px; font-weight: 700; }
+.file { font: 11.5px 'Geist Mono', monospace; color: #93a399; }
+.diff { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font: 11.5px/1.7 'Geist Mono', monospace; }
+.diff div { padding: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.del { background: rgb(239 68 68 / 0.12); color: #fca5a5; }
+.add { background: rgb(92 194 122 / 0.14); color: #a7e8b8; }
+.ctx { color: #6f8577; }
+.btn { justify-self: start; width: max-content; padding: 7px 14px; border-radius: 7px; background: var(--accent); color: var(--bg); font-weight: 600; font-size: 13px; }
+.builds { display: grid; gap: 4px; font: 12px 'Geist Mono', monospace; }
+.builds div { display: flex; justify-content: space-between; color: #c9d4cc; }
+.run { color: #e0a84a; }
+</style>
+</head>
+<body>
+<div class="canvas dots split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <div class="brand"><span class="gdot"></span><span class="brand-name">Mario Gutiérrez</span></div>
+    <div class="api"><span class="verb">GET</span>/projects/site-content-manager-admin <span class="ok">200 OK</span></div>
+    <h1>Review the diff,<br><span class="accent">publish both sites</span></h1>
+    <p class="tagline">A private React panel for every piece of content on my resume and portfolio.</p>
+  </div>
+  <div class="visual card app">
+    <div class="nav">
+      <small>RESUME</small><span>Profile</span><span>Experience</span><span>CV</span>
+      <small>PORTFOLIO</small><span>Projects</span><span>About</span>
+      <small>RELEASE</small><span class="on">Publish</span><span>History</span>
+    </div>
+    <div class="main">
+      <h3>Publish</h3>
+      <div class="file">src/data/projects.json</div>
+      <div class="diff">
+        <div class="ctx">  "slug": "cashtrackr",</div>
+        <div class="del">- "featured": false,</div>
+        <div class="add">+ "featured": true,</div>
+      </div>
+      <span class="btn">Publish 2 sites</span>
+      <div class="builds">
+        <div><span>resume</span><span class="ok">✓ deployed</span></div>
+        <div><span>portfolio</span><span class="run">● covers</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
