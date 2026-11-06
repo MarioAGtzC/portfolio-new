@@ -679,7 +679,7 @@
       "Unit and integration tests cover the auth flow, budget access control, validation and the internal-key lock, against a dedicated test database with a guard that prevents running them on the real one.",
       "A docs test fails if any registered route is missing from the OpenAPI spec."
     ],
-    "liveUrl": "https://apicashtrackr.greenie.dev/docs",
+    "liveUrl": "https://cashtrackr-backend-o9br.onrender.com/docs",
     "repoUrl": "https://github.com/MarioAGtzC/cashtrackr",
     "year": 2026,
     "featured": false,
@@ -792,7 +792,7 @@
       "Every endpoint can be explored and tried from the browser in Swagger UI.",
       "Automated tests with Node.js's built-in test runner cover the username and link validators, the error handler and the image upload flow, with Cloudinary mocked."
     ],
-    "liveUrl": "https://apidevtree.greenie.dev/docs",
+    "liveUrl": "https://devtree-backend-l7ov.onrender.com/docs",
     "repoUrl": "https://github.com/MarioAGtzC/devtree-backend",
     "year": 2025,
     "featured": false,
