@@ -31,7 +31,10 @@ describe('filterProjects', () => {
   });
 
   test('tech=node matches the projects that run on Node (criterion 3, A3)', () => {
-    assert.deepEqual(slugs('tech=node'), ['reservadito', 'portfolio-resume', 'cashtrackr', 'devtree']);
+    // Includes/excludes rather than an exact list: new projects from the SCM may also run on Node.
+    const node = slugs('tech=node');
+    for (const slug of ['reservadito', 'portfolio-resume', 'cashtrackr', 'devtree']) assert.ok(node.includes(slug), slug);
+    for (const slug of ['maquilaexpress', 'adn-cre4cion']) assert.ok(!node.includes(slug), slug);
     assert.deepEqual(find('tech=node', 'reservadito')?.matches, [
       { kind: 'implied', tech: 'node', via: 'nest' },
     ]);
