@@ -40,23 +40,6 @@ describe('filterProjects', () => {
     ]);
   });
 
-  test('a hub matches through a piece and names it in `in`', () => {
-    const [match] = find('tech=reactrouter', 'portfolio-resume')?.matches ?? [];
-    assert.equal(match.kind, 'direct');
-    assert.equal(match.in?.slug, 'portfolio');
-  });
-
-  test('own matches win over piece matches, direct over implied', () => {
-    // DevTree lists Node.js test runner itself; its backend piece lists Node.js directly.
-    assert.deepEqual(find('tech=node', 'devtree')?.matches, [
-      { kind: 'implied', tech: 'node', via: 'express' },
-    ]);
-    // Reservadito has no TanStack Query itself; its first piece does.
-    const [match] = find('tech=tanstackquery', 'reservadito')?.matches ?? [];
-    assert.equal(match.kind, 'direct');
-    assert.equal(match.in?.slug, 'reservadito-client');
-  });
-
   test('type=backend includes the Reservadito hub in Projects (criterion 4)', () => {
     const results = run('type=backend');
     assert.ok(slugs('type=backend').includes('reservadito'));
@@ -69,24 +52,6 @@ describe('filterProjects', () => {
     assert.equal(results[hub + 1].project.slug, 'reservadito-backend');
     assert.equal(results[hub + 1].partOf?.slug, 'reservadito');
     assert.ok(!results.some((result) => result.project.slug === 'reservadito-client'));
-  });
-
-  test('All parts lists every piece after its hub, in order, when there are no filters', () => {
-    const order = run('view=all').map((result) => result.project.slug);
-    assert.deepEqual(order.slice(0, 5), [
-      'reservadito',
-      'reservadito-client',
-      'reservadito-business',
-      'reservadito-admin',
-      'reservadito-backend',
-    ]);
-    assert.equal(order.length, projects.length);
-  });
-
-  test('a piece is evaluated only on itself (A2)', () => {
-    // Contact API has no Node.js, even though its hub has NestJS.
-    assert.ok(!slugs('view=all&tech=node').includes('contact-api'));
-    assert.ok(slugs('view=all&tech=node').includes('site-content-manager-api'));
   });
 
   test('javascript includes TypeScript projects and ADN; typescript excludes ADN (criterion 5)', () => {
@@ -110,6 +75,50 @@ describe('filterProjects', () => {
   });
 });
 
+describe('filterProjects rules on fixed fixtures', () => {
+  // Hand-made projects, so stack edits in the SCM can't break these rules.
+  const fixture = (slug: string, order: number, category: Project['category'], stack: string[], parentSlug?: string) =>
+    ({ slug, title: slug, order, category, stack, parentSlug }) as Project;
+  const fixtures = [
+    fixture('hub-b', 2, ['backend'], ['React', 'React Router', 'Node.js'], 'hub'),
+    fixture('hub', 2, ['platform'], ['Express']),
+    fixture('hub-a', 1, ['web app'], ['React Router', 'AWS Lambda'], 'hub'),
+    fixture('solo', 1, ['landing'], ['HTML5']),
+  ];
+  const fixtureIndex = buildTechIndex(fixtures);
+  const runFixture = (query: string) =>
+    filterProjects(parseFilters(new URLSearchParams(query), fixtureIndex), fixtureIndex);
+  const fixtureSlugs = (query: string) => runFixture(query).map((result) => result.project.slug);
+  const hubMatches = (query: string) => runFixture(query).find((result) => result.project.slug === 'hub')!.matches;
+
+  test('All parts lists every piece right after its hub, in order', () => {
+    assert.deepEqual(fixtureSlugs(''), ['solo', 'hub']);
+    assert.deepEqual(fixtureSlugs('view=all'), ['solo', 'hub', 'hub-a', 'hub-b']);
+    assert.equal(runFixture('view=all')[2].partOf?.slug, 'hub');
+  });
+
+  test('a hub matches through a piece and names it in `in`', () => {
+    assert.deepEqual(hubMatches('tech=reactrouter'), [{ kind: 'direct', tech: 'reactrouter', in: fixtures[2] }]);
+    assert.deepEqual(hubMatches('tech=aws'), [{ kind: 'group', tech: 'aws', member: 'awslambda', in: fixtures[2] }]);
+  });
+
+  test('own matches win over piece matches, direct over implied', () => {
+    // The hub implies Node.js through Express; hub-b lists it directly.
+    assert.deepEqual(hubMatches('tech=node'), [{ kind: 'implied', tech: 'node', via: 'express' }]);
+    // hub-a only implies React (React Router); hub-b, later in order, has it directly.
+    assert.deepEqual(hubMatches('tech=react'), [{ kind: 'direct', tech: 'react', in: fixtures[0] }]);
+  });
+
+  test('a hub is judged on its pieces’ types too; a piece only on itself (A2)', () => {
+    assert.deepEqual(fixtureSlugs('view=all&type=backend'), ['hub', 'hub-b']);
+    assert.deepEqual(fixtureSlugs('view=all&tech=express'), ['hub']);
+  });
+
+  test('a tech no project has counts 0', () => {
+    assert.equal(facetCounts({ view: 'projects', techs: [] }, fixtureIndex).techs.get('mongodb'), 0);
+  });
+});
+
 describe('facetCounts', () => {
   const base: ProjectFilters = { view: 'projects', techs: [] };
 
@@ -126,7 +135,6 @@ describe('facetCounts', () => {
     const filters: ProjectFilters = { ...base, type: 'backend' };
     const { techs } = facetCounts(filters, index);
     assert.equal(techs.get('react'), run('type=backend&tech=react').length);
-    assert.equal(techs.get('php'), 0);
   });
 
   test('a selected tech counts the current results', () => {
