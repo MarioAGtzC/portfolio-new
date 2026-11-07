@@ -86,7 +86,8 @@ export function filterProjects(filters: ProjectFilters, index: TechIndex): Resul
 }
 
 function evaluate(project: Project, pieces: Project[], filters: ProjectFilters, index: TechIndex): Result | undefined {
-  if (filters.type && ![project, ...pieces].some((item) => item.category.includes(filters.type!))) return undefined;
+  const { type } = filters;
+  if (type && ![project, ...pieces].some((item) => item.category.includes(type))) return undefined;
 
   const matches: ResultMatch[] = [];
   for (const tech of filters.techs) {
