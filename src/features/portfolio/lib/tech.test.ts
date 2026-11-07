@@ -1,6 +1,18 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
-import { normalizeTech, stripVersion } from './tech.ts';
+import type { Project } from '../../../types/project.ts';
+import { buildTechIndex, normalizeTech, resolveTech, stripVersion } from './tech.ts';
+
+const projects = JSON.parse(
+  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+) as Project[];
+const index = buildTechIndex(projects);
+const own = (slug: string) => {
+  const matches = index.own.get(slug);
+  assert.ok(matches, `unknown project ${slug}`);
+  return matches;
+};
 
 describe('normalizeTech', () => {
   const cases: [string, string][] = [
@@ -39,4 +51,84 @@ describe('stripVersion', () => {
   for (const [input, expected] of cases) {
     test(`${input} → ${expected}`, () => assert.equal(stripVersion(input), expected));
   }
+});
+
+describe('resolveTech', () => {
+  const cases: [string, string | undefined][] = [
+    ['Node.js', 'node'],
+    ['nodejs', 'node'],
+    ['NODEJS', 'node'],
+    ['Node.js 24', 'node'],
+    ['Amazon SES', 'awsses'],
+    ['AWS SES', 'awsses'],
+    ['ses', 'awsses'],
+    ['Stripe.js', 'stripe'],
+    ['Stripe', 'stripe'],
+    ['Stripe.js / React Stripe.js', 'stripe'],
+    ['postgres', 'postgresql'],
+    ['TanStack React Query', 'tanstackquery'],
+    ['amazon web services', 'aws'],
+    ['Express 5', 'express'],
+    ['recat', undefined],
+    ['', undefined],
+  ];
+  for (const [input, expected] of cases) {
+    test(`${JSON.stringify(input)} → ${expected}`, () => assert.equal(resolveTech(input, index), expected));
+  }
+
+  test('a stack name outside the catalog becomes its own tech', () => {
+    assert.equal(resolveTech('Cloudflare R2', index), 'cloudflarer2');
+    assert.equal(index.entries.get('cloudflarer2')?.label, 'Cloudflare R2');
+    assert.equal(index.entries.get('bootstrap')?.label, 'Bootstrap');
+  });
+});
+
+describe('buildTechIndex: implications', () => {
+  test('NestJS counts as Node.js, TypeScript, JavaScript and Express', () => {
+    const matches = own('reservadito-backend');
+    for (const tech of ['node', 'typescript', 'javascript', 'express']) {
+      assert.deepEqual(matches.get(tech), { kind: 'implied', tech, via: 'nest' });
+    }
+  });
+
+  test('a direct tech wins over an implied one', () => {
+    assert.deepEqual(own('devtree-backend').get('node'), { kind: 'direct', tech: 'node' });
+  });
+
+  test('the shortest chain wins: TypeScript → JavaScript', () => {
+    assert.deepEqual(own('contact-api').get('javascript'), { kind: 'implied', tech: 'javascript', via: 'typescript' });
+  });
+
+  test('JavaScript does not count as TypeScript', () => {
+    assert.deepEqual(own('adn-cre4cion').get('javascript'), { kind: 'direct', tech: 'javascript' });
+    assert.equal(own('adn-cre4cion').has('typescript'), false);
+  });
+
+  test('AWS Lambda does not count as Node.js', () => {
+    assert.equal(own('contact-api').has('node'), false);
+  });
+
+  test('Stripe.js and Stripe are the same tech', () => {
+    assert.deepEqual(own('reservadito-business').get('stripe'), { kind: 'direct', tech: 'stripe' });
+    assert.deepEqual(own('maquilaexpress').get('stripe'), { kind: 'direct', tech: 'stripe' });
+  });
+
+  test('Next.js counts as React (transitive from the hub stack)', () => {
+    assert.deepEqual(own('cashtrackr').get('react'), { kind: 'implied', tech: 'react', via: 'next' });
+  });
+});
+
+describe('buildTechIndex: groups', () => {
+  test('AWS includes AWS Lambda', () => {
+    assert.deepEqual(own('contact-api').get('aws'), { kind: 'group', tech: 'aws', member: 'awslambda' });
+  });
+
+  test('AWS includes Amazon SES', () => {
+    const matches = buildTechIndex([{ ...projects[0], slug: 'x', stack: ['Amazon SES'] }]).own.get('x');
+    assert.deepEqual(matches?.get('aws'), { kind: 'group', tech: 'aws', member: 'awsses' });
+  });
+
+  test('projects without AWS services are not in the group', () => {
+    assert.equal(own('devtree').has('aws'), false);
+  });
 });
