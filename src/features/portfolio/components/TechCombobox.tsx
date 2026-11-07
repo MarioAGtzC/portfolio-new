@@ -71,6 +71,9 @@ function TechCombobox({ techs, index, facets, addTech, removeTech }: TechCombobo
           <span
             key={tech}
             {...getSelectedItemProps({ selectedItem: tech, index: position })}
+            // Downshift makes the chip focusable but gives it no role; a group can carry the name.
+            role='group'
+            aria-label={label(tech)}
             className='inline-flex items-center gap-1 rounded-md border border-line bg-surface-2 py-0.5 pr-1 pl-2 font-geist-mono text-xs text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent'
           >
             {label(tech)}
