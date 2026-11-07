@@ -26,13 +26,18 @@ export interface TechIndex {
  * and no trailing "js" (`Node.js`, `nodejs` and `node` all give `node`).
  */
 export function normalizeTech(text: string): string {
-  const key = text
+  const key = foldText(text);
+  // Keep short keys like "js" itself; only strip the suffix when 3+ characters remain.
+  return key.endsWith('js') && key.length - 2 >= 3 ? key.slice(0, -2) : key;
+}
+
+/** Lowercase, no accents, letters and digits only (`Node.js` → `nodejs`). */
+export function foldText(text: string): string {
+  return text
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '');
-  // Keep short keys like "js" itself; only strip the suffix when 3+ characters remain.
-  return key.endsWith('js') && key.length - 2 >= 3 ? key.slice(0, -2) : key;
 }
 
 /** Drops a trailing version from a stack name: `React 19`, `Tailwind CSS v4`, `OAuth 2.0`. */
