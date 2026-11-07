@@ -33,9 +33,9 @@ function Portfolio() {
         Every project below is a real case study: the problem it solves, how it was built, and the result.
       </p>
       <ProjectFilters {...filterState} />
-      {/* Empty without filters, so the default page reads exactly as before. */}
+      {/* Present from the first render, so only later changes (including Clear filters) are announced. */}
       <p className='sr-only' aria-live='polite'>
-        {unfiltered ? '' : `${results.length} ${results.length === 1 ? 'project' : 'projects'} found`}
+        {`${results.length} ${results.length === 1 ? 'project' : 'projects'} found`}
       </p>
 
       {results.length > 0 || !unfiltered ? (
