@@ -63,8 +63,12 @@ describe('suggestTechs', () => {
   });
 
   test('ranks prefix, then word start, then contains', () => {
+    // Check the rule, not a fixed list: new stack names from the SCM may add matches.
     // TypeScript: label starts with it; openapi-typescript: a word starts with it.
-    assert.deepEqual(ids('type'), ['typescript', 'openapitypescript']);
+    const type = suggestTechs('type', { index, count });
+    const prefix = type.map(({ label }) => foldText(label).startsWith('type'));
+    assert.deepEqual(prefix, [...prefix].sort((a, b) => Number(b) - Number(a)), 'prefix matches come first');
+    assert.ok(type.findIndex((s) => s.id === 'typescript') < type.findIndex((s) => s.id === 'openapitypescript'));
     assert.ok(ids('query').includes('tanstackquery'));
     const script = ids('script');
     assert.ok(script.includes('typescript') && script.includes('javascript'));
