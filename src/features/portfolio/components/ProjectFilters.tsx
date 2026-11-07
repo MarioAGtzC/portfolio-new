@@ -1,11 +1,16 @@
 import Button from '../../../components/ui/Button';
 import type { Facets, ProjectFilters as Filters, ProjectType, ProjectView } from '../lib/filters';
+import type { TechId, TechIndex } from '../lib/tech';
+import TechCombobox from './TechCombobox';
 
 export interface ProjectFiltersProps {
   filters: Filters;
   facets: Facets;
+  index: TechIndex;
   setView: (view: ProjectView) => void;
   setType: (type?: ProjectType) => void;
+  addTech: (tech: TechId) => void;
+  removeTech: (tech: TechId) => void;
   clear: () => void;
 }
 
@@ -17,7 +22,7 @@ const VIEWS: [ProjectView, string][] = [
 const segmentStyles =
   'flex-1 rounded-md px-3 py-1.5 font-geist-mono text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex-none';
 
-function ProjectFilters({ filters, facets, setView, setType, clear }: ProjectFiltersProps) {
+function ProjectFilters({ filters, facets, index, setView, setType, addTech, removeTech, clear }: ProjectFiltersProps) {
   // A4: hide types with no results, but never the selected one.
   const types = [...facets.types]
     .filter(([type, count]) => count > 0 || type === filters.type)
@@ -56,6 +61,8 @@ function ProjectFilters({ filters, facets, setView, setType, clear }: ProjectFil
           ))}
         </select>
       </label>
+
+      <TechCombobox techs={filters.techs} index={index} facets={facets} addTech={addTech} removeTech={removeTech} />
 
       {(filters.type || filters.techs.length > 0) && (
         <Button variant='outline' size='sm' onClick={clear} className='sm:ml-auto'>

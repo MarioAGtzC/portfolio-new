@@ -11,7 +11,8 @@ import { useSeo } from '../../seo/useSeo';
 function Portfolio() {
   useSeo(PORTFOLIO_SEO);
 
-  const { filters, index, results, facets, setView, setType, clear } = useProjectFilters();
+  const filterState = useProjectFilters();
+  const { filters, index, results, clear } = filterState;
   const unfiltered = isDefault(filters);
   const query = serializeFilters(filters);
   const json = results.map(({ project: { slug, title, year, status, origin, team }, partOf }) => ({
@@ -30,7 +31,7 @@ function Portfolio() {
       <p className='max-w-2xl text-lg text-ink-2'>
         Every project below is a real case study: the problem it solves, how it was built, and the result.
       </p>
-      <ProjectFilters filters={filters} facets={facets} setView={setView} setType={setType} clear={clear} />
+      <ProjectFilters {...filterState} />
       {/* Empty without filters, so the default page reads exactly as before. */}
       <p className='sr-only' aria-live='polite'>
         {unfiltered ? '' : `${results.length} ${results.length === 1 ? 'project' : 'projects'} found`}
