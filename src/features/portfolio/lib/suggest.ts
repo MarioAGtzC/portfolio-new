@@ -1,5 +1,5 @@
 import { TECH_GROUPS } from './techCatalog.ts';
-import { foldText, normalizeTech, type TechId, type TechIndex } from './tech.ts';
+import { foldText, resolveTech, stripVersion, type TechId, type TechIndex } from './tech.ts';
 
 export interface TechSuggestion {
   id: TechId;
@@ -23,9 +23,9 @@ const groupIds = new Set(TECH_GROUPS.map((group) => group.id));
  * then a word starts with it, then label contains it. Ties by count, then alphabetically.
  */
 export function suggestTechs(text: string, { index, count, exclude = [], limit = 8 }: SuggestOptions): TechSuggestion[] {
-  const query = foldText(text);
+  const query = foldText(stripVersion(text));
   if (!query) return [];
-  const exact = index.byKey.get(normalizeTech(text));
+  const exact = resolveTech(text, index);
 
   const ranked: (TechSuggestion & { rank: number })[] = [];
   for (const [id, { label }] of index.entries) {

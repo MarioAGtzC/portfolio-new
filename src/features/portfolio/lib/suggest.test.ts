@@ -51,6 +51,11 @@ describe('suggestTechs', () => {
     assert.equal(ids('tailwind-css')[0], 'tailwindcss');
   });
 
+  test('ignores a trailing version, like stack names', () => {
+    assert.equal(ids('React 19')[0], 'react');
+    assert.equal(ids('Next.js 14')[0], 'next');
+  });
+
   test('exact id or alias comes first', () => {
     assert.equal(ids('postgres')[0], 'postgresql');
     assert.equal(ids('ses')[0], 'awsses');
