@@ -4,6 +4,7 @@ import StatusBadge from '../../../components/ui/StatusBadge';
 import TechChips from '../../../components/ui/TechChips';
 import { getProjectPieces } from '../../../data/projects';
 import type { Project } from '../../../types/project';
+import { shortHubName } from '../lib/matches';
 
 export interface ProjectCardProps {
   project: Project;
@@ -11,12 +12,16 @@ export interface ProjectCardProps {
   wide?: boolean;
   /** Hide the origin line, e.g. inside a hub where every piece shares it. */
   showOrigin?: boolean;
+  /** The hub, for a piece listed on its own (All parts view). */
+  partOf?: Project;
+  /** Why the project matches the selected techs, already formatted. */
+  matches?: string;
   className?: string;
 }
 
 const STACK_LIMIT = 5;
 
-function ProjectCard({ project, wide = false, showOrigin = true, className }: ProjectCardProps) {
+function ProjectCard({ project, wide = false, showOrigin = true, partOf, matches, className }: ProjectCardProps) {
   const pieces = getProjectPieces(project.slug);
   const meta = [String(project.year), pieces.length > 0 ? `${pieces.length} pieces` : null]
     .filter(Boolean)
@@ -65,10 +70,12 @@ function ProjectCard({ project, wide = false, showOrigin = true, className }: Pr
           <StatusBadge status={project.status} />
           <span className='font-geist-mono text-xs text-muted'>{meta}</span>
         </div>
+        {partOf && <p className='font-geist-mono text-xs text-muted'>Part of {shortHubName(partOf)}</p>}
         <h3 className={['font-semibold text-ink', wide ? 'text-xl' : 'text-lg'].join(' ')}>
           {project.title}
         </h3>
         <p className='text-sm leading-relaxed text-ink-2'>{project.summary}</p>
+        {matches && <p className='font-geist-mono text-xs text-ink-2'>{matches}</p>}
         {showOrigin && <OriginLabel origin={project.origin} team={project.team} />}
         <TechChips items={project.stack} limit={STACK_LIMIT} className='mt-auto pt-1' />
       </div>
