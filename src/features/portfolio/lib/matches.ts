@@ -13,18 +13,23 @@ export function shortPieceName(project: Project): string {
   return colon === -1 ? project.title : project.title.slice(colon + 2);
 }
 
-/** Why a result showed up, one entry per selected tech: `Matches in Backend: NestJS → Node.js · …`. */
+/**
+ * Why a result showed up, one entry per selected tech, with "Matches" written once (A15):
+ * `Matches: React · in Backend: NestJS → Node.js`. Empty when no tech is selected.
+ */
 export function formatMatches(result: Result, index: TechIndex): string {
+  if (result.matches.length === 0) return '';
   const label = (id: TechId) => index.entries.get(id)?.label ?? id;
   const entry = (match: ResultMatch) => {
-    const where = match.in ? `Matches in ${shortPieceName(match.in)}` : 'Matches';
     const what =
       match.kind === 'implied'
         ? `${label(match.via)} → ${label(match.tech)}`
         : match.kind === 'group'
           ? `${label(match.member)} (${label(match.tech)})`
           : label(match.tech);
-    return `${where}: ${what}`;
+    return match.in ? `in ${shortPieceName(match.in)}: ${what}` : what;
   };
-  return result.matches.map(entry).join(' · ');
+  const line = result.matches.map(entry).join(' · ');
+  // "in Backend: …" first reads as "Matches in Backend: …"; anything else needs the colon.
+  return result.matches[0].in ? `Matches ${line}` : `Matches: ${line}`;
 }

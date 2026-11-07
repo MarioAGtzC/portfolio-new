@@ -46,10 +46,19 @@ describe('formatMatches', () => {
     assert.equal(formatMatches(result, index), 'Matches: AWS Lambda (AWS)');
   });
 
-  test('two techs are joined by " · "', () => {
+  test('two techs are joined by " · ", with "Matches" written once (A15)', () => {
     assert.equal(
       format({ kind: 'direct', tech: 'react' }, { kind: 'implied', tech: 'node', via: 'nest' }),
-      'Matches: React · Matches: NestJS → Node.js',
+      'Matches: React · NestJS → Node.js',
+    );
+    const backend = titled('Reservadito: Backend');
+    assert.equal(
+      format({ kind: 'direct', tech: 'react' }, { kind: 'implied', tech: 'node', via: 'nest', in: backend }),
+      'Matches: React · in Backend: NestJS → Node.js',
+    );
+    assert.equal(
+      format({ kind: 'implied', tech: 'node', via: 'nest', in: backend }, { kind: 'direct', tech: 'react' }),
+      'Matches in Backend: NestJS → Node.js · React',
     );
   });
 
