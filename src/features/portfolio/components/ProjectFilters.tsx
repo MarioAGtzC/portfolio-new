@@ -2,6 +2,7 @@ import Button from '../../../components/ui/Button';
 import type { Facets, ProjectFilters as Filters, ProjectType, ProjectView } from '../lib/filters';
 import type { TechId, TechIndex } from '../lib/tech';
 import TechCombobox from './TechCombobox';
+import { focusTechSearch } from './techSearch';
 
 export interface ProjectFiltersProps {
   filters: Filters;
@@ -65,7 +66,15 @@ function ProjectFilters({ filters, facets, index, setView, setType, addTech, rem
       <TechCombobox techs={filters.techs} index={index} facets={facets} addTech={addTech} removeTech={removeTech} />
 
       {(filters.type || filters.techs.length > 0) && (
-        <Button variant='outline' size='sm' onClick={clear} className='sm:ml-auto'>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => {
+            clear();
+            focusTechSearch();
+          }}
+          className='sm:ml-auto'
+        >
           Clear filters
         </Button>
       )}

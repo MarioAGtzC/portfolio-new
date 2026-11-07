@@ -3,6 +3,7 @@ import { useState, type ChangeEvent } from 'react';
 import type { Facets } from '../lib/filters';
 import { suggestTechs, type TechSuggestion } from '../lib/suggest';
 import type { TechId, TechIndex } from '../lib/tech';
+import { focusTechSearch, TECH_SEARCH_ID } from './techSearch';
 
 export interface TechComboboxProps {
   /** Selected techs, from the URL. */
@@ -43,6 +44,7 @@ function TechCombobox({ techs, index, facets, addTech, removeTech }: TechCombobo
       items,
       inputValue,
       selectedItem: null,
+      inputId: TECH_SEARCH_ID,
       // Enter adds the first suggestion without touching the list: `react` + Enter → React.
       defaultHighlightedIndex: 0,
       itemToString: (item) => item?.label ?? '',
@@ -78,6 +80,7 @@ function TechCombobox({ techs, index, facets, addTech, removeTech }: TechCombobo
               onClick={(event) => {
                 event.stopPropagation();
                 removeTech(tech);
+                focusTechSearch();
               }}
               className='rounded px-1 text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-accent'
             >

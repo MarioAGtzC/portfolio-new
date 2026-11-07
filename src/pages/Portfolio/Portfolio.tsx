@@ -2,6 +2,7 @@ import Button from '../../components/ui/Button';
 import ResponsePanel from '../../components/ui/ResponsePanel';
 import ProjectCard from '../../features/portfolio/components/ProjectCard';
 import ProjectFilters from '../../features/portfolio/components/ProjectFilters';
+import { focusTechSearch } from '../../features/portfolio/components/techSearch';
 import { useProjectFilters } from '../../features/portfolio/hooks/useProjectFilters';
 import { isDefault, serializeFilters } from '../../features/portfolio/lib/filters';
 import { formatMatches } from '../../features/portfolio/lib/matches';
@@ -63,7 +64,14 @@ function Portfolio() {
           ) : (
             <div className='flex flex-col items-center gap-4 p-12 text-center text-muted'>
               <p>No projects match these filters.</p>
-              <Button variant='outline' size='sm' onClick={clear}>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => {
+                  clear();
+                  focusTechSearch();
+                }}
+              >
                 Clear filters
               </Button>
             </div>
