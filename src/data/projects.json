@@ -729,6 +729,102 @@
     "parentSlug": "cashtrackr"
   },
   {
+    "slug": "smart-logistics-routing",
+    "title": "Smart Logistics Routing API",
+    "summary": "A NestJS API that computes the cheapest route through a road network asynchronously, with a hand-written Dijkstra that handles peak-hour traffic, vehicle limits and ordered stops, plus a live demo that runs the same algorithm in the browser.",
+    "stack": [
+      "NestJS",
+      "TypeScript",
+      "Node.js",
+      "PostgreSQL",
+      "TypeORM",
+      "Redis",
+      "BullMQ",
+      "Swagger (OpenAPI)",
+      "class-validator",
+      "Jest",
+      "Supertest",
+      "Docker",
+      "esbuild",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "role": "Technical challenge, built solo: requirements analysis, design, implementation, tests and the web demo.",
+    "problem": "A logistics operator needs the cheapest route between two points of a road network, but the cheapest path depends on the truck (weight limits and hazardous-load bans) and on the time of day (peak-hour traffic). The challenge asked for a REST API that stores networks, computes routes with Dijkstra in a service layer without blocking requests, documents every endpoint with Swagger and proves the algorithm with Jest tests.",
+    "process": "I planned the work in phases with acceptance criteria and wrote down every interpretation the statement left open. Networks are stored as directed graphs in PostgreSQL with TypeORM migrations and read through a Redis cache. A route request is validated, queued in BullMQ and answered with 202 and a job id; a worker computes it and the client polls its status. The algorithm is a hand-written Dijkstra on a binary heap, written as pure functions without Nest: costs are minutes, so the accumulated cost is the clock, and an edge's peak-hour multiplier depends on when the vehicle enters it. Vehicle restrictions remove edges before the search, stops run one leg at a time from the previous arrival, and a second search without restrictions runs only on failure to tell NO_ROUTE from ROUTE_BLOCKED_BY_CONSTRAINTS. Business errors are returned without retries, system errors are retried with backoff, and a Redis outage answers 503 instead of hanging. A known case where peak hours make Dijkstra suboptimal is documented and pinned by a test. Finally, a static web demo runs the same algorithm, compiled with esbuild and traced through an optional step observer, so anyone can watch it work step by step without the API running.",
+    "results": [
+      "All three validation cases of the challenge pass, within 150+ unit tests and end-to-end suites that process real jobs against PostgreSQL and Redis.",
+      "Route requests never block the API: a worker computes them in the background, and a Redis outage returns 503 in milliseconds.",
+      "Every endpoint, schema and error is documented in Swagger, and a test fails if one is missing.",
+      "A public demo on GitHub Pages runs the same routing code in the browser, at no hosting cost and with no backend to keep running."
+    ],
+    "architecture": [
+      {
+        "label": "Clients",
+        "nodes": [
+          {
+            "label": "Web demo",
+            "detail": "GitHub Pages · same algorithm in the browser"
+          },
+          {
+            "label": "API clients",
+            "detail": "REST · Swagger at /docs"
+          }
+        ]
+      },
+      {
+        "label": "API",
+        "nodes": [
+          {
+            "label": "NestJS API",
+            "detail": "validates · 202 + job id"
+          }
+        ]
+      },
+      {
+        "label": "Queue",
+        "nodes": [
+          {
+            "label": "BullMQ",
+            "detail": "Redis · retries with backoff"
+          }
+        ]
+      },
+      {
+        "label": "Worker",
+        "nodes": [
+          {
+            "label": "Route worker",
+            "detail": "time-dependent Dijkstra"
+          }
+        ]
+      },
+      {
+        "label": "Data",
+        "nodes": [
+          {
+            "label": "PostgreSQL",
+            "detail": "graphs and edges"
+          },
+          {
+            "label": "Redis cache",
+            "detail": "graphs · cache-aside"
+          }
+        ]
+      }
+    ],
+    "liveUrl": "https://logistics.greenie.dev/",
+    "year": 2026,
+    "featured": false,
+    "order": 4,
+    "origin": "challenge",
+    "category": [
+      "backend",
+      "api"
+    ],
+    "status": "in progress"
+  },
+  {
     "slug": "devtree",
     "title": "DevTree: Link-in-bio Platform",
     "summary": "A link-in-bio platform for developers: a REST API for accounts, usernames and public profiles, and the React app that consumes it.",
@@ -755,7 +851,7 @@
     "liveUrl": "https://devtree.greenie.dev/",
     "year": 2025,
     "featured": false,
-    "order": 4,
+    "order": 5,
     "origin": "course",
     "category": [
       "web app",
@@ -871,7 +967,7 @@
     ],
     "year": 2020,
     "featured": false,
-    "order": 5,
+    "order": 6,
     "origin": "client",
     "category": [
       "web app"
@@ -902,7 +998,7 @@
     "repoUrl": "https://github.com/dielozmo/ADN_Cre4cion",
     "year": 2020,
     "featured": false,
-    "order": 6,
+    "order": 7,
     "origin": "client",
     "category": [
       "landing"

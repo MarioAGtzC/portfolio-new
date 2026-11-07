@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Smart Logistics Routing API · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #111513; --grid: rgb(228 234 229 / 0.05); --grid-size: 30px; --accent: #43b883; --ink: #e4eae5; --muted: #9aa69f;
+  --line: #2b3530; --surface: #19201c; --panel-bg: #161c19; }
+.glow { right: -220px; top: -260px; width: 640px; height: 640px; background: radial-gradient(circle, rgb(67 184 131 / 0.16), transparent 65%); }
+.split { --pad-x: 72px; --text-width: 470px; --split-gap: 44px; }
+.tag { margin-bottom: 24px; }
+h1 { --h1: 52px; margin-bottom: 18px; }
+.tagline { font-size: 19px; }
+.note { display: flex; align-items: center; gap: 10px; margin-top: 26px; font: 14px 'Geist Mono', monospace; color: #6f7c74; }
+.note .dot { width: 8px; height: 8px; background: #e6aa45; }
+.graph { display: block; width: 100%; height: auto; padding: 14px 16px 4px; }
+.e line { stroke: #4a5650; stroke-width: 2.5; }
+.e text { fill: #8b978f; font: 600 13px 'Geist Mono', monospace; text-anchor: middle; }
+.e.route line { stroke: var(--accent); stroke-width: 6; }
+.e.route text { fill: var(--accent); }
+.e.peak text { fill: #e6aa45; }
+.n circle { fill: #19201c; stroke: #6f7c74; stroke-width: 2.5; }
+.n.on circle { fill: #173426; stroke: var(--accent); }
+.n text { fill: var(--ink); font: 800 19px 'Geist', sans-serif; text-anchor: middle; dominant-baseline: central; }
+.arrow-g { fill: #4a5650; } .arrow-r { fill: #43b883; }
+.log { border-top: 1px solid var(--line); padding: 14px 20px 16px; display: grid; gap: 6px; font: 14px/1.6 'Geist Mono', monospace; color: #c9d4cc; }
+.log .row { display: flex; justify-content: space-between; gap: 12px; }
+.verb { font-weight: 700; color: #e6aa45; }
+.ok { color: var(--accent); }
+.dim { color: #6f7c74; }
+</style>
+</head>
+<body>
+<div class="canvas dots split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <span class="tag">Technical challenge</span>
+    <h1>Cheapest route,<br><span class="accent">even at rush hour</span></h1>
+    <p class="tagline">A NestJS API that queues route requests in BullMQ and solves them with a time-dependent Dijkstra: peak-hour traffic, vehicle limits and ordered stops.</p>
+    <div class="note"><span class="dot"></span>PostgreSQL · Redis · Swagger · live demo</div>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#22c55e"></i><span>departure 06:50 · peak 07:00–09:00</span></div>
+    <svg class="graph" viewBox="0 0 580 270" aria-hidden="true">
+      <defs>
+        <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrow-g"/></marker>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="arrow-r"/></marker>
+      </defs>
+      <g class="e"><line x1="80" y1="124" x2="192" y2="64" marker-end="url(#ag)"/><text x="122" y="80">10</text></g>
+      <g class="e route"><line x1="80" y1="146" x2="192" y2="204" marker-end="url(#ar)"/><text x="122" y="200">15</text></g>
+      <g class="e peak"><line x1="235" y1="64" x2="350" y2="124" marker-end="url(#ag)"/><text x="318" y="80">12 × 2.0</text></g>
+      <g class="e route"><line x1="235" y1="204" x2="350" y2="146" marker-end="url(#ar)"/><text x="318" y="200">5</text></g>
+      <g class="e route"><line x1="399" y1="135" x2="494" y2="135" marker-end="url(#ar)"/><text x="447" y="118">10 × 1.2</text></g>
+      <g class="n on"><circle cx="58" cy="135" r="23"/><text x="58" y="135">A</text></g>
+      <g class="n"><circle cx="213" cy="55" r="23"/><text x="213" y="55">B</text></g>
+      <g class="n on"><circle cx="213" cy="215" r="23"/><text x="213" y="215">C</text></g>
+      <g class="n on"><circle cx="375" cy="135" r="23"/><text x="375" y="135">D</text></g>
+      <g class="n on"><circle cx="520" cy="135" r="23"/><text x="520" y="135">E</text></g>
+    </svg>
+    <div class="log">
+      <div class="row"><span><span class="verb">POST</span> /route/optimize</span><span class="ok">202 · job queued</span></div>
+      <div class="row"><span>A → C → D → E</span><span><span class="ok">COMPLETED</span> <span class="dim">·</span> 32 min · 07:22</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
