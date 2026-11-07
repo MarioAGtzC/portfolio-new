@@ -44,6 +44,7 @@ export function useProjectFilters() {
       if (!filters.techs.includes(tech)) write({ ...filters, techs: [...filters.techs, tech] });
     },
     removeTech: (tech: TechId) => write({ ...filters, techs: filters.techs.filter((id) => id !== tech) }),
-    clear: () => write({ view: 'projects', techs: [] }),
+    // Keeps the view: Clear filters only removes the type and the techs.
+    clear: () => write({ view: filters.view, techs: [] }),
   };
 }

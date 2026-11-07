@@ -1,6 +1,7 @@
 import Button from '../../components/ui/Button';
 import ResponsePanel from '../../components/ui/ResponsePanel';
 import ProjectCard from '../../features/portfolio/components/ProjectCard';
+import ProjectFilters from '../../features/portfolio/components/ProjectFilters';
 import { useProjectFilters } from '../../features/portfolio/hooks/useProjectFilters';
 import { isDefault, serializeFilters } from '../../features/portfolio/lib/filters';
 import { formatMatches } from '../../features/portfolio/lib/matches';
@@ -10,7 +11,7 @@ import { useSeo } from '../../seo/useSeo';
 function Portfolio() {
   useSeo(PORTFOLIO_SEO);
 
-  const { filters, index, results, clear } = useProjectFilters();
+  const { filters, index, results, facets, setView, setType, clear } = useProjectFilters();
   const unfiltered = isDefault(filters);
   const query = serializeFilters(filters);
   const json = results.map(({ project: { slug, title, year, status, origin, team }, partOf }) => ({
@@ -29,6 +30,7 @@ function Portfolio() {
       <p className='max-w-2xl text-lg text-ink-2'>
         Every project below is a real case study: the problem it solves, how it was built, and the result.
       </p>
+      <ProjectFilters filters={filters} facets={facets} setView={setView} setType={setType} clear={clear} />
       {/* Empty without filters, so the default page reads exactly as before. */}
       <p className='sr-only' aria-live='polite'>
         {unfiltered ? '' : `${results.length} ${results.length === 1 ? 'project' : 'projects'} found`}
