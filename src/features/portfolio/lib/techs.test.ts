@@ -36,6 +36,14 @@ describe('techs.json schema (the catalog rules the API also enforces)', () => {
     assert.ok(paths(withEntries(node, { ...typescript, aliases: ['Node.js'] })).includes('entries.1.aliases.0'));
   });
 
+  test('a name without letters or digits is rejected on its own', () => {
+    const result = techsSchema.safeParse(withEntries(node, { ...typescript, aliases: ['++'] }));
+    assert.deepEqual(
+      result.success ? [] : result.error.issues.map(({ path, message }) => [path.join('.'), message]),
+      [['entries.1.aliases.0', 'Needs letters or digits']],
+    );
+  });
+
   test('a group needs a prefix', () => {
     assert.ok(paths({ ...techs, groups: [{ ...techs.groups[0], prefixes: [] }] }).includes('groups.0.prefixes'));
   });

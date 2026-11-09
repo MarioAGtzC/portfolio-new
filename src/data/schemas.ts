@@ -170,6 +170,11 @@ export const techsSchema = z
       ];
       for (const [name, namePath] of names) {
         const key = normalizeTech(name);
+        // Such a name could never be typed into the filters, and would collide with every other one.
+        if (!key) {
+          issue(namePath, 'Needs letters or digits');
+          continue;
+        }
         const previous = owner.get(key);
         if (previous !== undefined && previous !== tech.id) issue(namePath, `"${name}" already names ${previous}`);
         if (previous === undefined) owner.set(key, tech.id);
