@@ -1,0 +1,222 @@
+{
+  "entries": [
+    {
+      "id": "node",
+      "label": "Node.js"
+    },
+    {
+      "id": "typescript",
+      "label": "TypeScript",
+      "aliases": [
+        "ts"
+      ],
+      "implies": [
+        "javascript"
+      ]
+    },
+    {
+      "id": "javascript",
+      "label": "JavaScript",
+      "aliases": [
+        "js",
+        "ecmascript"
+      ]
+    },
+    {
+      "id": "postgresql",
+      "label": "PostgreSQL",
+      "aliases": [
+        "postgres",
+        "psql",
+        "pg"
+      ]
+    },
+    {
+      "id": "tailwindcss",
+      "label": "Tailwind CSS",
+      "aliases": [
+        "tailwind"
+      ]
+    },
+    {
+      "id": "mongodb",
+      "label": "MongoDB",
+      "aliases": [
+        "mongo"
+      ]
+    },
+    {
+      "id": "awsses",
+      "label": "Amazon SES",
+      "aliases": [
+        "AWS SES",
+        "ses"
+      ]
+    },
+    {
+      "id": "tanstackquery",
+      "label": "TanStack Query",
+      "aliases": [
+        "TanStack React Query",
+        "React Query"
+      ],
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "testinglibrary",
+      "label": "Testing Library",
+      "aliases": [
+        "React Testing Library",
+        "RTL"
+      ],
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "stripe",
+      "label": "Stripe",
+      "aliases": [
+        "Stripe.js / React Stripe.js"
+      ]
+    },
+    {
+      "id": "swagger",
+      "label": "Swagger (OpenAPI)",
+      "aliases": [
+        "openapi"
+      ]
+    },
+    {
+      "id": "latex",
+      "label": "LaTeX",
+      "aliases": [
+        "LaTeX (XeLaTeX)",
+        "xelatex"
+      ]
+    },
+    {
+      "id": "vite",
+      "label": "Vite",
+      "aliases": [
+        "Vite (SWC)"
+      ]
+    },
+    {
+      "id": "githubactions",
+      "label": "GitHub Actions",
+      "aliases": [
+        "gha",
+        "ci"
+      ]
+    },
+    {
+      "id": "nest",
+      "label": "NestJS",
+      "implies": [
+        "node",
+        "typescript",
+        "express"
+      ]
+    },
+    {
+      "id": "express",
+      "label": "Express",
+      "implies": [
+        "node"
+      ]
+    },
+    {
+      "id": "next",
+      "label": "Next.js",
+      "implies": [
+        "react",
+        "node"
+      ]
+    },
+    {
+      "id": "react",
+      "label": "React"
+    },
+    {
+      "id": "reactnative",
+      "label": "React Native",
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "mongoose",
+      "label": "Mongoose",
+      "implies": [
+        "mongodb",
+        "node"
+      ]
+    },
+    {
+      "id": "sequelize",
+      "label": "Sequelize",
+      "implies": [
+        "node"
+      ]
+    },
+    {
+      "id": "prisma",
+      "label": "Prisma",
+      "implies": [
+        "node"
+      ]
+    },
+    {
+      "id": "stripeconnect",
+      "label": "Stripe Connect",
+      "implies": [
+        "stripe"
+      ]
+    },
+    {
+      "id": "reactrouter",
+      "label": "React Router",
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "reacthookform",
+      "label": "React Hook Form",
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "reactemail",
+      "label": "React Email",
+      "implies": [
+        "react"
+      ]
+    },
+    {
+      "id": "nodejstestrunner",
+      "label": "Node.js test runner",
+      "implies": [
+        "node"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "aws",
+      "label": "AWS",
+      "aliases": [
+        "amazon",
+        "amazon web services"
+      ],
+      "prefixes": [
+        "AWS",
+        "Amazon"
+      ]
+    }
+  ]
+}

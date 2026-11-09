@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { normalizeTech } from '../features/portfolio/lib/tech.ts';
 
 // Shapes of the JSON files the Site Content Manager publishes, kept in line with src/types/project.ts.
 // Checked by vite.config.ts, so an invalid file fails the build.
@@ -103,10 +104,89 @@ const seoPage = z.strictObject({ title: text, description: text });
 /** Texts of the fixed pages; project pages use their own title and summary. */
 export const seoSchema = z.strictObject({ home: seoPage, portfolio: seoPage, contact: seoPage });
 
+const techEntrySchema = z.strictObject({
+  /** Normalized key (`normalizeTech`), used in `?tech=` URLs. */
+  id: text,
+  label: text,
+  aliases: z.array(text).optional(),
+  /** Entry ids this tech cannot run without (applied transitively). */
+  implies: z.array(text).optional(),
+});
+
+const techGroupSchema = z.strictObject({
+  id: text,
+  label: text,
+  aliases: z.array(text).optional(),
+  /** A stack name is in the group when it equals a prefix or starts with it plus a space. */
+  prefixes: z.array(text).min(1),
+});
+
+/**
+ * The project filters' tech catalog (techs.json). Same rules as the API's techsSchema: ids normalized
+ * and unique, `implies` naming existing entries without cycles, no key naming two techs.
+ */
+export const techsSchema = z
+  .strictObject({ entries: z.array(techEntrySchema), groups: z.array(techGroupSchema) })
+  .superRefine(({ entries, groups }, ctx) => {
+    const techs = [
+      ...entries.map((tech, index) => ({ tech, path: ['entries', index] })),
+      ...groups.map((tech, index) => ({ tech, path: ['groups', index] })),
+    ];
+    const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: 'custom', path, message });
+
+    const seenIds = new Set<string>();
+    for (const { tech, path } of techs) {
+      if (normalizeTech(tech.id) !== tech.id) issue([...path, 'id'], `Must be a normalized key ("${normalizeTech(tech.id)}")`);
+      if (seenIds.has(tech.id)) issue([...path, 'id'], 'Duplicate id');
+      seenIds.add(tech.id);
+    }
+
+    const entryIds = new Set(entries.map(({ id }) => id));
+    entries.forEach(({ implies = [] }, index) =>
+      implies.forEach((target, i) => {
+        if (!entryIds.has(target)) issue(['entries', index, 'implies', i], `Unknown tech "${target}"`);
+      }),
+    );
+    const implies = new Map(entries.map(({ id, implies = [] }) => [id, implies]));
+    const cycleFrom = (id: string, path: string[]): string[] | undefined => {
+      if (path.includes(id)) return [...path, id];
+      for (const next of implies.get(id) ?? []) {
+        const cycle = cycleFrom(next, [...path, id]);
+        if (cycle) return cycle;
+      }
+      return undefined;
+    };
+    entries.forEach(({ id }, index) => {
+      const cycle = cycleFrom(id, []);
+      if (cycle && cycle[0] === id) issue(['entries', index, 'implies'], `Cycle: ${cycle.join(' → ')}`);
+    });
+
+    const owner = new Map<string, string>();
+    for (const { tech, path } of techs) {
+      const names: [string, (string | number)[]][] = [
+        [tech.id, [...path, 'id']],
+        [tech.label, [...path, 'label']],
+        ...(tech.aliases ?? []).map((alias, i): [string, (string | number)[]] => [alias, [...path, 'aliases', i]]),
+      ];
+      for (const [name, namePath] of names) {
+        const key = normalizeTech(name);
+        // Such a name could never be typed into the filters, and would collide with every other one.
+        if (!key) {
+          issue(namePath, 'Needs letters or digits');
+          continue;
+        }
+        const previous = owner.get(key);
+        if (previous !== undefined && previous !== tech.id) issue(namePath, `"${name}" already names ${previous}`);
+        if (previous === undefined) owner.set(key, tech.id);
+      }
+    }
+  });
+
 export type ProjectData = z.infer<typeof projectSchema>;
 export type About = z.infer<typeof aboutSchema>;
 export type Career = z.infer<typeof careerSchema>;
 export type Seo = z.infer<typeof seoSchema>;
+export type Techs = z.infer<typeof techsSchema>;
 
 /** Every published JSON file and its schema, by path from the project root. */
 export const DATA_FILES = {
@@ -114,4 +194,5 @@ export const DATA_FILES = {
   'src/data/about.json': aboutSchema,
   'src/data/career.json': careerSchema,
   'src/data/seo.json': seoSchema,
+  'src/data/techs.json': techsSchema,
 };

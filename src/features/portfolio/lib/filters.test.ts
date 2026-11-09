@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
 import { isDefault, parseFilters, serializeFilters, type ProjectFilters } from './filters.ts';
 import { buildTechIndex } from './tech.ts';
 
+// A frozen copy of techs.json, so these expectations do not follow the catalog published by the SCM.
+const techs = JSON.parse(readFileSync(new URL('./fixtures/techs.json', import.meta.url), 'utf8')) as Techs;
+
 const projects = JSON.parse(
-  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
-const index = buildTechIndex(projects);
+const index = buildTechIndex(projects, techs);
 const parse = (query: string) => parseFilters(new URLSearchParams(query), index);
 const roundTrip = (query: string) => serializeFilters(parse(query));
 

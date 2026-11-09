@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
 import { filterProjects, parseFilters, type Result, type ResultMatch } from './filters.ts';
 import { formatMatches, shortHubName, shortPieceName } from './matches.ts';
 import { buildTechIndex } from './tech.ts';
 
+// A frozen copy of techs.json, so these expectations do not follow the catalog published by the SCM.
+const techs = JSON.parse(readFileSync(new URL('./fixtures/techs.json', import.meta.url), 'utf8')) as Techs;
+
 // Hand-made results, so stack edits in the SCM can't break the format; labels come from the catalog.
 const titled = (title: string) => ({ slug: 'x', title }) as Project;
-const catalog = buildTechIndex([]);
+const catalog = buildTechIndex([], techs);
 const format = (...matches: ResultMatch[]) => formatMatches({ project: titled('Hub'), matches }, catalog);
 
 describe('short names (D9)', () => {
@@ -41,7 +45,7 @@ describe('formatMatches', () => {
   });
 
   test('group', () => {
-    const index = buildTechIndex([{ slug: 'x', title: 'X', stack: ['AWS Lambda'] } as Project]);
+    const index = buildTechIndex([{ slug: 'x', title: 'X', stack: ['AWS Lambda'] } as Project], techs);
     const result: Result = { project: titled('X'), matches: [{ kind: 'group', tech: 'aws', member: 'awslambda' }] };
     assert.equal(formatMatches(result, index), 'Matches: AWS Lambda (AWS)');
   });
@@ -68,9 +72,9 @@ describe('formatMatches', () => {
 
   test('Reservadito with tech=node reads "NestJS → Node.js" (spec criterion 3)', () => {
     const projects = JSON.parse(
-      readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+      readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
     ) as Project[];
-    const index = buildTechIndex(projects);
+    const index = buildTechIndex(projects, techs);
     const reservadito = filterProjects(parseFilters(new URLSearchParams('tech=node'), index), index).find(
       (result) => result.project.slug === 'reservadito',
     )!;

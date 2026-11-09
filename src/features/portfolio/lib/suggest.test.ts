@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
 import { suggestTechs } from './suggest.ts';
 import { buildTechIndex, foldText, type TechId } from './tech.ts';
 
+// A frozen copy of techs.json, so these expectations do not follow the catalog published by the SCM.
+const techs = JSON.parse(readFileSync(new URL('./fixtures/techs.json', import.meta.url), 'utf8')) as Techs;
+
 const projects = JSON.parse(
-  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
-const index = buildTechIndex(projects);
+const index = buildTechIndex(projects, techs);
 // Stub count: how many projects (hubs and pieces) have the tech themselves.
 const count = (id: TechId) => [...index.own.values()].filter((matches) => matches.has(id)).length;
 const ids = (text: string, exclude: TechId[] = []) => suggestTechs(text, { index, count, exclude }).map((s) => s.id);

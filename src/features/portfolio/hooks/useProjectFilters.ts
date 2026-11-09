@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { projects } from '../../../data/projects';
+import techs from '../../../data/techs.json';
 import { facetCounts, filterProjects, parseFilters, serializeFilters } from '../lib/filters';
 import type { ProjectFilters, ProjectType, ProjectView } from '../lib/filters';
 import { buildTechIndex, type TechId } from '../lib/tech';
 
-const index = buildTechIndex(projects);
+// techs.json is published by the Site Content Manager and checked against its schema at build time.
+const index = buildTechIndex(projects, techs);
 
 /** /portfolio filters backed by the URL (D4): every change replaces the history entry. */
 export function useProjectFilters() {

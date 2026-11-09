@@ -1,4 +1,3 @@
-import { TECH_GROUPS } from './techCatalog.ts';
 import { foldText, resolveTech, stripVersion, type TechId, type TechIndex } from './tech.ts';
 
 export interface TechSuggestion {
@@ -15,8 +14,6 @@ export interface SuggestOptions {
   exclude?: TechId[];
   limit?: number;
 }
-
-const groupIds = new Set(TECH_GROUPS.map((group) => group.id));
 
 /**
  * Techs matching what the user typed, best first: exact id or alias, then label starts with it,
@@ -40,7 +37,7 @@ export function suggestTechs(text: string, { index, count, exclude = [], limit =
     if (rank < 0) continue;
     const results = count(id);
     if (results === 0) continue;
-    ranked.push({ id, label: groupIds.has(id) ? `${label} (any service)` : label, count: results, rank });
+    ranked.push({ id, label: index.groups.has(id) ? `${label} (any service)` : label, count: results, rank });
   }
 
   return ranked
