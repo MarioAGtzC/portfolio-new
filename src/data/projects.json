@@ -825,6 +825,98 @@
     "status": "in progress"
   },
   {
+    "slug": "message-throttling-gateway",
+    "title": "Message Throttling Gateway",
+    "summary": "A gateway that absorbs bursts of messages and delivers them to a provider limited to 100 requests per second, with persistence, retries and idempotent intake, plus a live simulator that shows how it behaves under load.",
+    "stack": [
+      "TypeScript",
+      "Node.js",
+      "Express",
+      "PostgreSQL",
+      "Prisma",
+      "Redis",
+      "BullMQ",
+      "express-validator",
+      "express-rate-limit",
+      "Jest",
+      "Docker",
+      "esbuild",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "role": "Technical challenge, built solo: design, implementation, tests, the local Docker environment and the web simulator.",
+    "problem": "An upstream platform can send tens of thousands of messages at once, while the provider that delivers them accepts only 100 requests per second and rejects the rest with 429. Forwarding the burst directly would mean rejected sends, lost messages and duplicate deliveries when the sender retries. The gateway sits in between: it accepts every message at once and releases it at the rate the provider can take.",
+    "process": "Three services run together with Docker Compose: the gateway, a mock of the upstream platform that fires bursts with up to 100 requests in flight, and a mock provider that enforces 100 requests per second. The gateway, built with Express, validates each message, saves it in PostgreSQL through Prisma and queues a BullMQ job on Redis, answering 202 without waiting for delivery. A worker capped at 100 jobs per second forwards each message to the provider and records its status; a 429, an error or no answer within 5 seconds is retried up to 5 attempts with exponential backoff. The message id is both the primary key and the job id, so a repeated or simultaneous duplicate is acknowledged without queuing a second job, and a sweep every minute re-queues any message that was saved but never queued. Later I added a static simulator on GitHub Pages that uses the gateway's limits, attempts and backoff as its defaults, with step-by-step scenarios, the interaction between the two rate limits, and a run measured on Docker.",
+    "results": [
+      "Measured on Docker, a burst of 10,000 messages was fully delivered in 135 seconds (about 74 per second) with none failed; the 158 messages rejected with 429 at a window edge went through on retry.",
+      "The measurement showed that the time per job, not the rate limit, set the pace, because the worker processes one job at a time; the simulator makes both limits visible.",
+      "Repeated and simultaneous submissions of the same id are acknowledged without a second job, and messages left behind by a crash between saving and queuing are picked up by the sweep.",
+      "Unit tests cover the gateway (intake, worker paths and sweep) and the simulator, and CI deploys the page only when every job passes."
+    ],
+    "architecture": [
+      {
+        "label": "Sender",
+        "nodes": [
+          {
+            "label": "Mock A",
+            "detail": "bursts · 100 requests in flight"
+          }
+        ]
+      },
+      {
+        "label": "Gateway",
+        "nodes": [
+          {
+            "label": "Service B",
+            "detail": "Express · validates · 202"
+          }
+        ]
+      },
+      {
+        "label": "State and queue",
+        "nodes": [
+          {
+            "label": "PostgreSQL",
+            "detail": "messages and status"
+          },
+          {
+            "label": "Redis + BullMQ",
+            "detail": "jobs · 100/s limiter · backoff"
+          }
+        ]
+      },
+      {
+        "label": "Delivery",
+        "nodes": [
+          {
+            "label": "Worker",
+            "detail": "one job at a time · 5 attempts"
+          }
+        ]
+      },
+      {
+        "label": "Provider",
+        "nodes": [
+          {
+            "label": "Mock C",
+            "detail": "100 requests/s · 429 beyond"
+          }
+        ]
+      }
+    ],
+    "liveUrl": "https://gateway.greenie.dev/",
+    "repoUrl": "https://github.com/MarioAGtzC/message-throttling-gateway",
+    "year": 2026,
+    "featured": false,
+    "order": 5,
+    "origin": "challenge",
+    "category": [
+      "backend",
+      "microservice"
+    ],
+    "status": "live"
+  },
+  {
     "slug": "devtree",
     "title": "DevTree: Link-in-bio Platform",
     "summary": "A link-in-bio platform for developers: a REST API for accounts, usernames and public profiles, and the React app that consumes it.",
@@ -851,7 +943,7 @@
     "liveUrl": "https://devtree.greenie.dev/",
     "year": 2025,
     "featured": false,
-    "order": 5,
+    "order": 6,
     "origin": "course",
     "category": [
       "web app",
@@ -967,7 +1059,7 @@
     ],
     "year": 2020,
     "featured": false,
-    "order": 6,
+    "order": 7,
     "origin": "client",
     "category": [
       "web app"
@@ -998,7 +1090,7 @@
     "repoUrl": "https://github.com/dielozmo/ADN_Cre4cion",
     "year": 2020,
     "featured": false,
-    "order": 7,
+    "order": 8,
     "origin": "client",
     "category": [
       "landing"

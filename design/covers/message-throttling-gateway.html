@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Message Throttling Gateway · cover</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.canvas { --bg: #0f1115; --grid: rgb(230 232 235 / 0.045); --grid-size: 30px; --accent: #4cc38a; --ink: #e6e8eb; --muted: #9aa3ae;
+  --line: #2a2f3a; --surface: #171a21; --panel-bg: #141820; }
+.glow { left: -240px; bottom: -360px; width: 680px; height: 680px; background: radial-gradient(circle, rgb(76 195 138 / 0.14), transparent 65%); }
+.split { --pad-x: 72px; --text-width: 470px; --split-gap: 44px; }
+.tag { margin-bottom: 24px; }
+h1 { --h1: 52px; margin-bottom: 18px; }
+.tagline { font-size: 19px; }
+.note { display: flex; align-items: center; gap: 10px; margin-top: 26px; font: 14px 'Geist Mono', monospace; color: #6b7480; }
+.note .dot { width: 8px; height: 8px; background: #f2b84b; }
+.chart { display: block; width: 100%; height: auto; padding: 18px 20px 6px; }
+.lbl { fill: #9aa3ae; font: 600 12px 'Geist Mono', monospace; letter-spacing: 0.06em; }
+.axis { stroke: #2a2f3a; stroke-width: 1; }
+.tick { fill: #6b7480; font: 11px 'Geist Mono', monospace; }
+.in { fill: #f2b84b; }
+.out { fill: #4cc38a; }
+.cap { stroke: #4cc38a; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.cap-l { fill: #4cc38a; font: 600 12px 'Geist Mono', monospace; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+.stats div { padding: 12px 16px 14px; border-right: 1px solid var(--line); }
+.stats div:last-child { border-right: 0; }
+.stats small { display: block; font: 600 11px 'Geist Mono', monospace; letter-spacing: 0.08em; color: #6b7480; }
+.stats strong { display: block; margin-top: 4px; font: 600 19px 'Geist Mono', monospace; color: var(--ink); }
+.s-pending { color: #9aa3ae !important; } .s-retry { color: #f2b84b !important; } .s-sent { color: #4cc38a !important; } .s-failed { color: #f2555a !important; }
+</style>
+</head>
+<body>
+<div class="canvas dots split">
+  <div class="glow"></div>
+  <div class="text stack">
+    <span class="tag">Technical challenge</span>
+    <h1>A burst comes in,<br><span class="accent">100/s go out</span></h1>
+    <p class="tagline">A gateway that stores every message, queues it in BullMQ and delivers it at the provider's limit, with retries and idempotent intake.</p>
+    <div class="note"><span class="dot"></span>Express · PostgreSQL · Redis · live simulator</div>
+  </div>
+  <div class="visual panel">
+    <div class="window-bar"><i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#22c55e"></i><span>GET /messages · measured on Docker</span></div>
+    <svg class="chart" viewBox="0 0 540 230" aria-hidden="true">
+      <text class="lbl" x="0" y="14">RECEIVED</text>
+      <rect class="in" x="0" y="26" width="16" height="74" rx="2"/>
+      <rect class="in" x="20" y="38" width="16" height="62" rx="2"/>
+      <rect class="in" x="40" y="58" width="16" height="42" rx="2"/>
+      <rect class="in" x="60" y="80" width="16" height="20" rx="2"/>
+      <line class="axis" x1="0" y1="100" x2="540" y2="100"/>
+      <text class="lbl" x="0" y="130">SENT PER SECOND</text>
+      <line class="cap" x1="0" y1="152" x2="540" y2="152"/>
+      <text class="cap-l" x="452" y="146">limit 100/s</text>
+      <g class="out">
+        <rect x="0" y="168" width="16" height="38" rx="2"/><rect x="20" y="166" width="16" height="40" rx="2"/>
+        <rect x="40" y="170" width="16" height="36" rx="2"/><rect x="60" y="167" width="16" height="39" rx="2"/>
+        <rect x="80" y="169" width="16" height="37" rx="2"/><rect x="100" y="166" width="16" height="40" rx="2"/>
+        <rect x="120" y="168" width="16" height="38" rx="2"/><rect x="140" y="171" width="16" height="35" rx="2"/>
+        <rect x="160" y="167" width="16" height="39" rx="2"/><rect x="180" y="169" width="16" height="37" rx="2"/>
+        <rect x="200" y="166" width="16" height="40" rx="2"/><rect x="220" y="168" width="16" height="38" rx="2"/>
+        <rect x="240" y="170" width="16" height="36" rx="2"/><rect x="260" y="167" width="16" height="39" rx="2"/>
+        <rect x="280" y="169" width="16" height="37" rx="2"/><rect x="300" y="166" width="16" height="40" rx="2"/>
+        <rect x="320" y="168" width="16" height="38" rx="2"/><rect x="340" y="171" width="16" height="35" rx="2"/>
+        <rect x="360" y="167" width="16" height="39" rx="2"/><rect x="380" y="169" width="16" height="37" rx="2"/>
+        <rect x="400" y="166" width="16" height="40" rx="2"/><rect x="420" y="168" width="16" height="38" rx="2"/>
+        <rect x="440" y="170" width="16" height="36" rx="2"/><rect x="460" y="167" width="16" height="39" rx="2"/>
+        <rect x="480" y="169" width="16" height="37" rx="2"/><rect x="500" y="168" width="16" height="38" rx="2"/>
+        <rect x="520" y="170" width="16" height="36" rx="2"/>
+      </g>
+      <line class="axis" x1="0" y1="206" x2="540" y2="206"/>
+      <text class="tick" x="0" y="224">0 s</text>
+      <text class="tick" x="230" y="224">avg 74/s</text>
+      <text class="tick" x="500" y="224">135 s</text>
+    </svg>
+    <div class="stats">
+      <div><small>RECEIVED</small><strong>10,000</strong></div>
+      <div><small>RETRIED</small><strong class="s-retry">158</strong></div>
+      <div><small>SENT</small><strong class="s-sent">10,000</strong></div>
+      <div><small>FAILED</small><strong class="s-failed">0</strong></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
