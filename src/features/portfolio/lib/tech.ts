@@ -1,7 +1,8 @@
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
-import { TECH_ENTRIES, TECH_GROUPS, type TechId } from './techCatalog.ts';
 
-export type { TechId };
+/** Normalized key of a tech's canonical name (`normalizeTech`); used in the URL. */
+export type TechId = string;
 
 /** Why a project counts for one tech, from most to least direct. */
 export type Match =
@@ -18,6 +19,8 @@ export interface TechIndex {
   entries: Map<TechId, { label: string }>;
   /** Each project's own techs (its stack only, not its pieces'), with implications and groups. */
   own: Map<string, Map<TechId, Match>>;
+  /** Ids of the catalog's groups (e.g. AWS), which match many techs. */
+  groups: Set<TechId>;
   projects: Project[];
 }
 
@@ -46,19 +49,24 @@ export function stripVersion(name: string): string {
 }
 
 /** Every [normalized key, id] pair the catalog defines: ids, labels and aliases. */
-export function catalogKeys(): [string, TechId][] {
-  return [...TECH_ENTRIES, ...TECH_GROUPS].flatMap((tech) =>
+export function catalogKeys({ entries, groups }: Techs): [string, TechId][] {
+  return [...entries, ...groups].flatMap((tech) =>
     [tech.id, tech.label, ...(tech.aliases ?? [])].map((name): [string, TechId] => [normalizeTech(name), tech.id]),
   );
 }
 
-/** Builds the tech lookup and each project's techs. Pure: call it once per project list. */
-export function buildTechIndex(projects: Project[]): TechIndex {
+/**
+ * Builds the tech lookup and each project's techs from the catalog (techs.json). Pure: call it once
+ * per project list.
+ */
+export function buildTechIndex(projects: Project[], catalog: Techs): TechIndex {
   const byKey = new Map<string, TechId>();
   const entries = new Map<TechId, { label: string }>();
-  for (const [key, id] of catalogKeys()) if (!byKey.has(key)) byKey.set(key, id);
-  for (const tech of [...TECH_ENTRIES, ...TECH_GROUPS]) entries.set(tech.id, { label: tech.label });
-  const implies = new Map(TECH_ENTRIES.map((entry) => [entry.id, entry.implies ?? []]));
+  for (const [key, id] of catalogKeys(catalog)) if (!byKey.has(key)) byKey.set(key, id);
+  for (const tech of [...catalog.entries, ...catalog.groups]) entries.set(tech.id, { label: tech.label });
+  const implies = new Map(catalog.entries.map((entry) => [entry.id, entry.implies ?? []]));
+  // A prefix matches the whole name or its first words: "AWS" takes "AWS Lambda", not "AWSome".
+  const startsWith = (name: string, prefix: string) => name === prefix || name.startsWith(`${prefix} `);
 
   const own = new Map<string, Map<TechId, Match>>();
   for (const project of projects) {
@@ -90,10 +98,12 @@ export function buildTechIndex(projects: Project[]): TechIndex {
       for (const next of implies.get(tech) ?? []) queue.push({ tech: next, via });
     }
 
-    for (const group of TECH_GROUPS) {
+    for (const group of catalog.groups) {
       if (matches.has(group.id)) continue;
       const member = direct.find(({ id, name }) =>
-        group.prefixes.some((prefix) => name.startsWith(prefix) || entries.get(id)?.label.startsWith(prefix)),
+        group.prefixes.some(
+          (prefix) => startsWith(name, prefix) || startsWith(entries.get(id)?.label ?? '', prefix),
+        ),
       );
       if (member) matches.set(group.id, { kind: 'group', tech: group.id, member: member.id });
     }
@@ -101,7 +111,7 @@ export function buildTechIndex(projects: Project[]): TechIndex {
     own.set(project.slug, matches);
   }
 
-  return { byKey, entries, own, projects };
+  return { byKey, entries, own, groups: new Set(catalog.groups.map(({ id }) => id)), projects };
 }
 
 /** Resolves any spelling (`Node.js`, `NODEJS`, `node 24`) to a known tech id. */

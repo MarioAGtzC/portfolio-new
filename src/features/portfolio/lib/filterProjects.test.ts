@@ -1,15 +1,19 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
 import { facetCounts, filterProjects, parseFilters, type ProjectFilters } from './filters.ts';
 import { buildTechIndex } from './tech.ts';
+
+// A frozen copy of techs.json, so these expectations do not follow the catalog published by the SCM.
+const techs = JSON.parse(readFileSync(new URL('./fixtures/techs.json', import.meta.url), 'utf8')) as Techs;
 
 // A frozen copy of projects.json, so these expectations do not follow the content published by the SCM.
 const projects = JSON.parse(
   readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
-const index = buildTechIndex(projects);
+const index = buildTechIndex(projects, techs);
 const run = (query: string) => filterProjects(parseFilters(new URLSearchParams(query), index), index);
 const slugs = (query: string) => run(query).map((result) => result.project.slug);
 const find = (query: string, slug: string) => run(query).find((result) => result.project.slug === slug);
@@ -86,7 +90,7 @@ describe('filterProjects rules on fixed fixtures', () => {
     fixture('hub-a', 1, ['web app'], ['React Router', 'AWS Lambda'], 'hub'),
     fixture('solo', 1, ['landing'], ['HTML5']),
   ];
-  const fixtureIndex = buildTechIndex(fixtures);
+  const fixtureIndex = buildTechIndex(fixtures, techs);
   const runFixture = (query: string) =>
     filterProjects(parseFilters(new URLSearchParams(query), fixtureIndex), fixtureIndex);
   const fixtureSlugs = (query: string) => runFixture(query).map((result) => result.project.slug);

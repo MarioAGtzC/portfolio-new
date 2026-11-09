@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
+import type { Techs } from '../../../data/schemas.ts';
 import type { Project } from '../../../types/project.ts';
 import { buildTechIndex, normalizeTech, resolveTech, stripVersion } from './tech.ts';
+
+// A frozen copy of techs.json, so these expectations do not follow the catalog published by the SCM.
+const techs = JSON.parse(readFileSync(new URL('./fixtures/techs.json', import.meta.url), 'utf8')) as Techs;
 
 const projects = JSON.parse(
   readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
-const index = buildTechIndex(projects);
+const index = buildTechIndex(projects, techs);
 const own = (slug: string) => {
   const matches = index.own.get(slug);
   assert.ok(matches, `unknown project ${slug}`);
@@ -124,8 +128,15 @@ describe('buildTechIndex: groups', () => {
   });
 
   test('AWS includes Amazon SES', () => {
-    const matches = buildTechIndex([{ ...projects[0], slug: 'x', stack: ['Amazon SES'] }]).own.get('x');
+    const matches = buildTechIndex([{ ...projects[0], slug: 'x', stack: ['Amazon SES'] }], techs).own.get('x');
     assert.deepEqual(matches?.get('aws'), { kind: 'group', tech: 'aws', member: 'awsses' });
+  });
+
+  test('a prefix matches the whole name or its first words only (D26)', () => {
+    const groupOf = (stack: string[]) => buildTechIndex([{ ...projects[0], slug: 'x', stack }], techs).own.get('x')?.has('aws');
+    assert.equal(groupOf(['AWS']), true);
+    assert.equal(groupOf(['AWS CDK']), true);
+    assert.equal(groupOf(['AWSome Tool']), false);
   });
 
   test('projects without AWS services are not in the group', () => {
