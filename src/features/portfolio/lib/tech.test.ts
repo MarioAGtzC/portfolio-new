@@ -5,7 +5,7 @@ import type { Project } from '../../../types/project.ts';
 import { buildTechIndex, normalizeTech, resolveTech, stripVersion } from './tech.ts';
 
 const projects = JSON.parse(
-  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
 const index = buildTechIndex(projects);
 const own = (slug: string) => {

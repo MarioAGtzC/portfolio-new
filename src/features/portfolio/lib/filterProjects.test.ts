@@ -5,8 +5,9 @@ import type { Project } from '../../../types/project.ts';
 import { facetCounts, filterProjects, parseFilters, type ProjectFilters } from './filters.ts';
 import { buildTechIndex } from './tech.ts';
 
+// A frozen copy of projects.json, so these expectations do not follow the content published by the SCM.
 const projects = JSON.parse(
-  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
 const index = buildTechIndex(projects);
 const run = (query: string) => filterProjects(parseFilters(new URLSearchParams(query), index), index);

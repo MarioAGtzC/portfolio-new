@@ -68,7 +68,7 @@ describe('formatMatches', () => {
 
   test('Reservadito with tech=node reads "NestJS → Node.js" (spec criterion 3)', () => {
     const projects = JSON.parse(
-      readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+      readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
     ) as Project[];
     const index = buildTechIndex(projects);
     const reservadito = filterProjects(parseFilters(new URLSearchParams('tech=node'), index), index).find(

@@ -1,0 +1,1100 @@
+[
+  {
+    "slug": "reservadito",
+    "title": "Reservadito: Multi-tenant Booking Platform",
+    "summary": "A booking platform for appointment-based service businesses (barbershops, spas, clinics, therapists) covering discovery, scheduling, payments, staff management, and reviews for both independent locations and multi-branch franchises.",
+    "stack": [
+      "NestJS",
+      "PostgreSQL",
+      "React",
+      "Stripe Connect",
+      "AWS Fargate",
+      "Terraform",
+      "Prisma",
+      "Redis",
+      "Next.js",
+      "Capacitor"
+    ],
+    "role": "Full-stack engineer in a team of 3. We designed and built the platform together: domain modeling, the NestJS backend API, three frontends, the shared SDK contract, and the AWS infrastructure and CI/CD pipelines.",
+    "team": 3,
+    "problem": "Appointment-based businesses typically run on a patchwork of WhatsApp, paper agendas, phone calls, and generic calendar apps, which makes it hard to prevent double-bookings, collect payment up front, enforce cancellation policies, or prove a client actually showed up. Franchises also lack any consolidated view across branches. On the client side, people just want one place to find a trustworthy business, see real availability and pricing, book in a few taps, pay online, and leave a review.",
+    "process": "The domain was modeled first (organizations → businesses/branches → staff → services → bookings) so franchise support, recurring appointments and multi-branch payments wouldn't need a later rewrite. Prisma is the single source of truth for the data model, and a shared SDK (@reservadito/sdk: types, Zod schemas and an HTTP client) is used by the backend and all three frontends, so the API contract is defined once. A pnpm and Turborepo monorepo holds four apps: a customer app and a business panel that also ship as native iOS and Android apps through Capacitor, an internal admin panel, and a modular NestJS backend. Every pull request runs typecheck, tests and lint in GitHub Actions, and staging and production deploy to AWS through their own pipelines.",
+    "results": [
+      "Availability rules, cancellation policies, reminders, no-shows and payment collection are enforced by the system instead of tracked by hand.",
+      "QR check-in plus confirmation from both client and business settles whether an appointment happened, without manual admin intervention in the common case.",
+      "One Prisma schema and one shared SDK keep the API contract consistent across the backend and three frontends.",
+      "Two of the apps ship to the web, the App Store and Google Play from one codebase each."
+    ],
+    "architecture": [
+      {
+        "label": "Clients",
+        "nodes": [
+          {
+            "label": "Customer app",
+            "detail": "web · iOS · Android",
+            "pieceSlug": "reservadito-client"
+          },
+          {
+            "label": "Business panel",
+            "detail": "web · iOS · Android",
+            "pieceSlug": "reservadito-business"
+          },
+          {
+            "label": "Admin panel",
+            "detail": "Next.js",
+            "pieceSlug": "reservadito-admin"
+          }
+        ]
+      },
+      {
+        "label": "Contract",
+        "nodes": [
+          {
+            "label": "@reservadito/sdk",
+            "detail": "types · Zod · HTTP client"
+          }
+        ]
+      },
+      {
+        "label": "API",
+        "nodes": [
+          {
+            "label": "Backend API",
+            "detail": "NestJS · AWS Fargate",
+            "pieceSlug": "reservadito-backend"
+          }
+        ]
+      },
+      {
+        "label": "Data & services",
+        "nodes": [
+          {
+            "label": "PostgreSQL",
+            "detail": "Prisma · RDS Multi-AZ"
+          },
+          {
+            "label": "Redis · BullMQ",
+            "detail": "ElastiCache"
+          },
+          {
+            "label": "Stripe Connect",
+            "detail": "webhooks · ledger"
+          }
+        ]
+      }
+    ],
+    "year": 2026,
+    "featured": true,
+    "order": 1,
+    "origin": "product",
+    "category": [
+      "platform"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "reservadito-client",
+    "title": "Reservadito: Customer App",
+    "summary": "The customer-facing app for discovering businesses, booking appointments, paying online, and leaving reviews. Shipped as web and native iOS/Android from one codebase.",
+    "stack": [
+      "React 18",
+      "Capacitor",
+      "TanStack Query",
+      "Stripe.js / React Stripe.js",
+      "Mapbox",
+      "Firebase Cloud Messaging",
+      "Vite",
+      "Tailwind CSS",
+      "QR code generation"
+    ],
+    "role": "Built by our team of 3 as part of the Reservadito monorepo.",
+    "team": 3,
+    "problem": "Clients need a single place to search by location, see transparent pricing and real availability, book one-off or recurring appointments, pay online, reschedule within clear rules, and leave a review, instead of calling around or messaging on WhatsApp.",
+    "process": "React and Vite, wrapped with Capacitor to ship the same codebase as native iOS and Android apps with native Google and Apple sign-in, push notifications and device geolocation, released through TestFlight and App Store pipelines. Clients search businesses on a Mapbox map with clustered pins, book one-off or recurring appointments, pay with Stripe, reschedule within the business's rules, buy memberships, enroll in courses and leave reviews. Each booking gets its own QR code for check-in at the business. Legal documents (terms, privacy, FAQ) are rendered from Markdown in Spanish and English. Types, validation and the HTTP client come from the shared SDK.",
+    "results": [
+      "Ships as a web app and as native iOS and Android apps from one codebase.",
+      "Covers the full client journey: map search, booking, online payment, rescheduling, QR check-in, memberships and reviews, in Spanish and English."
+    ],
+    "liveUrl": "https://www.reservadito.mx/",
+    "year": 2026,
+    "featured": false,
+    "order": 1,
+    "origin": "product",
+    "category": [
+      "web app",
+      "mobile app"
+    ],
+    "status": "live",
+    "parentSlug": "reservadito"
+  },
+  {
+    "slug": "reservadito-business",
+    "title": "Reservadito: Business Panel",
+    "summary": "The dashboard service businesses use to manage branches, staff, services, schedules, cancellation policies, and online payments. Also shipped as a native app.",
+    "stack": [
+      "React 18",
+      "Capacitor",
+      "Stripe Connect",
+      "TanStack Query",
+      "Recharts",
+      "Stripe.js",
+      "Google Maps",
+      "dnd-kit",
+      "Firebase Cloud Messaging",
+      "Vite",
+      "Tailwind CSS"
+    ],
+    "role": "Built by our team of 3 as part of the Reservadito monorepo.",
+    "team": 3,
+    "problem": "Businesses need a single dashboard to manage branches, staff, services, schedules, exceptions, and cancellation policies, collect payment online, and prove attendance via QR check-in, instead of tracking no-shows and payments by hand.",
+    "process": "Same approach as the customer app: React, Vite and Capacitor from one codebase for web and native builds, with push notifications and native sign-in. Owners and staff manage branches, staff, services, schedules, exceptions, cancellation policies and bookings. Stripe Connect's embedded components handle payment onboarding and account management inside the panel. Services and categories are reordered with dnd-kit, branch location is set with a Google Maps picker, and Recharts powers the analytics dashboards. Pure business logic is covered by Vitest unit tests.",
+    "results": [
+      "Gives business owners one place to run daily operations, track performance and set up Stripe payments without leaving the app.",
+      "Ships as a web app and as native iOS and Android apps from one codebase."
+    ],
+    "liveUrl": "https://business.reservadito.mx/",
+    "year": 2026,
+    "featured": false,
+    "order": 2,
+    "origin": "product",
+    "category": [
+      "web app",
+      "mobile app"
+    ],
+    "status": "live",
+    "parentSlug": "reservadito"
+  },
+  {
+    "slug": "reservadito-admin",
+    "title": "Reservadito: Admin Panel",
+    "summary": "The internal panel the platform team uses to support businesses and users, review bookings and payouts, and manage plans, categories and app versions.",
+    "stack": [
+      "Next.js 14",
+      "React 18",
+      "TanStack Query",
+      "Tailwind CSS",
+      "Google Maps"
+    ],
+    "role": "Built by our team of 3 as part of the Reservadito monorepo.",
+    "team": 3,
+    "problem": "The platform operator needs an internal team able to support businesses, investigate payment disputes, and audit actions across the system, without exposing any of that tooling to businesses or clients.",
+    "process": "Built with Next.js, separate from the SPA and Capacitor approach of the customer and business apps, because it is internal-only and never ships as a native app. It covers a dashboard plus sections for businesses, organizations, users, bookings, payouts, subscription plans and adjustments, categories, amenities, app versions and operations. It uses the same shared SDK and TanStack Query as the other frontends.",
+    "results": [
+      "Gives the internal team one place for support, payouts and platform configuration, isolated from the client- and business-facing apps."
+    ],
+    "year": 2026,
+    "featured": false,
+    "order": 3,
+    "origin": "product",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "reservadito"
+  },
+  {
+    "slug": "reservadito-backend",
+    "title": "Reservadito: Backend",
+    "summary": "The central API behind Reservadito: auth, bookings, availability, payments, and multi-tenant organization/branch management. Deployed on AWS with Terraform-managed infrastructure.",
+    "stack": [
+      "NestJS",
+      "PostgreSQL",
+      "Redis",
+      "Stripe Connect",
+      "AWS Fargate",
+      "Terraform",
+      "Prisma",
+      "BullMQ",
+      "AWS SES",
+      "Passport",
+      "JWT",
+      "Google OAuth",
+      "Apple Sign-In",
+      "Argon2",
+      "Field-level encryption",
+      "Resend",
+      "React Email",
+      "Firebase Cloud Messaging",
+      "Cloudflare R2"
+    ],
+    "role": "Built by our team of 3 as part of the Reservadito monorepo.",
+    "team": 3,
+    "problem": "A multi-tenant booking system needs to enforce availability rules, handle recurring appointments, move money correctly across independent businesses and franchises, authenticate users safely at scale, and keep sensitive client health data protected, without ad-hoc, per-feature solutions that drift out of sync.",
+    "process": "A modular NestJS API with more than 30 domain modules (auth, organizations, businesses, services, availability, bookings, discounts, memberships, wallet, Stripe, reviews, search, analytics, audit and more) over a PostgreSQL schema of 71 Prisma models. Requests are validated with the shared Zod schemas, protected by role-based guards and rate-limited per user and IP through Redis. Authentication uses 15-minute JWTs with Google and Apple sign-in, Argon2 password hashing and a Redis-backed brute-force lockout that fails closed in production. Payments run on Stripe Connect with shared franchise or per-branch accounts, webhook processing, reconciliation and an internal wallet for earnings and payouts. Scheduled jobs handle reminders, auto-completion, no-shows, membership and subscription expiry, and stuck-payment retries. Clinical health-profile fields are encrypted at the application level. Email goes through Resend or AWS SES with React Email templates and .ics invites, and push notifications through Firebase. It runs on AWS Fargate behind an ALB with RDS and ElastiCache, defined with Terraform.",
+    "results": [
+      "Around 240 backend unit test files cover security, permissions and edge-case-heavy logic such as availability, pricing and overlaps, and run on every pull request.",
+      "Background jobs automate reminders, no-shows, auto-completion, expirations and payment retries instead of leaving them to staff.",
+      "Production infrastructure is reproducible from Terraform, and deploys run through CI with database migrations included."
+    ],
+    "year": 2026,
+    "featured": false,
+    "order": 4,
+    "origin": "product",
+    "category": [
+      "backend"
+    ],
+    "status": "live",
+    "parentSlug": "reservadito"
+  },
+  {
+    "slug": "portfolio-resume",
+    "title": "Portfolio & Resume Sites",
+    "summary": "My two personal sites, this portfolio and my resume, plus the systems behind them: a content manager that edits and publishes both, and a serverless API for their contact forms.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "Prisma",
+      "Tailwind CSS v4",
+      "AWS Lambda",
+      "Amazon SES",
+      "AWS CDK",
+      "GitHub Actions",
+      "LaTeX (XeLaTeX)",
+      "Cloudflare Turnstile"
+    ],
+    "role": "Solo project: I designed, built and deployed all five pieces.",
+    "problem": "Recruiters see a candidate twice, as a web profile and as a PDF, and the two drift apart when they are maintained separately. A list of repo links doesn't show what someone built or why. I wanted a resume site and CV built from the same data, a portfolio that explains each project as a case study, content I can update without editing code in two repositories, and a contact channel I own instead of a third-party form service.",
+    "process": "Five pieces around two static sites. The resume and the portfolio are React apps that build from published JSON, and each compiles the same CV PDF with LaTeX in CI. Their content is edited in the Site Content Manager: an admin panel and a NestJS API that store it in PostgreSQL and publish it to each site's repository as one validated commit, which redeploys the site. The portfolio models multi-part projects as hubs with linked pieces, renders every cover from HTML during the deploy and prerenders every route for SEO. Both contact forms post to a serverless API on AWS (API Gateway, Lambda and SES) defined with the AWS CDK, with a separate Turnstile configuration per site.",
+    "results": [
+      "Both sites are edited from one panel, and every change is reviewed as a diff before it is published.",
+      "The resume and the portfolio offer the same CV PDF, compiled from the same generated LaTeX file, so the PDF can't drift from the site.",
+      "Both sites share one contact backend with no server to maintain, and bots are filtered on the client and on the API."
+    ],
+    "architecture": [
+      {
+        "label": "Editing",
+        "nodes": [
+          {
+            "label": "Admin panel",
+            "detail": "React · Cloudflare Pages",
+            "pieceSlug": "site-content-manager-admin"
+          }
+        ]
+      },
+      {
+        "label": "Content",
+        "nodes": [
+          {
+            "label": "Content API",
+            "detail": "NestJS · PostgreSQL (Neon)",
+            "pieceSlug": "site-content-manager-api"
+          }
+        ]
+      },
+      {
+        "label": "Publishing",
+        "nodes": [
+          {
+            "label": "GitHub",
+            "detail": "one commit per site · Actions deploy"
+          }
+        ]
+      },
+      {
+        "label": "Sites",
+        "nodes": [
+          {
+            "label": "Portfolio",
+            "detail": "React · GitHub Pages",
+            "pieceSlug": "portfolio"
+          },
+          {
+            "label": "Resume",
+            "detail": "React · LaTeX CV",
+            "pieceSlug": "resume"
+          }
+        ]
+      },
+      {
+        "label": "Contact",
+        "nodes": [
+          {
+            "label": "Contact API",
+            "detail": "Lambda · SES",
+            "pieceSlug": "contact-api"
+          }
+        ]
+      }
+    ],
+    "year": 2026,
+    "featured": true,
+    "order": 2,
+    "origin": "personal",
+    "category": [
+      "web app",
+      "serverless"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "portfolio",
+    "title": "Mario Gutiérrez: Portfolio",
+    "summary": "This site: a portfolio where each project is a case study covering the problem, the process and the results, with a contact form backed by my own serverless API.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "React Router",
+      "Vite",
+      "Zod",
+      "Cloudflare Turnstile",
+      "LaTeX (XeLaTeX)",
+      "Playwright",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "role": "Solo project: design, implementation and deployment.",
+    "problem": "Recruiters and clients usually judge an engineer from a resume PDF, a GitHub profile full of repos without context, or a LinkedIn summary. None of these quickly shows what the person built, what their role was, or why it mattered. This site answers those questions, and platforms with several codebases appear as one story with their pieces linked underneath.",
+    "process": "All content (projects, the About section and SEO texts) is JSON published by my Site Content Manager and checked against Zod schemas at build time, so invalid data fails the build. A project can be a hub with linked pieces and an optional architecture diagram. Code is grouped by feature (home, portfolio, project detail, contact). Each deploy compiles the site's own copy of my CV from the published LaTeX file and renders every project cover and social preview from its HTML with Playwright. After the build, a prerender script writes static HTML for every route with its own meta tags, JSON-LD and Open Graph image, plus sitemap.xml and robots.txt. Colors are design tokens with light and dark values and a system, dark and light toggle. The contact form combines Turnstile, a honeypot field, client-side validation and a 30-second cooldown, and posts to the Contact API.",
+    "results": [
+      "Projects read as case studies, and multi-part systems appear as one hub with linked pieces instead of disconnected repos.",
+      "Every route is prerendered with its own metadata and preview image, so search engines and link previews see real content without running JavaScript.",
+      "Publishing from the admin panel is the only release step: the commit triggers linting, the CV, the covers, the build and the deploy, and invalid content stops it."
+    ],
+    "repoUrl": "https://github.com/MarioAGtzC/portfolio-new",
+    "year": 2026,
+    "featured": false,
+    "order": 1,
+    "origin": "personal",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "resume",
+    "title": "Mario Gutiérrez: Resume Site",
+    "summary": "My resume site for recruiters: experience, skills and contact on one page, with a PDF CV built from the same content so both always match.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "LaTeX (XeLaTeX)",
+      "GitHub Actions",
+      "Cloudflare Turnstile",
+      "Vite",
+      "GitHub Pages"
+    ],
+    "role": "Solo project: design, implementation, CV pipeline and deployment.",
+    "problem": "Recruiters usually see a candidate as a web profile and as a PDF attached to an application. When those are maintained separately they drift apart: an updated role on the site, an outdated PDF in the inbox. This site keeps a single source of truth, and gives recruiters a spam-protected way to get in touch without a personal email address on the page.",
+    "process": "All resume content lives in JSON files published by my Site Content Manager, and components only render it. Experience totals, role durations, the career timeline and years per language are calculated from dates, so nothing goes stale. The same content becomes a LaTeX document generated by the content manager's API, and GitHub Actions compiles it to PDF, checks that the PDF has extractable text, builds the site and deploys it. Sections are labelled like API endpoints to match the backend focus, with light, dark and system themes. The contact form uses Turnstile, a honeypot field and a 30-second cooldown before posting to the Contact API.",
+    "results": [
+      "The site and the downloadable CV are built from the same published content on every deploy, so they can't fall out of sync.",
+      "Experience figures are computed from dates instead of typed by hand.",
+      "A broken CV can't ship: the pipeline fails if the compiled PDF has no extractable text."
+    ],
+    "liveUrl": "https://mario-gutierrez.com/",
+    "repoUrl": "https://github.com/MarioAGtzC/resume-new",
+    "year": 2026,
+    "featured": false,
+    "order": 2,
+    "origin": "personal",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "site-content-manager-admin",
+    "title": "Site Content Manager: Admin Panel",
+    "summary": "A private React panel where I edit every piece of content on my resume and portfolio, review a diff of what will change, publish it and follow each site's deploy.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS v4",
+      "React Router",
+      "TanStack Query",
+      "openapi-typescript",
+      "openapi-fetch",
+      "CodeMirror 6",
+      "dnd-kit",
+      "Vitest",
+      "Testing Library",
+      "Playwright",
+      "GitHub Actions",
+      "Cloudflare Pages"
+    ],
+    "role": "Solo project: requirements, design, implementation, tests and deployment.",
+    "problem": "Updating either site meant editing data files and components by hand in two repositories. I wanted every piece of content in forms, a clear view of what would change before it went live, and no need to open the site repositories at all.",
+    "process": "The panel is a React single-page app that works only through its API. I built each feature after its API endpoints were usable, generating the panel's TypeScript types from the API's OpenAPI document with openapi-typescript, so both sides stay in sync. It has editors for the resume (profile, experience and CV), for portfolio projects (story, stack, links, architecture diagram, parent projects with their pieces, and slug renaming with a confirmation for published pages), for the About section and for both sites' SEO texts. Screenshots are uploaded and reordered, each project's cover is edited as HTML in CodeMirror with a live preview in a sandboxed frame, and the logos the covers use are managed in their own screen. The publish screen shows a per-file diff for each site and then the progress of its deploy, and the history restores an earlier version as a new publish. Short lists such as stack and skills are chips that can be reordered by drag and drop or with the keyboard. It reuses the portfolio's design tokens, treats keyboard and screen-reader use as requirements, warns about unsaved changes, shows API errors next to their fields, and waits with retries while the free-tier API wakes up. Hosting is Cloudflare Pages with a strict Content-Security-Policy.",
+    "results": [
+      "The content of both sites is managed from one place, without editing code or opening the site repositories.",
+      "Every change is reviewed as a diff before it goes live, and an earlier version can be restored from the history.",
+      "Component tests cover each screen, and end-to-end tests run the real API against a production build of the panel, including its Content-Security-Policy, so a header problem fails locally instead of in production."
+    ],
+    "year": 2026,
+    "featured": false,
+    "order": 3,
+    "origin": "personal",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "site-content-manager-api",
+    "title": "Site Content Manager: API",
+    "summary": "The backend behind the content of my resume and portfolio: it stores everything in PostgreSQL and publishes each site's files to its GitHub repository as one validated commit.",
+    "stack": [
+      "NestJS",
+      "TypeScript",
+      "Node.js 24",
+      "PostgreSQL",
+      "Prisma",
+      "Zod",
+      "Swagger (OpenAPI)",
+      "GitHub App",
+      "Octokit",
+      "sharp",
+      "Vitest",
+      "Supertest",
+      "Docker",
+      "GitHub Actions",
+      "Neon",
+      "Render"
+    ],
+    "role": "Solo project: requirements, architecture, implementation, tests and deployment.",
+    "problem": "Both sites kept their content in their repositories: JSON files in the resume, and TypeScript data plus text inside a component in the portfolio, which also had no CV of its own and downloaded the resume's. Updating a job, a project or a skill meant editing files by hand in two repositories, with nothing checking the data until the build.",
+    "process": "I wrote a specification first, then a phased plan with acceptance criteria per task, building the API before the panel in each phase. The content lives in a relational schema in PostgreSQL with Prisma, and an importer read the sites' original files, with a round-trip test proving that importing and exporting reproduces them exactly. The database is exported into the exact files each site builds from (JSON data, cover HTML, images and a LaTeX cv.tex generated from the resume data), and every file is validated against the same schema the site uses before it is published. A preview shows a per-file diff; publishing creates a single commit per site through GitHub's Git Data API, authenticated as a GitHub App, and is refused if the content or the branch changed since the preview. Unchanged content creates no commit. After publishing, the API follows each site's GitHub Actions deploy and reports its progress. Screenshots are validated and converted to WebP with sharp, uploaded SVG logos are rejected if they contain scripts or external references, and every publication keeps a snapshot that can be restored as a new commit. Sign-in is GitHub-only and restricted to an allow-list, with sessions in a signed httpOnly cookie, CSRF and Origin checks on every write, Helmet headers and per-IP rate limits. The publishing flow was built against two sandbox repositories and a dry-run mode before the real sites were connected.",
+    "results": [
+      "Both sites are now updated from the admin panel instead of by editing code, and every publish goes through validation, a diff preview and a reviewable commit.",
+      "The resume and the portfolio offer the same CV PDF, compiled in each site's CI from the cv.tex the API generates.",
+      "The sites' own builds fail on invalid data, so a bad publish cannot silently break a live page.",
+      "Any earlier version of either site can be republished from the history."
+    ],
+    "liveUrl": "https://api.mario-gutierrez.com/docs",
+    "year": 2026,
+    "featured": false,
+    "order": 4,
+    "origin": "personal",
+    "category": [
+      "backend",
+      "api"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "contact-api",
+    "title": "Contact API",
+    "summary": "A serverless backend for the contact forms of my resume and portfolio sites: it filters bots, validates every field and delivers each message as a formatted email.",
+    "stack": [
+      "AWS Lambda",
+      "Amazon API Gateway",
+      "Amazon SES",
+      "AWS CDK",
+      "TypeScript",
+      "Cloudflare Turnstile",
+      "AWS Systems Manager",
+      "AWS IAM",
+      "Vitest",
+      "GitHub Actions",
+      "Amazon EventBridge",
+      "Amazon CloudWatch"
+    ],
+    "role": "Solo project: I designed, built and deployed it end to end.",
+    "problem": "A personal website needs a reliable way for visitors to get in touch without exposing a personal email address or letting bots flood the inbox. Running a traditional server just to relay a handful of messages is more to run, secure and maintain than the feature is worth.",
+    "process": "One POST /contact endpoint on an API Gateway HTTP API, handled by a TypeScript Lambda and delivered through Amazon SES, with no database or always-on compute. The handler validates every field with length caps, verifies the Turnstile token server-side with a separate secret per site, checks that the token was solved on the same site making the request, and rejects origins with no secret configured. User input is HTML-escaped before it goes into the email, and IP, user agent and time come from the request itself. Everything is defined with the AWS CDK. The CAPTCHA secrets are encrypted parameters in AWS Systems Manager Parameter Store, read at runtime and cached for five minutes, and the destination address is resolved at deploy time, so neither lives in the repo or the deploy command. Each request writes one structured log line with the site, the outcome, the rejection reason and the SES message ID, and no personal data. An SES configuration set publishes the delivery events of every email (delivered, delayed by the receiving server, bounced, complained, rejected) through Amazon EventBridge to CloudWatch Logs, so each message can be followed after it leaves AWS. A Vitest suite covers the validation, CAPTCHA, secret loading, email template and CORS logic, the full handler with AWS and Cloudflare mocked, and the synthesized CDK template; GitHub Actions runs it with a type check and cdk synth on every push and pull request.",
+    "results": [
+      "One deployment handles the contact forms of two sites, each with its own CAPTCHA configuration and a label in the email showing where the message came from.",
+      "A message is sent only after it passes field validation and the CAPTCHA check, including the site match.",
+      "API-wide throttling (5 requests per second, burst of 10) bounds abuse without paying for AWS WAF.",
+      "No servers or database to maintain, and replying to a message is one click.",
+      "54 automated tests run in CI on every push, including checks that the deployed template keeps IAM scoped and contains no secrets.",
+      "Every email is traceable end to end, from the request log to the receiving server's response, which turned a multi-hour Outlook delay from guesswork into a diagnosis."
+    ],
+    "architecture": [
+      {
+        "label": "Client",
+        "nodes": [
+          {
+            "label": "Contact form",
+            "detail": "portfolio · resume · Turnstile widget"
+          }
+        ]
+      },
+      {
+        "label": "API",
+        "nodes": [
+          {
+            "label": "API Gateway",
+            "detail": "HTTP API · 5 rps, burst 10"
+          },
+          {
+            "label": "Lambda",
+            "detail": "TypeScript handler"
+          }
+        ]
+      },
+      {
+        "label": "Services",
+        "nodes": [
+          {
+            "label": "Cloudflare Turnstile",
+            "detail": "per-site secret · hostname check"
+          },
+          {
+            "label": "SSM Parameter Store",
+            "detail": "encrypted secrets · 5 min cache"
+          },
+          {
+            "label": "Amazon SES",
+            "detail": "DKIM · DMARC · HTML email"
+          }
+        ]
+      },
+      {
+        "label": "Observability",
+        "nodes": [
+          {
+            "label": "EventBridge",
+            "detail": "SES delivery events"
+          },
+          {
+            "label": "CloudWatch Logs",
+            "detail": "request log · delivery log"
+          }
+        ]
+      }
+    ],
+    "repoUrl": "https://github.com/MarioAGtzC/contact-api",
+    "year": 2026,
+    "featured": false,
+    "order": 5,
+    "origin": "personal",
+    "category": [
+      "serverless",
+      "api"
+    ],
+    "status": "live",
+    "parentSlug": "portfolio-resume"
+  },
+  {
+    "slug": "cashtrackr",
+    "title": "CashTrackr: Budgeting App",
+    "summary": "A personal budgeting app: users create budgets, log expenses against them and see what is left, with a Next.js frontend and a private Express API.",
+    "stack": [
+      "Next.js 14",
+      "Express 5",
+      "TypeScript",
+      "PostgreSQL",
+      "Sequelize",
+      "Zod",
+      "JWT",
+      "Jest",
+      "Vitest",
+      "Playwright",
+      "Neon",
+      "Vercel",
+      "Render"
+    ],
+    "role": "Course project (2026), built solo: I used the course as a starting point, then reworked it with AI-assisted reviews and took both pieces to production with security hardening and tests.",
+    "problem": "People who set a budget for something, like a trip or a month of groceries, lose track of how much is left once expenses pile up. CashTrackr gives each user private budgets with their expenses attached, so they always know where the money went and what remains.",
+    "process": "Two pieces built as a backend-for-frontend: the browser never calls the API. Every request goes through Next.js server actions and a server-only data layer that attaches a shared internal key, and the Express API rejects anything without it. The API owns the data and the account flow (email-confirmed sign-up, JWT login and password reset with one-time codes), checks ownership on every budget and expense, and is rate limited per real user, because the frontend forwards the visitor's IP. Both pieces went through a pre-deploy security review, and the fixes were verified against the live site.",
+    "results": [
+      "Live in production end to end: frontend on Vercel, API on Render, PostgreSQL on Neon, and transactional email from a verified domain.",
+      "The API is reachable only through the frontend's server, and users can never read or change each other's data.",
+      "Unit, integration and end-to-end tests on both pieces, with the end-to-end suite passing against the production site."
+    ],
+    "architecture": [
+      {
+        "label": "Client",
+        "nodes": [
+          {
+            "label": "Next.js frontend",
+            "detail": "server actions · httpOnly session cookie",
+            "pieceSlug": "cashtrackr-frontend"
+          }
+        ]
+      },
+      {
+        "label": "API",
+        "nodes": [
+          {
+            "label": "Express API",
+            "detail": "internal key · JWT · rate limits",
+            "pieceSlug": "cashtrackr-backend"
+          }
+        ]
+      },
+      {
+        "label": "Services",
+        "nodes": [
+          {
+            "label": "PostgreSQL (Neon)",
+            "detail": "users · budgets · expenses"
+          },
+          {
+            "label": "Email (SMTP)",
+            "detail": "confirmation · reset codes"
+          }
+        ]
+      }
+    ],
+    "liveUrl": "https://cashtrackr.greenie.dev/",
+    "year": 2026,
+    "featured": true,
+    "order": 3,
+    "origin": "course",
+    "category": [
+      "web app",
+      "backend"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "cashtrackr-backend",
+    "title": "CashTrackr: Backend",
+    "summary": "A private REST API for CashTrackr: email-verified accounts, budgets and expenses with per-user ownership, reachable only through the frontend's server.",
+    "stack": [
+      "Express 5",
+      "TypeScript",
+      "PostgreSQL",
+      "Sequelize",
+      "JWT",
+      "bcrypt",
+      "express-validator",
+      "express-rate-limit",
+      "helmet",
+      "Nodemailer",
+      "Jest",
+      "Supertest",
+      "Swagger (OpenAPI)",
+      "Docker",
+      "Neon",
+      "Render"
+    ],
+    "role": "Course project (2026), built solo: I started from the course version and extended and hardened it for production, using AI-assisted reviews to find and fix weak spots.",
+    "problem": "The app needed an API that keeps each user's budgets and expenses private, protects accounts with email confirmation and password recovery, and cannot be called by anyone except the CashTrackr frontend.",
+    "process": "Users own budgets and budgets own expenses, and ownership is checked on every request: another user's budget or expense answers 404. Accounts are confirmed by email, sessions are JWTs, and a forgotten password is reset with a cryptographically secure 6-digit code. Every /api request must carry an internal key that only the Next.js server holds, compared in constant time, so browsers, Postman and other backends are rejected even if they know the URL. Inputs have strict type and length validation matching the database columns, auth routes are limited to 5 requests per minute per IP and the rest to 100, helmet sets security headers, CORS allows only the frontend, and a central error handler never leaks internals. The app refuses to start without its required environment variables and connects to the database before opening the port, so a broken deploy fails fast. The OpenAPI docs are written next to each route and served at /docs.",
+    "results": [
+      "Serves the live CashTrackr frontend, with confirmation and reset emails delivered from a verified sending domain.",
+      "Account takeover through malformed reset codes, cross-user data access, unbounded auth attempts and stack-trace leaks are closed off.",
+      "Unit and integration tests cover the auth flow, budget access control, validation and the internal-key lock, against a dedicated test database with a guard that prevents running them on the real one.",
+      "A docs test fails if any registered route is missing from the OpenAPI spec."
+    ],
+    "liveUrl": "https://cashtrackr-backend-o9br.onrender.com/docs",
+    "repoUrl": "https://github.com/MarioAGtzC/cashtrackr",
+    "year": 2026,
+    "featured": false,
+    "order": 1,
+    "origin": "course",
+    "category": [
+      "backend",
+      "api"
+    ],
+    "status": "live",
+    "parentSlug": "cashtrackr"
+  },
+  {
+    "slug": "cashtrackr-frontend",
+    "title": "CashTrackr: Frontend",
+    "summary": "The Next.js app for CashTrackr: sign-up, budgets and expenses through server actions, so the API is never exposed to the browser.",
+    "stack": [
+      "Next.js 14",
+      "React 18",
+      "TypeScript",
+      "Zod",
+      "Tailwind CSS",
+      "Headless UI",
+      "Vitest",
+      "Testing Library",
+      "Playwright",
+      "Vercel"
+    ],
+    "role": "Course project (2026), built solo: the course version had a number of problems, so I reworked it with AI-assisted development, fixing bugs and adding security hardening, tests and a production deployment.",
+    "problem": "Keeping track of spending usually means a spreadsheet nobody updates. CashTrackr gives each person a private space to set a budget for a goal, record expenses as they happen and see at once what is spent and what remains.",
+    "process": "The full user flow: sign-up with an email confirmation code, login and logout, password recovery, profile and password management, and budget and expense CRUD in modal forms. Every mutation is a Next.js server action, and a server-only data layer holds the API URL and internal key, so neither reaches the browser bundle. Zod schemas validate both form input and API responses, field errors show next to each field, and deleting a budget requires the password. The session JWT lives in an httpOnly, secure cookie verified on the server before any admin page renders, security headers block clickjacking and MIME sniffing, malformed API paths are rejected before any request, and the build fails if a required environment variable is missing. Because all API traffic comes from the Next.js server, it forwards the visitor's IP so the API can rate-limit per user instead of per server.",
+    "results": [
+      "Live in production and working end to end against the deployed API.",
+      "A pre-deploy review found no exposed secrets in the client bundle or the Git history; the issues it found (missing security headers, a cookie without secure, outdated dependencies, a shared rate-limit key) were fixed and verified in production.",
+      "45 unit and component tests with Vitest and Testing Library, plus 5 Playwright end-to-end tests that pass against the production site."
+    ],
+    "liveUrl": "https://cashtrackr.greenie.dev/",
+    "repoUrl": "https://github.com/MarioAGtzC/cashtrackr-frontend",
+    "year": 2026,
+    "featured": false,
+    "order": 2,
+    "origin": "course",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "cashtrackr"
+  },
+  {
+    "slug": "smart-logistics-routing",
+    "title": "Smart Logistics Routing API",
+    "summary": "A NestJS API that computes the cheapest route through a road network asynchronously, with a hand-written Dijkstra that handles peak-hour traffic, vehicle limits and ordered stops, plus a live demo that runs the same algorithm in the browser.",
+    "stack": [
+      "NestJS",
+      "TypeScript",
+      "Node.js",
+      "PostgreSQL",
+      "TypeORM",
+      "Redis",
+      "BullMQ",
+      "Swagger (OpenAPI)",
+      "class-validator",
+      "Jest",
+      "Supertest",
+      "Docker",
+      "esbuild",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "role": "Technical challenge, built solo: requirements analysis, design, implementation, tests and the web demo.",
+    "problem": "A logistics operator needs the cheapest route between two points of a road network, but the cheapest path depends on the truck (weight limits and hazardous-load bans) and on the time of day (peak-hour traffic). The challenge asked for a REST API that stores networks, computes routes with Dijkstra in a service layer without blocking requests, documents every endpoint with Swagger and proves the algorithm with Jest tests.",
+    "process": "I planned the work in phases with acceptance criteria and wrote down every interpretation the statement left open. Networks are stored as directed graphs in PostgreSQL with TypeORM migrations and read through a Redis cache. A route request is validated, queued in BullMQ and answered with 202 and a job id; a worker computes it and the client polls its status. The algorithm is a hand-written Dijkstra on a binary heap, written as pure functions without Nest: costs are minutes, so the accumulated cost is the clock, and an edge's peak-hour multiplier depends on when the vehicle enters it. Vehicle restrictions remove edges before the search, stops run one leg at a time from the previous arrival, and a second search without restrictions runs only on failure to tell NO_ROUTE from ROUTE_BLOCKED_BY_CONSTRAINTS. Business errors are returned without retries, system errors are retried with backoff, and a Redis outage answers 503 instead of hanging. A known case where peak hours make Dijkstra suboptimal is documented and pinned by a test. Finally, a static web demo runs the same algorithm, compiled with esbuild and traced through an optional step observer, so anyone can watch it work step by step without the API running.",
+    "results": [
+      "All three validation cases of the challenge pass, within 150+ unit tests and end-to-end suites that process real jobs against PostgreSQL and Redis.",
+      "Route requests never block the API: a worker computes them in the background, and a Redis outage returns 503 in milliseconds.",
+      "Every endpoint, schema and error is documented in Swagger, and a test fails if one is missing.",
+      "A public demo on GitHub Pages runs the same routing code in the browser, at no hosting cost and with no backend to keep running."
+    ],
+    "architecture": [
+      {
+        "label": "Clients",
+        "nodes": [
+          {
+            "label": "Web demo",
+            "detail": "GitHub Pages · same algorithm in the browser"
+          },
+          {
+            "label": "API clients",
+            "detail": "REST · Swagger at /docs"
+          }
+        ]
+      },
+      {
+        "label": "API",
+        "nodes": [
+          {
+            "label": "NestJS API",
+            "detail": "validates · 202 + job id"
+          }
+        ]
+      },
+      {
+        "label": "Queue",
+        "nodes": [
+          {
+            "label": "BullMQ",
+            "detail": "Redis · retries with backoff"
+          }
+        ]
+      },
+      {
+        "label": "Worker",
+        "nodes": [
+          {
+            "label": "Route worker",
+            "detail": "time-dependent Dijkstra"
+          }
+        ]
+      },
+      {
+        "label": "Data",
+        "nodes": [
+          {
+            "label": "PostgreSQL",
+            "detail": "graphs and edges"
+          },
+          {
+            "label": "Redis cache",
+            "detail": "graphs · cache-aside"
+          }
+        ]
+      }
+    ],
+    "liveUrl": "https://logistics.greenie.dev/",
+    "year": 2026,
+    "featured": false,
+    "order": 4,
+    "origin": "challenge",
+    "category": [
+      "backend",
+      "api"
+    ],
+    "status": "in progress"
+  },
+  {
+    "slug": "message-throttling-gateway",
+    "title": "Message Throttling Gateway",
+    "summary": "A gateway that absorbs bursts of messages and delivers them to a provider limited to 100 requests per second, with persistence, retries and idempotent intake, plus a live simulator that shows how it behaves under load.",
+    "stack": [
+      "TypeScript",
+      "Node.js",
+      "Express",
+      "PostgreSQL",
+      "Prisma",
+      "Redis",
+      "BullMQ",
+      "express-validator",
+      "express-rate-limit",
+      "Jest",
+      "Docker",
+      "esbuild",
+      "GitHub Actions",
+      "GitHub Pages"
+    ],
+    "role": "Technical challenge, built solo: design, implementation, tests, the local Docker environment and the web simulator.",
+    "problem": "An upstream platform can send tens of thousands of messages at once, while the provider that delivers them accepts only 100 requests per second and rejects the rest with 429. Forwarding the burst directly would mean rejected sends, lost messages and duplicate deliveries when the sender retries. The gateway sits in between: it accepts every message at once and releases it at the rate the provider can take.",
+    "process": "Three services run together with Docker Compose: the gateway, a mock of the upstream platform that fires bursts with up to 100 requests in flight, and a mock provider that enforces 100 requests per second. The gateway, built with Express, validates each message, saves it in PostgreSQL through Prisma and queues a BullMQ job on Redis, answering 202 without waiting for delivery. A worker capped at 100 jobs per second forwards each message to the provider and records its status; a 429, an error or no answer within 5 seconds is retried up to 5 attempts with exponential backoff. The message id is both the primary key and the job id, so a repeated or simultaneous duplicate is acknowledged without queuing a second job, and a sweep every minute re-queues any message that was saved but never queued. Later I added a static simulator on GitHub Pages that uses the gateway's limits, attempts and backoff as its defaults, with step-by-step scenarios, the interaction between the two rate limits, and a run measured on Docker.",
+    "results": [
+      "Measured on Docker, a burst of 10,000 messages was fully delivered in 135 seconds (about 74 per second) with none failed; the 158 messages rejected with 429 at a window edge went through on retry.",
+      "The measurement showed that the time per job, not the rate limit, set the pace, because the worker processes one job at a time; the simulator makes both limits visible.",
+      "Repeated and simultaneous submissions of the same id are acknowledged without a second job, and messages left behind by a crash between saving and queuing are picked up by the sweep.",
+      "Unit tests cover the gateway (intake, worker paths and sweep) and the simulator, and CI deploys the page only when every job passes."
+    ],
+    "architecture": [
+      {
+        "label": "Sender",
+        "nodes": [
+          {
+            "label": "Mock A",
+            "detail": "bursts · 100 requests in flight"
+          }
+        ]
+      },
+      {
+        "label": "Gateway",
+        "nodes": [
+          {
+            "label": "Service B",
+            "detail": "Express · validates · 202"
+          }
+        ]
+      },
+      {
+        "label": "State and queue",
+        "nodes": [
+          {
+            "label": "PostgreSQL",
+            "detail": "messages and status"
+          },
+          {
+            "label": "Redis + BullMQ",
+            "detail": "jobs · 100/s limiter · backoff"
+          }
+        ]
+      },
+      {
+        "label": "Delivery",
+        "nodes": [
+          {
+            "label": "Worker",
+            "detail": "one job at a time · 5 attempts"
+          }
+        ]
+      },
+      {
+        "label": "Provider",
+        "nodes": [
+          {
+            "label": "Mock C",
+            "detail": "100 requests/s · 429 beyond"
+          }
+        ]
+      }
+    ],
+    "liveUrl": "https://gateway.greenie.dev/",
+    "repoUrl": "https://github.com/MarioAGtzC/message-throttling-gateway",
+    "year": 2026,
+    "featured": false,
+    "order": 5,
+    "origin": "challenge",
+    "category": [
+      "backend",
+      "microservice"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "devtree",
+    "title": "DevTree: Link-in-bio Platform",
+    "summary": "A link-in-bio platform for developers: a REST API for accounts, usernames and public profiles, and the React app that consumes it.",
+    "stack": [
+      "Express",
+      "MongoDB",
+      "React 19",
+      "TypeScript",
+      "JWT",
+      "TanStack React Query",
+      "Swagger (OpenAPI)",
+      "Tailwind CSS",
+      "Vitest",
+      "Node.js test runner"
+    ],
+    "role": "Course project (2025), built solo: I followed the course material and extended it, writing both the API and the frontend.",
+    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
+    "process": "Two pieces built against one REST contract: an Express and MongoDB API that handles authentication, username claiming, profile management, image uploads and public lookups, documented with Swagger, and a React SPA that covers the full user journey, from username search and registration to a drag-and-drop link editor with a live preview and a public profile page.",
+    "results": [
+      "Both pieces are deployed: the API on Render with interactive Swagger docs, and the frontend on Netlify.",
+      "Covers the full user journey: claim a username, sign up, edit the profile and links, and share a public page.",
+      "Both pieces have automated tests: 57 in the frontend, and unit tests for the API's validators, error handling and image uploads."
+    ],
+    "liveUrl": "https://devtree.greenie.dev/",
+    "year": 2025,
+    "featured": false,
+    "order": 6,
+    "origin": "course",
+    "category": [
+      "web app",
+      "backend"
+    ],
+    "status": "live"
+  },
+  {
+    "slug": "devtree-backend",
+    "title": "DevTree: Backend",
+    "summary": "A REST API providing authentication, profile management, username availability lookup, and public profile lookup for the DevTree platform.",
+    "stack": [
+      "Express",
+      "TypeScript",
+      "MongoDB",
+      "Mongoose",
+      "JWT",
+      "bcryptjs",
+      "express-validator",
+      "Cloudinary",
+      "formidable",
+      "Swagger (OpenAPI)",
+      "Node.js",
+      "Node.js test runner",
+      "Render"
+    ],
+    "role": "Course project (2025), built solo following the course and extending it: API design, data model, authentication, validation, image uploads and API docs.",
+    "problem": "The platform needed an API to register accounts, claim a unique username, personalize a public page, check whether a desired username is still available, and expose a fast public lookup by username without leaking sensitive data.",
+    "process": "A single User document holds both the credentials and the public profile. Each request goes through routes, validators, a body whitelist, optional JWT authentication and then a controller. Usernames become unique, lowercase, URL-safe slugs, and names that would collide with app routes or static files, such as admin or docs, are reserved. Profile links must be http(s) URLs, so no javascript: link can reach a public page. Passwords need 8+ characters with upper and lower case, a number and a symbol before they are hashed with bcrypt. Public lookups return the profile without password, email or internal fields, and a search endpoint powers the frontend's live username picker. Uploading a new profile image deletes the previous one from Cloudinary. CORS allows only the configured frontend origin, and the OpenAPI spec is generated from JSDoc annotations and served at /docs.",
+    "results": [
+      "Deployed API covering the full profile lifecycle: sign-up, login, profile editing, image upload, username checks and public lookup.",
+      "Field whitelisting, slugged usernames and uniqueness checks keep unexpected or duplicate data out of the database.",
+      "Public responses never include passwords, emails or internal fields, and replaced images don't pile up in storage.",
+      "Every endpoint can be explored and tried from the browser in Swagger UI.",
+      "Automated tests with Node.js's built-in test runner cover the username and link validators, the error handler and the image upload flow, with Cloudinary mocked."
+    ],
+    "liveUrl": "https://devtree-backend-l7ov.onrender.com/docs",
+    "repoUrl": "https://github.com/MarioAGtzC/devtree-backend",
+    "year": 2025,
+    "featured": false,
+    "order": 1,
+    "origin": "course",
+    "category": [
+      "backend"
+    ],
+    "status": "live",
+    "parentSlug": "devtree"
+  },
+  {
+    "slug": "devtree-frontend",
+    "title": "DevTree: Frontend",
+    "summary": "A React SPA consuming the DevTree API to manage a developer's profile, links, and public \"link-in-bio\" page.",
+    "stack": [
+      "React 19",
+      "TypeScript",
+      "TanStack Query",
+      "React Router",
+      "React Hook Form",
+      "dnd-kit",
+      "Tailwind CSS",
+      "Axios",
+      "Vite (SWC)",
+      "Vitest",
+      "React Testing Library",
+      "Netlify"
+    ],
+    "role": "Course project (2025), built solo following the course and extending it: the whole frontend, connected to my own API.",
+    "problem": "Developers have their presence scattered across many platforms but only one link slot in most social bios. DevTree solves this with a single, personal, brandable URL that consolidates every relevant link.",
+    "process": "Route-level layouts separate the public and auth pages from the /admin dashboard, which redirects to login when the user can't be loaded. The logged-in user lives in one TanStack Query cache: toggling or reordering links updates it immediately so the live preview reacts at once, and Save changes sends it to the API. All requests go through one Axios client that attaches the auth token. Forms use React Hook Form with validation for email format, password strength and confirmation, and URLs are validated before a link can be enabled. Netlify serves an SPA fallback so public /<username> links work on direct visits. Every bug I fixed got a regression test, such as lost URLs and duplicate link IDs in the links editor, and a login that bounced back to the login page after logging out.",
+    "results": [
+      "Live in production and connected to my own backend, covering the full flow: claim a handle, sign up, edit the profile and links, and share a public page.",
+      "Client-side validation catches common input errors before a request is sent.",
+      "Link changes and reordering show in the preview right away, before they are saved.",
+      "57 automated tests across 7 files cover routing, the API module, the auth and search forms, and both editors."
+    ],
+    "liveUrl": "https://devtree.greenie.dev/",
+    "repoUrl": "https://github.com/MarioAGtzC/devtree-frontend",
+    "year": 2025,
+    "featured": false,
+    "order": 2,
+    "origin": "course",
+    "category": [
+      "web app"
+    ],
+    "status": "live",
+    "parentSlug": "devtree"
+  },
+  {
+    "slug": "maquilaexpress",
+    "title": "Maquila Express",
+    "summary": "A platform for ordering custom parts made by laser cutting, CNC routing, plotter cutting or 3D printing: customers upload a design file, get an instant quote, pay online and track the order.",
+    "stack": [
+      "PHP",
+      "CodeIgniter 4",
+      "MySQL",
+      "Three.js",
+      "Stripe",
+      "Pusher",
+      "OAuth 2.0",
+      "Mailgun",
+      "Bootstrap 4",
+      "FullCalendar",
+      "Chart.js"
+    ],
+    "role": "Fullstack developer on an 8-person team at Kioscomático. I designed and built the whole quotation algorithm, every automated pricing path, and did fullstack work across the rest of the platform with the team.",
+    "team": 8,
+    "problem": "Getting a custom part made usually starts with emailing a drawing to a shop and waiting while someone works out material, thickness and machine time by hand. One quote can take days and several messages. The platform turns that into self-service for customers, and gives the shop, its machine operators and partner sales companies one place to run the work.",
+    "process": "For laser cutting and CNC routing, a custom PHP parser reads the uploaded DXF to get the part's dimensions and total cutting length. The price combines sheet cost per area for the chosen material and gauge, pieces per sheet, gas use, operator time from cutting length and machine speed, electricity, a speed and thickness adjustment, margin and VAT, plus a surcharge for multi-pass routing on thick materials. Plotter cutting is priced by area, and 3D printing uses the model volume read by a Three.js STL viewer with tiered rates and infill and finish surcharges. The public landing page gives an instant preview price by converting the DXF to G-code with dxf2gcode and measuring the toolpath. Every cost input is editable from the back office, and jobs outside the rules fall back to a custom quote. Around that, the team built the order lifecycle, Stripe, CoDi and bank-deposit payments, Pusher chat and notifications, operator task tracking and partner sales.",
+    "results": [
+      "Quotes no longer depend on manual estimation: laser, router, plotter and 3D-printing prices come from the uploaded file and the shop's own cost settings.",
+      "The shop can reprice without code changes, because material prices, machine speeds and operating costs are edited in the back office.",
+      "Quote, payment, production tasks, shipping status and customer chat share one record per order instead of being spread across email."
+    ],
+    "year": 2020,
+    "featured": false,
+    "order": 7,
+    "origin": "client",
+    "category": [
+      "web app"
+    ],
+    "status": "archived"
+  },
+  {
+    "slug": "adn-cre4cion",
+    "title": "ADN Cre4ción",
+    "summary": "A Spanish-language marketing site for a consultancy that helps construction companies adopt BIM and digital workflows: services, projects, team, a blog and sign-ups for a paid BIM + Revit workshop.",
+    "stack": [
+      "HTML5",
+      "CSS3",
+      "Bootstrap 5",
+      "Webpack 5",
+      "JavaScript",
+      "Google Forms",
+      "GitHub Pages"
+    ],
+    "role": "Front-end developer on a client project.",
+    "problem": "ADN Cre4ción needed a professional online presence to win clients in a traditional industry that was only starting to digitize: explain its services, build credibility with projects and its team, promote a paid workshop and publish articles that support its expertise.",
+    "process": "Five pages: a single-page home with sections for services, projects, team, trainings, articles and contact, plus a blog index, two posts and a privacy policy. Bootstrap's grid with custom breakpoints handles phones, tablets and desktops, and a fixed navbar collapses on mobile with scroll-spy highlighting. Separate Webpack configs run a dev server and produce a minified, cache-busted production build. Open Graph and Twitter Card tags give shared links a proper preview, and the workshop sign-up uses Google Forms so no backend was needed. The build was served as a static site on a custom domain.",
+    "results": [
+      "Gave the client one place to present its services, past work, team and training offer to prospective customers.",
+      "Visitors could download the workshop syllabus and register on their own, without manual follow-up.",
+      "Shipped as a lightweight static site with no server or database to maintain."
+    ],
+    "repoUrl": "https://github.com/dielozmo/ADN_Cre4cion",
+    "year": 2020,
+    "featured": false,
+    "order": 8,
+    "origin": "client",
+    "category": [
+      "landing"
+    ],
+    "status": "archived"
+  }
+]

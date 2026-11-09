@@ -2,9 +2,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import type { Project } from '../../../types/project.ts';
+import { filterProjects, parseFilters } from './filters.ts';
 import { buildTechIndex, catalogKeys, normalizeTech, resolveTech, stripVersion } from './tech.ts';
 import { TECH_ENTRIES, TECH_GROUPS } from './techCatalog.ts';
 
+// The live projects.json, which the SCM publishes: only structural checks here, so editing a stack,
+// category or slug never fails the deploy. Expectations about specific projects use fixtures/projects.json.
 const projects = JSON.parse(
   readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
@@ -52,4 +55,17 @@ test('every stack name in projects.json resolves to a labeled tech', () => {
   }
   // Sanity: version stripping groups React 18 and React 19 under one tech.
   assert.equal(resolveTech(stripVersion('React 18'), index), resolveTech('React 19', index));
+});
+
+test('default filters give the top-level projects in order', () => {
+  const index = buildTechIndex(projects);
+  const topLevel = projects
+    .filter((project) => !project.parentSlug)
+    .sort((a, b) => a.order - b.order)
+    .map((project) => project.slug);
+  const results = filterProjects(parseFilters(new URLSearchParams(''), index), index);
+  assert.deepEqual(
+    results.map((result) => result.project.slug),
+    topLevel,
+  );
 });

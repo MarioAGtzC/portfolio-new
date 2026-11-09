@@ -6,7 +6,7 @@ import { suggestTechs } from './suggest.ts';
 import { buildTechIndex, foldText, type TechId } from './tech.ts';
 
 const projects = JSON.parse(
-  readFileSync(new URL('../../../data/projects.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('./fixtures/projects.json', import.meta.url), 'utf8'),
 ) as Project[];
 const index = buildTechIndex(projects);
 // Stub count: how many projects (hubs and pieces) have the tech themselves.
